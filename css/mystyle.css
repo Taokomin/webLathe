@@ -1,0 +1,134 @@
+@import url("https://fonts.googleapis.com/css2?family=Noto+Serif+Thai:wght@200;400&display=swap");
+* {
+  font-family: "Noto Serif Thai", serif;
+}
+.container{
+	padding: 20px;
+	width: 800px;
+}
+nav {
+  background-image: linear-gradient(to right, #03018c, #212aa5, #4259c3);
+  height: 80px;
+  min-height: 50px;
+  width: 100%;
+  padding: 10px;
+}
+nav ul {
+    display: flex;
+    justify-content: space-between;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+  }
+  
+  nav ul li {
+    flex-basis: 0;
+    flex-grow: 1;
+  }
+  
+  nav ul li a {
+    display: block;
+    text-align: center;
+    padding: 10px;
+    color: white !important;
+  }
+  a{
+    color: white !important;
+  }
+.btn-add{
+ float: right;
+}
+li.dropdown .dropdown-menu a:hover {
+  background-color: #4259c3;
+}
+.btn-1 {
+  width: 100;
+  height: 5;
+}
+.btn-2 {
+  width: 100;
+  height: 5;
+}
+.btn-primary {
+  background-color:#03018c;
+  border-color:#03018c;
+}
+.dropdown-menu {
+
+  background-color: #03018c !important;
+}
+.nav-item {
+  border-style: solid;
+  border-color: #fff;
+}
+
+.title-word {
+    animation: color-animation 4s linear infinite;
+  }
+
+  .title-word-1 {
+    --color-1: #03018C;
+    --color-2: #212AA5;
+    --color-3: #4259C3;
+  }
+
+  .title-word-2 {
+    --color-1: #212AA5;
+    --color-2: #4259C3;
+    --color-3: #03018C;
+  }
+
+  .title-word-3 {
+    --color-1: #4259C3;
+    --color-2: #03018C;
+    --color-3: #212AA5;
+  }
+
+  .title-word-4 {
+    --color-1: #03018C;
+    --color-2: #212AA5;
+    --color-3: #4259C3;
+  }
+
+  @keyframes color-animation {
+    0% {
+      color: var(--color-1)
+    }
+
+    32% {
+      color: var(--color-1)
+    }
+
+    33% {
+      color: var(--color-2)
+    }
+
+    65% {
+      color: var(--color-2)
+    }
+
+    66% {
+      color: var(--color-3)
+    }
+
+    99% {
+      color: var(--color-3)
+    }
+
+    100% {
+      color: var(--color-1)
+    }
+  }
+
+  /* Here are just some visual styles. 🖌 */
+
+
+  .title {
+    font-family: "Montserrat", sans-serif;
+    font-weight: 800;
+    font-size: 8.5vw;
+    text-transform: uppercase;
+    place-items: center;
+    text-align: center;
+
+  }
