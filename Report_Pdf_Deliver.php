@@ -63,8 +63,9 @@ $tableh = '
 }
 </style>
 
-<h2 style="text-align:center"> รายงานการสั่งซื้อวัสดุและอุปกรณ์ตามช่วงเวลา</h2>
-<h3 style="border-right:0px solid #000;padding:3px;text-align:center;"  >ตั้งแต่วันที่  '.$start_date.' ถึง '.$end_date.'</h3>
+<h2 style="border-right:0px solid #000;padding:3px;text-align:center;"  >ตั้งแต่วันที่  '.$start_date.' ถึง '.$end_date.'</h2>
+<h3 style="text-align:center"> รายงานการสั่งซื้อวัสดุและอุปกรณ์ตามช่วงเวลา</h3>
+
 
 <table id="bg-table" width="100%" style="border-collapse: collapse;font-size:12pt;margin-top:8px;">
 <tr style="border:1px solid #000;padding:4px;">

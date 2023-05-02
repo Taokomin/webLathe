@@ -39,8 +39,8 @@ $values = mysqli_fetch_assoc($result);
             </div>
             <div class="mb-3">
                 <label for="Userlevel" class="form-label">สิทธิการใช้งาน</label>
-                <select class="form-select" aria-label="Default select example" name="Userlevel" value="<?php echo $values["Unit_id"]; ?>" required>
-                    <option value="">-กรุณาเลือกสิทธิการใช้งาน-</option>
+                <select class="form-select" aria-label="Default select example" name="Userlevel"  required>
+                    <option value="<?php echo $values["Userlevel"]; ?>">-กรุณาเลือกสิทธิการใช้งาน-</option>
                     <option value="P">บุคลากร(P)</option>
                     <option value="M">ผู้จัดการ(M)</option>
                     <option value="E">ผู้บริหาร(E)</option>
