@@ -1,5 +1,5 @@
 <?php
-require('C:\xampp\XAMXUN\htdocs\Lathe_application\config\condb.php');
+require('C:\xampp\XAMXUN\htdocs\webLathe\config\condb.php');
 
 $Auto_number = $_POST['Auto_number'];
 $Takeback_id  = $_POST['Takeback_id '];

@@ -1,5 +1,5 @@
 <?php
-require('C:\xampp\XAMXUN\htdocs\Lathe_application\config\condb.php');
+require('C:\xampp\XAMXUN\htdocs\webLathe\config\condb.php');
 
 $Auto_number = $_GET['Auto_number'];
 $AcceptMaterial_id = $_GET['AcceptMaterial_id'];
@@ -13,20 +13,19 @@ $MaterialType_id = $_GET['MaterialType_id'];
 $Partner_id = $_GET['Partner_id'];
 $Employee_id = $_GET['Employee_id'];
 
-// Get the current material quantity
+
 $sql = "SELECT Material_quantity FROM material WHERE Material_id = '$Material_id'";
 $result = mysqli_query($con, $sql);
 $row = mysqli_fetch_assoc($result);
 $Material_quantity = $row['Material_quantity'];
 
-// Calculate the remaining material quantity
+
 $remaining_Material_quantity = $Material_quantity + $BuyMaterial_quantity;
 
-// Update the material quantity in the database
+
 $sql1 = "UPDATE material SET Material_quantity = '$remaining_Material_quantity' WHERE Material_id = '$Material_id'";
 mysqli_query($con, $sql1);
 
-// Insert the accept_material data into the database
 $sql2 = "INSERT INTO accept_material (
     Auto_number,
     AcceptMaterial_id,

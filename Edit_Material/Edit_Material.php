@@ -1,5 +1,5 @@
 <?php
-require('C:\xampp\XAMXUN\htdocs\Lathe_application\config\condb.php');
+require('C:\xampp\XAMXUN\htdocs\webLathe\config\condb.php');
 $Material_id = $_GET["Material_id"];
 $sql = "SELECT * FROM material WHERE Material_id='$Material_id'";
 $result = mysqli_query($con, $sql);
@@ -49,7 +49,7 @@ $values = mysqli_fetch_assoc($result);
                 }
             </script>
             <?php
-            require('C:\xampp\XAMXUN\htdocs\Lathe_application\config\condb.php');
+            require('C:\xampp\XAMXUN\htdocs\webLathe\config\condb.php');
             $sql1 = $con;
             $query1 = "SELECT * FROM unit ORDER BY Unit_id asc";
             $result1 = mysqli_query($sql1, $query1);
@@ -72,7 +72,7 @@ $values = mysqli_fetch_assoc($result);
             </div>
             
             <?php
-            require('C:\xampp\XAMXUN\htdocs\Lathe_application\config\condb.php');
+            require('C:\xampp\XAMXUN\htdocs\webLathe\config\condb.php');
             $sql2 = $con;
             $query2 = "SELECT * FROM material_type ORDER BY MaterialType_id asc";
             $result2 = mysqli_query($sql2, $query2);

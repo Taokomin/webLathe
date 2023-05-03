@@ -1,5 +1,5 @@
 <?php
-require('C:\xampp\XAMXUN\htdocs\Lathe_application\config\condb.php');
+require('C:\xampp\XAMXUN\htdocs\webLathe\config\condb.php');
 $Auto_number = $_GET['Auto_number'];
 $Takeback_id = $_GET['Takeback_id'];
 $Takeback_day = $_GET['Takeback_day'];

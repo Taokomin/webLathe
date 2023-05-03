@@ -135,7 +135,7 @@ if (!$_SESSION["UserID"]) {
                 </thead>
                 <tbody>
                 <?php
-                    require('C:\xampp\XAMXUN\htdocs\Lathe_application\config\condb.php');
+                    require('C:\xampp\XAMXUN\htdocs\webLathe\config\condb.php');
                     $query = "SELECT * FROM takeback ORDER BY PickupMaterial_id asc";
                     $result = mysqli_query($con, $query);
                     while ($values = mysqli_fetch_assoc($result)) {

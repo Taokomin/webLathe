@@ -1,5 +1,5 @@
 <?php
-require('C:\xampp\XAMXUN\htdocs\Lathe_application\config\condb.php');
+require('C:\xampp\XAMXUN\htdocs\webLathe\config\condb.php');
 $Partner_id = $_GET["Partner_id"];
 $sql = "SELECT * FROM partner WHERE Partner_id='$Partner_id'";
 $result = mysqli_query($con, $sql);
@@ -32,7 +32,7 @@ $values = mysqli_fetch_assoc($result);
                 <input type="text" class="form-control" name="Partner_id" value="<?php echo $values['Partner_id']; ?>" readonly>
             </div>
             <?php
-            require('C:\xampp\XAMXUN\htdocs\Lathe_application\config\condb.php');
+            require('C:\xampp\XAMXUN\htdocs\webLathe\config\condb.php');
             $sql1 = $con;
             $query1 = "SELECT * FROM prefix_name ORDER BY Prefix_id asc";
             $result1 = mysqli_query($sql1, $query1);

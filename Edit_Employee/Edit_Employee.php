@@ -1,5 +1,5 @@
 <?php
-require('C:\xampp\XAMXUN\htdocs\Lathe_application\config\condb.php');
+require('C:\xampp\XAMXUN\htdocs\webLathe\config\condb.php');
 $Employee_id = $_GET["Employee_id"];
 $sql = "SELECT * FROM employee WHERE Employee_id='$Employee_id'";
 $result = mysqli_query($con, $sql);
@@ -32,7 +32,7 @@ $values = mysqli_fetch_assoc($result);
                 <input type="text" class="form-control" name="Employee_id" value="<?php echo $values['Employee_id']; ?>" readonly>
             </div>
             <?php
-            require('C:\xampp\XAMXUN\htdocs\Lathe_application\config\condb.php');
+            require('C:\xampp\XAMXUN\htdocs\webLathe\config\condb.php');
             $sql1 = $con;
             $query1 = "SELECT * FROM prefix_name ORDER BY Prefix_id asc";
             $result1 = mysqli_query($sql1, $query1);
@@ -79,7 +79,7 @@ $values = mysqli_fetch_assoc($result);
                 <input type="text" class="form-control" name="Employee_address" value="<?php echo $values['Employee_number']; ?>" required>
             </div>
             <?php
-            require('C:\xampp\XAMXUN\htdocs\Lathe_application\config\condb.php');
+            require('C:\xampp\XAMXUN\htdocs\webLathe\config\condb.php');
             $sql2 = $con;
             $query2 = "SELECT * FROM employee_type ORDER BY EmployeeType_id asc";
             $result2 = mysqli_query($sql2, $query2);

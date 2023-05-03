@@ -1,5 +1,5 @@
 <?php
-require('C:\xampp\XAMXUN\htdocs\Lathe_application\config\condb.php');
+require('C:\xampp\XAMXUN\htdocs\webLathe\config\condb.php');
 $Prefix_id = $_GET["Prefix_id"];
 $sql = "SELECT * FROM prefix_name WHERE Prefix_id='$Prefix_id'";
 $result = mysqli_query($con, $sql);

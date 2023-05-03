@@ -130,7 +130,7 @@ if (!$_SESSION["UserID"]) {
                 </thead>
                 <tbody>
                     <?php
-                    require('C:\xampp\XAMXUN\htdocs\Lathe_application\config\condb.php');
+                    require('C:\xampp\XAMXUN\htdocs\webLathe\config\condb.php');
                     $query = "
                     SELECT m.*, u.Unit_name, mt.MaterialType_name
                     FROM material as m 

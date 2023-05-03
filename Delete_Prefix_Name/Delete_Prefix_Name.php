@@ -1,5 +1,5 @@
 <?php
-require('C:\xampp\XAMXUN\htdocs\Lathe_application\config\condb.php');
+require('C:\xampp\XAMXUN\htdocs\webLathe\config\condb.php');
   $Prefix_id = mysqli_real_escape_string($con, $_GET['Prefix_id']);
   
   $check_query = "SELECT Prefix_id FROM prefix_name WHERE Prefix_id = '$Prefix_id'";

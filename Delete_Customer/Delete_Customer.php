@@ -1,5 +1,5 @@
 <?php
-require('C:\xampp\XAMXUN\htdocs\Lathe_application\config\condb.php');
+require('C:\xampp\XAMXUN\htdocs\webLathe\config\condb.php');
 
 if (isset($_GET['Customer_id'])) {
     $Customer_id = $_GET['Customer_id'];

@@ -135,7 +135,7 @@ if (!$_SESSION["UserID"]) {
                 </thead>
                 <tbody>
                     <?php
-                    require('C:\xampp\XAMXUN\htdocs\Lathe_application\config\condb.php');
+                    require('C:\xampp\XAMXUN\htdocs\webLathe\config\condb.php');
                     $query = "SELECT am.*, m.Material_name
                     FROM accept_material as am
                     INNER JOIN material AS m ON am.Material_id = m.Material_id

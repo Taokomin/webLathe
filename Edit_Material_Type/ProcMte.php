@@ -1,5 +1,5 @@
 <?php
-require('C:\xampp\XAMXUN\htdocs\Lathe_application\config\condb.php');
+require('C:\xampp\XAMXUN\htdocs\webLathe\config\condb.php');
 
 $Auto_number = $_POST['Auto_number'];
 $MaterialType_id = $_POST['MaterialType_id'];

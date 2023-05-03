@@ -1,5 +1,5 @@
 <?php
-require('C:\xampp\XAMXUN\htdocs\Lathe_application\config\condb.php');
+require('C:\xampp\XAMXUN\htdocs\webLathe\config\condb.php');
   $EmployeeType_id = mysqli_real_escape_string($con, $_GET['EmployeeType_id']);
   
   $check_query = "SELECT EmployeeType_id FROM employee_type WHERE EmployeeType_id = '$EmployeeType_id'";

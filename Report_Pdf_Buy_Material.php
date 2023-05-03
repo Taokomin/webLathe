@@ -1,6 +1,6 @@
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
-include 'C:\xampp\XAMXUN\htdocs\Lathe_application\config\condb.php';
+include 'C:\xampp\XAMXUN\htdocs\webLathe\config\condb.php';
 if (!$con) {
   die("Connection failed: " . mysqli_connect_error());
 }

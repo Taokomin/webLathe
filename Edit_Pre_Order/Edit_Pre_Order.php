@@ -1,5 +1,5 @@
 <?php
-require('C:\xampp\XAMXUN\htdocs\Lathe_application\config\condb.php');
+require('C:\xampp\XAMXUN\htdocs\webLathe\config\condb.php');
 $PreOrder_id = $_GET["PreOrder_id"];
 $sql = "SELECT * FROM pre_order WHERE PreOrder_id = '$PreOrder_id'";
 $result = mysqli_query($con, $sql);
@@ -82,7 +82,7 @@ if (!$_SESSION["UserID"]) {
                     }
                 </script>
                 <?php
-                require('C:\xampp\XAMXUN\htdocs\Lathe_application\config\condb.php');
+                require('C:\xampp\XAMXUN\htdocs\webLathe\config\condb.php');
                 $sql1 = $con;
                 $query1 = "SELECT * FROM unit ORDER BY Unit_id asc";
                 $result1 = mysqli_query($sql1, $query1);
@@ -104,7 +104,7 @@ if (!$_SESSION["UserID"]) {
                     </select>
                 </div>
                 <?php
-                require('C:\xampp\XAMXUN\htdocs\Lathe_application\config\condb.php');
+                require('C:\xampp\XAMXUN\htdocs\webLathe\config\condb.php');
                 $sql2 = $con;
                 $query2 = "SELECT Customer_id, Customer_name, Customer_surname FROM customer ORDER BY Customer_id ASC";
                 $result2 = mysqli_query($sql2, $query2);

@@ -1,5 +1,5 @@
 <?php
-require('C:\xampp\XAMXUN\htdocs\Lathe_application\config\condb.php');
+require('C:\xampp\XAMXUN\htdocs\webLathe\config\condb.php');
 $Auto_number = $_GET['Auto_number'];
 $Deliver_id = $_GET['Deliver_id'];
 $Deliver_day = $_GET['Deliver_day'];

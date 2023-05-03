@@ -1,5 +1,5 @@
 <?php
-require('C:\xampp\XAMXUN\htdocs\Lathe_application\config\condb.php');
+require('C:\xampp\XAMXUN\htdocs\webLathe\config\condb.php');
 if (!$con) {
     mysqli_connect_errno();
 }
@@ -8,7 +8,7 @@ $GLOBALS['maxIdLength'] = 3;
 $GLOBALS['AcceptMaterial_id'] = '0';
 $GLOBALS['Auto_number'] = '0';
 
-// Get the latest AcceptMaterial_id from the database
+
 $sql1 = "SELECT AcceptMaterial_id FROM accept_material ORDER BY AcceptMaterial_id DESC LIMIT 1";
 $query1 = $con->query($sql1);
 $result1 = $query1->fetch_assoc();
@@ -17,7 +17,7 @@ if (isset($result1['AcceptMaterial_id'])) {
 }
 
 
-// Get the latest Auto_number from the database
+
 $sql2 = "SELECT Auto_number FROM accept_material ORDER BY Auto_number DESC LIMIT 1";
 $query2 = $con->query($sql2);
 $result2 = $query2->fetch_assoc();
@@ -25,7 +25,7 @@ if (isset($result2['Auto_number'])) {
     $GLOBALS['Auto_number'] = $result2['Auto_number'];
 }
 
-// Function to increase AcceptMaterial_id
+
 function increaseIdAm($AcceptMaterial_id)
 {
     $matchId = preg_replace('/[^0-9]/', '', $AcceptMaterial_id);
@@ -42,7 +42,7 @@ function increaseIdAm($AcceptMaterial_id)
     return 'AM' . $concatIdWithString;
 }
 
-// Function to increase Auto_number
+
 function increaseNumAm($Auto_number)
 {
     $matchId = preg_replace('/[^0-9]/', '', $Auto_number);

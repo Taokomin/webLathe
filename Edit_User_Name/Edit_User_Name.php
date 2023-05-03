@@ -1,5 +1,5 @@
 <?php
-require('C:\xampp\XAMXUN\htdocs\Lathe_application\config\condb.php');
+require('C:\xampp\XAMXUN\htdocs\webLathe\config\condb.php');
 $ID = $_GET["ID"];
 $sql = "SELECT * FROM user WHERE ID='$ID'";
 $result = mysqli_query($con, $sql);

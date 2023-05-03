@@ -1,5 +1,5 @@
 <?php
-require('C:\xampp\XAMXUN\htdocs\Lathe_application\config\condb.php');
+require('C:\xampp\XAMXUN\htdocs\webLathe\config\condb.php');
 
 if (isset($_GET['PreOrder_id'])) {
     $PreOrder_id = $_GET['PreOrder_id'];

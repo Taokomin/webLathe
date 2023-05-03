@@ -1,5 +1,5 @@
 <?php
-require('C:\xampp\XAMXUN\htdocs\Lathe_application\config\condb.php');
+require('C:\xampp\XAMXUN\htdocs\webLathe\config\condb.php');
 $MaterialType_id = $_GET["MaterialType_id"];
 $sql = "SELECT * FROM material_type WHERE MaterialType_id='$MaterialType_id'";
 $result = mysqli_query($con, $sql);

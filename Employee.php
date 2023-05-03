@@ -133,7 +133,7 @@ if (!$_SESSION["UserID"]) {
                 </thead>
                 <tbody>
                     <?php
-                    require('C:\xampp\XAMXUN\htdocs\Lathe_application\config\condb.php');
+                    require('C:\xampp\XAMXUN\htdocs\webLathe\config\condb.php');
                     $query = "
                         SELECT e.*,n.Prefix_name,et.EmployeeType_name
                         FROM employee as e 

@@ -93,7 +93,7 @@ if (!$_SESSION["UserID"]) {
                 </thead>
                 <tbody>
                     <?php
-                    require('C:\xampp\XAMXUN\htdocs\Lathe_application\config\condb.php');
+                    require('C:\xampp\XAMXUN\htdocs\webLathe\config\condb.php');
                     $query = "SELECT * FROM user ORDER BY ID asc" or die("Error:");
                     $result = mysqli_query($con, $query);
                     while ($values = mysqli_fetch_assoc($result)) {

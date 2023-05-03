@@ -1,5 +1,5 @@
 <?php
-require('C:\xampp\XAMXUN\htdocs\Lathe_application\config\condb.php');
+require('C:\xampp\XAMXUN\htdocs\webLathe\config\condb.php');
 $BuyMaterial_id = $_GET["BuyMaterial_id"];
 $sql = "SELECT * FROM buy_material WHERE BuyMaterial_id='$BuyMaterial_id'";
 $result = mysqli_query($con, $sql);
@@ -59,7 +59,7 @@ if (!$_SESSION["UserID"]) {
                     </script>
                 </div>
                 <?php
-                require('C:\xampp\XAMXUN\htdocs\Lathe_application\config\condb.php');
+                require('C:\xampp\XAMXUN\htdocs\webLathe\config\condb.php');
                 $sql = $con;
                 $query = "SELECT * FROM material ORDER BY Material_id asc";
                 $result = mysqli_query($sql, $query);

@@ -91,7 +91,7 @@ if (!$_SESSION["UserID"]) {
                 </thead>
                 <tbody>
                     <?php
-                    require_once 'C:\xampp\XAMXUN\htdocs\Lathe_application\config\condb.php';
+                    require_once 'C:\xampp\XAMXUN\htdocs\webLathe\config\condb.php';
 
                     function approveMaterial($PickupMaterial_id)
                     {
@@ -129,7 +129,7 @@ if (!$_SESSION["UserID"]) {
                     
                     ?>
                     <?php
-                    require('C:\xampp\XAMXUN\htdocs\Lathe_application\config\condb.php');
+                    require('C:\xampp\XAMXUN\htdocs\webLathe\config\condb.php');
                     $query = "SELECT * FROM pickup_material ORDER BY PickupMaterial_id asc";
                     $result = mysqli_query($con, $query);
                     while ($values = mysqli_fetch_assoc($result)) {

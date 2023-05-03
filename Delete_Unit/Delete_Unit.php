@@ -1,5 +1,5 @@
 <?php
-require('C:\xampp\XAMXUN\htdocs\Lathe_application\config\condb.php');
+require('C:\xampp\XAMXUN\htdocs\webLathe\config\condb.php');
   $Unit_id = mysqli_real_escape_string($con, $_GET['Unit_id']);
   
   $check_query = "SELECT Unit_id FROM unit WHERE Unit_id = '$Unit_id'";

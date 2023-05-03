@@ -1,5 +1,5 @@
 <?php
-require('C:\xampp\XAMXUN\htdocs\Lathe_application\config\condb.php');
+require('C:\xampp\XAMXUN\htdocs\webLathe\config\condb.php');
 if (!$con) {
     mysqli_connect_errno();
 }
@@ -8,7 +8,7 @@ $GLOBALS['maxIdLength'] = 3;
 $GLOBALS['Customer_id'] = '0';
 $GLOBALS['Auto_number'] = '0';
 
-// Get the latest Customer_id from the database
+
 $sql1 = "SELECT Customer_id FROM customer ORDER BY Customer_id DESC LIMIT 1";
 $query1 = $con->query($sql1);
 $result1 = $query1->fetch_assoc();
@@ -16,7 +16,7 @@ if ($result1['Customer_id']) {
     $GLOBALS['Customer_id'] = $result1['Customer_id'];
 }
 
-// Get the latest Auto_number from the database
+
 $sql2 = "SELECT Auto_number FROM customer ORDER BY Auto_number DESC LIMIT 1";
 $query2 = $con->query($sql2);
 $result2 = $query2->fetch_assoc();
@@ -24,7 +24,7 @@ if ($result2['Auto_number']) {
     $GLOBALS['Auto_number'] = $result2['Auto_number'];
 }
 
-// Function to increase Customer_id
+
 function increaseIdCm($Customer_id)
 {
     $matchId = preg_replace('/[^0-9]/', '', $Customer_id);
@@ -41,7 +41,7 @@ function increaseIdCm($Customer_id)
     return 'CM' . $concatIdWithString;
 }
 
-// Function to increase Auto_number
+
 function increaseNumCm($Auto_number)
 {
     $matchId = preg_replace('/[^0-9]/', '', $Auto_number);
