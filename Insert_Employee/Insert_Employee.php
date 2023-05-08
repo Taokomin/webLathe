@@ -135,8 +135,8 @@ function increaseNumEm($Auto_number)
                 </select>
             </div>
             <div class="mb-3">
-                <label for="Employee_license" class="form-label">สิทธิ์การใช้งาน</label>
-                <input type="email" class="form-control" name="Employee_license" value="พนักงาน" readonly>
+                <!-- <label for="Employee_license" class="form-label">สิทธิการใช้งาน</label> -->
+                <input type="hidden" class="form-control" name="Employee_license" value="LC01" required>
             </div>
             <div class="modal-footer">
                 <button type="submit" class="btn btn-success ">เพิ่มข้อมูล </button>

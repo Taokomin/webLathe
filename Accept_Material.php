@@ -31,8 +31,9 @@ if (!$_SESSION["UserID"]) {
             </div>
             <div>
                 <a style="color:white; display: flex; width: 200px;">
-                    <iconify-icon icon="gg:profile" width="32" height="32"></iconify-icon><?php echo ($_SESSION['User']); ?>
-                    <?php ?>
+                    <iconify-icon icon="gg:profile" width="32" height="32"></iconify-icon><?php 
+                    require('Function\getEmployeeName.php');
+                    echo getEmployeeName($_SESSION['User']); ?>
                 </a>
             </div>
             <div>

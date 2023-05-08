@@ -30,9 +30,10 @@ if (!$_SESSION["UserID"]) {
                     </li>
             </div>
             <div>
-            <a style="color:white; display: flex; width: 200px;">
-                    <iconify-icon icon="gg:profile" width="32" height="32"></iconify-icon><?php echo ($_SESSION['User']); ?>
-                    <?php ?>
+                <a style="color:white; display: flex; width: 200px;">
+                    <iconify-icon icon="gg:profile" width="32" height="32"></iconify-icon><?php 
+                    require('Function\getEmployeeName.php');
+                    echo getEmployeeName($_SESSION['User']); ?>
                 </a>
             </div>
             <div>
@@ -95,6 +96,12 @@ if (!$_SESSION["UserID"]) {
                     <?php
                     require('C:\xampp\XAMXUN\htdocs\webLathe\config\condb.php');
                     $query = "SELECT * FROM user ORDER BY ID asc" or die("Error:");
+                    $query = "
+                        SELECT u.*,e.Employee_name,e.Employee_surname,l.License_name
+                        FROM user as u 
+                        INNER JOIN  employee as e ON u.Employee_id = e.Employee_id
+                        INNER JOIN  license as l ON u.License_id = l.License_id
+                        ORDER BY e.Employee_id,l.License_id asc";
                     $result = mysqli_query($con, $query);
                     while ($values = mysqli_fetch_assoc($result)) {
                     ?>
@@ -102,9 +109,8 @@ if (!$_SESSION["UserID"]) {
                             <td><?php echo $values["ID"]; ?></td>
                             <td><?php echo $values["Username"]; ?></td>
                             <td><?php echo md5($values["Password"]); ?></td>
-                            <td><?php echo $values["Firstname"]; ?></td>
-                            <td><?php echo $values["Lastname"]; ?></td>
-                            <td><?php echo $values["Userlevel"]; ?></td>
+                            <td><?php echo $values["Employee_name"].$values["Employee_surname"]; ?></td>
+                            <td><?php echo $values["License_name"]; ?></td>
                             <td>
                                 <a href="Edit_User_Name/Edit_User_Name.php?ID=<?php echo $values["ID"]; ?>" class="btn btn-primary">
                                     <iconify-icon icon="el:file-edit"></iconify-icon>

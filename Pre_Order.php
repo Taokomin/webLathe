@@ -31,8 +31,9 @@ if (!$_SESSION["UserID"]) {
             </div>
             <div>
                 <a style="color:white; display: flex; width: 200px;">
-                    <iconify-icon icon="gg:profile" width="32" height="32"></iconify-icon><?php echo ($_SESSION['User']); ?>
-                    <?php ?>
+                    <iconify-icon icon="gg:profile" width="32" height="32"></iconify-icon><?php
+                                                                                            require('Function\getEmployeeName.php');
+                                                                                            echo getEmployeeName($_SESSION['User']); ?>
                 </a>
             </div>
             <div>
@@ -124,8 +125,10 @@ if (!$_SESSION["UserID"]) {
                         <th>วันที่สั่ง</th>
                         <th>สินค้าที่สั่งทำ</th>
                         <th>จำนวน</th>
-                        <th>รหัสหน่วยนับ</th>
-                        <th>รหัสลูกค้า</th>
+                        <th>หน่วยนับ</th>
+                        <th>ราคา</th>
+                        <th>หน่วยนับ</th>
+                        <th>ชื่อลูกค้า</th>
                         <th>ชื่อพนักงาน</th>
                         <th>การดำเนินการ</th>
                     </tr>
@@ -133,27 +136,38 @@ if (!$_SESSION["UserID"]) {
                 <tbody>
                     <?php
                     require('C:\xampp\XAMXUN\htdocs\webLathe\config\condb.php');
-                    $query = "
-                    SELECT po.*, u.Unit_name, c.Customer_name,c.Customer_surname
-                    FROM pre_order AS po
-                    INNER JOIN unit AS u ON po.Unit_id = u.Unit_id
-                    INNER JOIN customer AS c ON po.Customer_id = c.Customer_id
-                    ORDER BY u.Unit_id, c.Customer_id ASC;
-                    ";
+                    $query = "SELECT po.*, pod.PreOrder_detail, pod.PreOrder_quantity, u.Unit_id, u3.Unit_name AS Counting_unit_name,
+          pod.PreOrder_price, u2.Unit_id AS Price_unit_id, u4.Unit_name AS Price_unit_name,
+          pod.PreOrder_quantity, c.Customer_name, c.Customer_surname, e.Employee_name, e.Employee_surname
+          FROM pre_order AS po
+          INNER JOIN pre_order_detail AS pod ON po.PreOrder_id = pod.PreOrder_id
+          INNER JOIN unit AS u ON pod.Counting_unit = u.Unit_id
+          INNER JOIN unit AS u2 ON pod.Price_unit = u2.Unit_id
+          INNER JOIN unit AS u3 ON pod.Counting_unit = u3.Unit_id
+          INNER JOIN unit AS u4 ON pod.Price_unit = u4.Unit_id
+          INNER JOIN customer AS c ON po.Customer_id = c.Customer_id
+          INNER JOIN employee AS e ON po.Employee_id = e.Employee_id
+          ORDER BY po.PreOrder_id ASC;"; 
+
+
                     $result = mysqli_query($con, $query);
+                    $i = 1;
                     while ($values = mysqli_fetch_assoc($result)) {
                     ?>
                         <tr>
-                            <td><?php echo $values["Auto_number"]; ?></td>
-                            <td><?php echo $values["PreOrder_id"]; ?></td>
-                            <td><?php echo date("d/m/Y", strtotime($values["PreOrder_day"]. " UTC")); ?></td>
-                            <td><?php echo $values["PreOrder_detail"]; ?></td>
-                            <td><?php echo $values["PreOrder_quantity"]; ?></td>
-                            <td><?php echo $values["Unit_name"]; ?></td>
-                            <td><?php echo $values["Customer_name"] . " " . $values["Customer_surname"]; ?></td>
-                            <td><?php echo $values["Employee_id"]; ?></td>
-                            <td>
-                            <a href="Pdf_Pre_Order_id.php?Auto_number=<?php echo $values['Auto_number']; ?>" class="btn btn-warning"><iconify-icon icon="bxs:file-pdf" style="width: 14px; height: 14px"></iconify-icon></a>
+                            <td align="center"><?php echo $i++; ?></td>
+                            <td align="center"><?php echo $values["PreOrder_id"]; ?></td>
+                            <td align="center"><?php echo date("d/m/Y", strtotime($values["PreOrder_day"] . " UTC")); ?></td>
+                            <td align="center"><?php echo $values["PreOrder_detail"]; ?></td>
+                            <td align="center"><?php echo $values["PreOrder_quantity"]; ?></td>
+                            <td align="center"><?php echo $values["Counting_unit_name"]; ?></td>
+                            <td align="center"><?php echo $values["PreOrder_price"]; ?></td>
+                            <td align="center"><?php echo $values["Price_unit_name"]; ?></td>
+                            <td align="center"><?php echo $values["Customer_name"] . " " . $values["Customer_surname"]; ?></td>
+                            <td align="center"><?php echo $values["Employee_name"] . " " . $values["Employee_surname"]; ?></td>
+                            <td align="center">
+
+                                <!-- <a href="Pdf_Pre_Order_id.php?Auto_number=<?php echo $values['Auto_number']; ?>" class="btn btn-warning"><iconify-icon icon="bxs:file-pdf" style="width: 14px; height: 14px"></iconify-icon></a> -->
                                 <a href="Edit_Pre_Order/Edit_Pre_Order.php?PreOrder_id=<?php echo $values["PreOrder_id"]; ?>" class="btn btn-primary">
                                     <iconify-icon icon="el:file-edit"></iconify-icon>
                                 </a>

@@ -22,7 +22,7 @@ $values = mysqli_fetch_assoc($result);
         <h1 class="mt-5">แก้ไขข้อมูลพนักงาน</h1>
         <hr>
         <form action="ProcEme.php" method="post">
-        <input type="hidden" value="<?php echo $values["Employee_id"]; ?>" name="Employee_id">
+            <input type="hidden" value="<?php echo $values["Employee_id"]; ?>" name="Employee_id">
             <div class="mb-3">
                 <!-- <label for="Auto_number" class="form-label">ลำดับ</label> -->
                 <input type="hidden" class="form-control" name="Auto_number" value="<?php echo $values['Auto_number']; ?>" readonly>
@@ -76,34 +76,13 @@ $values = mysqli_fetch_assoc($result);
             </script>
             <div class="mb-3">
                 <label for="Employee_address" class="form-label">ที่อยู่พนักงาน</label>
-                <input type="text" class="form-control" name="Employee_address" value="<?php echo $values['Employee_number']; ?>" required>
-            </div>
-            <?php
-            require('C:\xampp\XAMXUN\htdocs\webLathe\config\condb.php');
-            $sql2 = $con;
-            $query2 = "SELECT * FROM employee_type ORDER BY EmployeeType_id asc";
-            $result2 = mysqli_query($sql2, $query2);
-            $default_EmployeeType_id = "";
-            if (isset($values['EmployeeType_id'])) {
-                $default_EmployeeType_id = $values['EmployeeType_id'];
-            }
-            ?>
-            <div class="mb-3">
-                <label for="EmployeeType_id" class="form-label">เลือกคำนำหน้าชื่อ</label>
-                <select class="form-select" aria-label="Default select example" name="EmployeeType_id"  required>
-                    <option value="">-กรุณาเลือก-</option>
-                    <?php foreach ($result2 as $results) { ?>
-                        <?php $selected = ($results["EmployeeType_id"] == $default_EmployeeType_id) ? "selected" : ""; ?>
-                        <option value="<?php echo $results["EmployeeType_id"]; ?>" <?php echo $selected; ?>>
-                            <?php echo $results["EmployeeType_name"]; ?>
-                        </option>
-                    <?php } ?>
-                </select>
+                <input type="text" class="form-control" name="Employee_address" value="<?php echo $values['Employee_address']; ?>" required>
             </div>
             <div class="mb-3">
-                <label for="Employee_license" class="form-label">สิทธิ์การใช้งาน</label>
-                <input type="email" class="form-control" name="Employee_license" value="พนักงาน" readonly>
+                <!-- <label for="Employee_license" class="form-label">สิทธิการใช้งาน</label> -->
+                <input type="hidden" class="form-control" name="Employee_license" value="LC01" required>
             </div>
+
             <div class="modal-footer">
                 <button type="submit" class="btn btn-success ">แก้ไขข้อมูล </button>
                 <a type="button" class="btn btn-danger " href="..\Employee.php">ยกเลิก</a>

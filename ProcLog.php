@@ -14,16 +14,16 @@ if (isset($_POST['Username'])) {
         $row = mysqli_fetch_array($result);
 
         $_SESSION["UserID"] = $row["ID"];
-        $_SESSION["User"] = $row["Firstname"] . " " . $row["Lastname"];
-        $_SESSION["Userlevel"] = $row["Userlevel"];
+        $_SESSION["User"] = $row["Employee_id"];
+        $_SESSION["Userlevel"] = $row["License_id"];
 
-        if ($_SESSION["Userlevel"] == "E") {
+        if ($_SESSION["Userlevel"] == "LC03") {
 
             Header("Location: executive.php");
-        } else if ($_SESSION["Userlevel"] == "M") {
+        } else if ($_SESSION["Userlevel"] == "LC02") {
 
             Header("Location: manager.php");
-        } else if ($_SESSION["Userlevel"] == "P") {
+        } else if ($_SESSION["Userlevel"] == "LC01") {
 
             Header("Location: index.php");
         } else {

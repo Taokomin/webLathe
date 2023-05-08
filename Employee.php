@@ -30,9 +30,10 @@ if (!$_SESSION["UserID"]) {
                     </li>
             </div>
             <div>
-            <a style="color:white; display: flex; width: 200px;">
-                    <iconify-icon icon="gg:profile" width="32" height="32"></iconify-icon><?php echo ($_SESSION['User']); ?>
-                    <?php ?>
+                <a style="color:white; display: flex; width: 200px;">
+                    <iconify-icon icon="gg:profile" width="32" height="32"></iconify-icon><?php 
+                    require('Function\getEmployeeName.php');
+                    echo getEmployeeName($_SESSION['User']); ?>
                 </a>
             </div>
             <div>
@@ -121,12 +122,12 @@ if (!$_SESSION["UserID"]) {
                     <tr>
                         <th>ลำดับ</th>
                         <th>รหัสพนักงาน</th>
-                        <th>รหัสคำนำหน้าชื่อ</th>
+                        <th>คำนำหน้าชื่อ</th>
                         <th>ชื่อพนักงาน</th>
                         <th>นามสกุลพนักงาน</th>
                         <th>เบอร์โทรพนักงาน</th>
                         <th>ที่อยู่พนักงาน</th>
-                        <th>รหัสประเภทพนักงาน</th>
+                        <th>ประเภทพนักงาน</th>
                         <th style="width: 2%;">สิทธิ์การใช้งาน</th>
                         <th>การดำเนินการ</th>
                     </tr>
@@ -157,7 +158,7 @@ if (!$_SESSION["UserID"]) {
                                 <a href="Edit_Employee/Edit_Employee.php?Employee_id=<?php echo $values["Employee_id"]; ?>" class="btn btn-primary">
                                     <iconify-icon icon="el:file-edit"></iconify-icon>
                                 </a>
-                                <a onclick="return confirm('คุณแน่ใจหรือว่าต้องการลบรายการนี้?')" href="Delete_Prefix_Name/Delete_Prefix_Name.php?Employee_id=<?php echo $values["Employee_id"]; ?>" class='btn btn-danger'>
+                                <a onclick="return confirm('คุณแน่ใจหรือว่าต้องการลบรายการนี้?')" href="Delete_Employee/Delete_Employee.php?Employee_id=<?php echo $values["Employee_id"]; ?>" class='btn btn-danger'>
                                     <iconify-icon icon="ant-design:delete-outlined"></iconify-icon>
                                 </a>
                             </td>
@@ -179,8 +180,6 @@ if (!$_SESSION["UserID"]) {
         <script>
             $(document).ready(function() {
                 $('#customer_table').DataTable({
-                    "scrollX": true,
-                    "scrollY": "200px",
                     "oLanguage": {
                         "sLengthMenu": "แสดง _MENU_ เร็คคอร์ด ต่อหน้า",
                         "sZeroRecords": "ไม่เจอข้อมูลที่ค้นหา",

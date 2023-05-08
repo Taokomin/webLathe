@@ -1,7 +1,18 @@
 <?php
 require('C:\xampp\XAMXUN\htdocs\webLathe\config\condb.php');
 $PreOrder_id = $_GET["PreOrder_id"];
-$sql = "SELECT * FROM pre_order WHERE PreOrder_id = '$PreOrder_id'";
+$sql = "SELECT po.*, pod.PreOrder_detail, pod.PreOrder_quantity, u.Unit_id, u3.Unit_name AS Counting_unit_name,
+pod.PreOrder_price, u2.Unit_id AS Price_unit_id, u4.Unit_name AS Price_unit_name,
+pod.PreOrder_quantity, c.Customer_name, c.Customer_surname, e.Employee_name, e.Employee_surname
+FROM pre_order AS po
+INNER JOIN pre_order_detail AS pod ON po.PreOrder_id = pod.PreOrder_id
+INNER JOIN unit AS u ON pod.Counting_unit = u.Unit_id
+INNER JOIN unit AS u2 ON pod.Price_unit = u2.Unit_id
+INNER JOIN unit AS u3 ON pod.Counting_unit = u3.Unit_id
+INNER JOIN unit AS u4 ON pod.Price_unit = u4.Unit_id
+INNER JOIN customer AS c ON po.Customer_id = c.Customer_id
+INNER JOIN employee AS e ON po.Employee_id = e.Employee_id
+ORDER BY po.PreOrder_id ASC;";
 $result = mysqli_query($con, $sql);
 $values = mysqli_fetch_assoc($result);
 ?>
@@ -33,20 +44,16 @@ if (!$_SESSION["UserID"]) {
         <div class="container">
             <h1 class="mt-5">แก้ไขข้อมูลสั่งสินค้าจากลูกค้า</h1>
             <hr>
-            <form action="ProcPoe.php" method="post">
-                <div class="mb-3">
-                    <!-- <label for="Auto_number" class="form-label">ลำดับ</label> -->
-                    <input type="hidden" class="form-control" name="Auto_number" value="<?php echo $values['Auto_number']; ?>" readonly>
-                </div>
-                <div class="mb-3">
+            <form action="ProcPoi.php" method="post">
+                <div class="mb-3" style="display: inline-block;width : 166px;">
                     <label for="PreOrder_id" class="form-label">รหัสสั่งสินค้าจากลูกค้า</label>
-                    <input type="text" class="form-control" name="PreOrder_id" value="<?php echo $values['PreOrder_id']; ?>" readonly>
+                    <input type="text" class="form-control" name="PreOrder_id" value="<?php echo (increaseIdPo($GLOBALS['PreOrder_id'])); ?>" readonly>
                 </div>
-                <div class="mb-3">
+                <div class="mb-3" style="display: inline-block;width : 166px;">
                     <label for="PreOrder_day" class="form-label">วันที่สั่ง</label>
-                    <input type="date" class="form-control" name="PreOrder_day" id="PreOrder_day" value="<?php echo $values['PreOrder_day']; ?>" required>
+                    <input type="date" class="form-control" name="PreOrder_day" id="PreOrder_day" value="<?php echo date('Y-m-d'); ?>" required>
                     <script type='text/javascript'>
-                        var highlight_dates = ['1-5-2020', '11-5-2020', '18-5-2020', '28-5-2020'];
+                        var highlight_dates = ['1-5-2020', '11-5-2020', '18-5-2020', '28-5-2020', '1-7-2023', '15-7-2023'];
                         $(document).ready(function() {
                             $('#PreOrder_day').PreOrder_day({
                                 beforeShowDay: function(date) {
@@ -64,78 +71,142 @@ if (!$_SESSION["UserID"]) {
                         });
                     </script>
                 </div>
-                <div class="mb-3">
-                    <label for="PreOrder_detail" class="form-label">สินค้าที่สั่งทำ</label>
-                    <input type="text" class="form-control" name="PreOrder_detail" value="<?php echo $values['PreOrder_detail']; ?>" required>
+                <div id="products">
+                    <div class="product">
+                        <div class="mb-3" style="display: inline-block;width : 166px;">
+                            <label for="product1_detail" class="form-label">รหัสรายการสั่งสินค้า</label>
+                            <input type="text" class="form-control" name="product_PreOrder_detail_id[]" value="<?php echo (increaseIdPod($GLOBALS['PreOrder_detail_id'])); ?>" readonly>
+                        </div>
+                        <div class="mb-3" style="display: inline-block;width : 166px;">
+                            <label for="product1_detail" class="form-label">สินค้าที่สั่งทำ</label>
+                            <input type="text" class="form-control" name="product_PreOrder_detail[]" required>
+                        </div>
+                        <div class="mb-3" style="display: inline-block;width : 120px;">
+                            <label for="product1_PreOrder_quantity" class="form-label">จำนวน</label>
+                            <input type="tel" class="form-control" name="product_PreOrder_quantity[]" required pattern="[0-9]+" onkeypress="return isNumberKey(event)">
+                        </div>
+                        <?php
+                        require('C:\xampp\XAMXUN\htdocs\webLathe\config\condb.php');
+                        $sql1 = $con;
+                        $query1 = "SELECT * FROM unit ORDER BY Unit_id asc";
+                        $result1 = mysqli_query($sql1, $query1);
+                        ?>
+                        <div class="mb-3" style="display: inline-block;width : 166px;">
+                            <label for="product1_Counting_unit" class="form-label">เลือกหน่วยนับ</label>
+                            <select class="form-select" aria-label="Default select example" name="product_Counting_unit[]" required>
+                                <option value="">-กรุณาเลือก-</option>
+                                <?php foreach ($result1 as $results) { ?>
+                                    <option value="<?php echo $results["Unit_id"]; ?>">
+                                        <?php echo $results["Unit_name"]; ?>
+                                    </option>
+                                <?php } ?>
+                            </select>
+                        </div>
+                        <div class="mb-3" style="display: inline-block;width : 120px;">
+                            <label for="product1_PreOrder_price" class="form-label">ราคา</label>
+                            <input type="text" class="form-control" name="product_PreOrder_price[]" required onkeypress="return isNumberKey(event)">
+                        </div>
+                        <?php
+                        require('C:\xampp\XAMXUN\htdocs\webLathe\config\condb.php');
+                        $sql1 = $con;
+                        $query1 = "SELECT * FROM unit ORDER BY Unit_id asc";
+                        $result1 = mysqli_query($sql1, $query1);
+                        ?>
+                        <div class="mb-3" style="display: inline-block;width : 166px;">
+                            <label for="product1_Price_unit" class="form-label">เลือกหน่วยนับ</label>
+                            <select class="form-select" aria-label="Default select example" name="product_Price_unit[]" required>
+                                <option value="">-กรุณาเลือก-</option>
+                                <?php foreach ($result1 as $results) { ?>
+                                    <option value="<?php echo $results["Unit_id"]; ?>">
+                                        <?php echo $results["Unit_name"]; ?>
+                                    </option>
+                                <?php } ?>
+                            </select>
+                        </div>
+
+                    </div>
                 </div>
-                <div class="mb-3">
-                    <label for="PreOrder_quantity" class="form-label">จำนวน</label>
-                    <input type="tel" class="form-control" name="PreOrder_quantity" value="<?php echo $values['PreOrder_quantity']; ?>" required pattern="[0-9]+" onkeypress="return isNumberKey(event)">
-                </div>
+                <button type="button" onclick="addProduct()" class="btn btn-primary">เพิ่มรายการสั่งซื้อ</button>
+                <br><br>
                 <script>
-                    function isNumberKey(evt) {
-                        var charCode = (evt.which) ? evt.which : event.keyCode;
-                        if (charCode > 31 && (charCode < 48 || charCode > 57)) {
-                            return false;
-                        }
-                        return true;
+                    function addProduct() {
+                        // Find the products container
+                        const productsContainer = document.querySelector("#products");
+
+                        // Clone the first product element
+                        const newProduct = productsContainer.firstElementChild.cloneNode(true);
+
+                        // Find all input elements and clear their values
+                        const inputElements = newProduct.querySelectorAll("input");
+                        inputElements.forEach((input) => {
+                            input.value = "";
+                        });
+
+                        // Find all select elements and set their selected index to 0
+                        const selectElements = newProduct.querySelectorAll("select");
+                        selectElements.forEach((select) => {
+                            select.selectedIndex = 0;
+                        });
+
+                        // Update the order item code
+                        const lastProduct = productsContainer.lastElementChild;
+                        const lastProductCode = lastProduct.querySelector('[name="product_PreOrder_detail_id[]"]').value;
+                        const newProductCode = 'POD' + (parseInt(lastProductCode.substr(3)) + 1).toString().padStart(2, '0');
+                        newProduct.querySelector('[name="product_PreOrder_detail_id[]"]').value = newProductCode;
+
+                        // Append the new product to the products container
+                        productsContainer.appendChild(newProduct);
                     }
                 </script>
-                <?php
-                require('C:\xampp\XAMXUN\htdocs\webLathe\config\condb.php');
-                $sql1 = $con;
-                $query1 = "SELECT * FROM unit ORDER BY Unit_id asc";
-                $result1 = mysqli_query($sql1, $query1);
-                $default_Unit_id = "";
-                if (isset($values['Unit_id'])) {
-                    $default_Unit_id = $values['Unit_id'];
-                }
-                ?>
-                <div class="mb-3">
-                    <label for="Unit_id" class="form-label">เลือกหน่วยนับ</label>
-                    <select class="form-select" aria-label="Default select example" name="Unit_id" required>
-                        <option value="">-กรุณาเลือก-</option>
-                        <?php foreach ($result1 as $results) { ?>
-                            <?php $selected = ($results["Unit_id"] == $default_Unit_id) ? "selected" : ""; ?>
-                            <option value="<?php echo $results["Unit_id"]; ?>" <?php echo $selected; ?>>
-                                <?php echo $results["Unit_name"]; ?>
-                            </option>
-                        <?php } ?>
-                    </select>
-                </div>
+
                 <?php
                 require('C:\xampp\XAMXUN\htdocs\webLathe\config\condb.php');
                 $sql2 = $con;
                 $query2 = "SELECT Customer_id, Customer_name, Customer_surname FROM customer ORDER BY Customer_id ASC";
                 $result2 = mysqli_query($sql2, $query2);
-                $default_Customer_id = "";
-                if (isset($values['Customer_id'])) {
-                    $default_Customer_id = $values['Customer_id'];
-                }
                 ?>
-                <div class="mb-3">
+                <div class="mb-3" style="display: inline-block;">
                     <label for="Customer_id" class="form-label">ชื่อลูกค้า</label>
                     <select class="form-select" aria-label="Default select example" name="Customer_id" required>
                         <option value="">-กรุณาเลือก-</option>
                         <?php foreach ($result2 as $results) { ?>
-                            <?php $selected = ($results["Customer_id"] == $default_Customer_id) ? "selected" : ""; ?>
-                            <option value="<?php echo $results["Customer_id"]; ?>" <?php echo $selected; ?>>
+                            <option value="<?php echo $results["Customer_id"]; ?>">
                                 <?php echo $results["Customer_name"] . " " . $results["Customer_surname"]; ?>
                             </option>
                         <?php } ?>
                     </select>
                 </div>
+                <?php
 
-                <div class="mb-3">
+                function getEmployeeName($userId)
+                {
+                    require('C:\xampp\XAMXUN\htdocs\webLathe\config\condb.php');
+                    $db = $con;
+
+
+                    $query = "SELECT CONCAT(Employee_name, ' ', Employee_surname) AS full_name FROM employee WHERE Employee_id = ?";
+                    $stmt = $db->prepare($query);
+                    $stmt->bind_param('s', $userId);
+                    $stmt->execute();
+                    $result = $stmt->get_result();
+                    $row = $result->fetch_assoc();
+
+                    return $row['full_name'];
+                }
+
+                ?>
+
+                <div class="mb-3" style="display: inline-block;">
                     <label for="Employee_id" class="form-label">ชื่อพนักงาน</label>
-                    <input type="email" class="form-control" name="Employee_id" value="<?php echo ($_SESSION['User']); ?> <?php ?>" readonly>
+                    <input type="text" class="form-control" value="<?php echo getEmployeeName($_SESSION['User']); ?>" readonly>
+                    <input type="hidden" class="form-control" name="Employee_id" value="<?php echo ($_SESSION['User']); ?> <?php ?>" readonly>
                 </div>
+
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-success ">แก้ไขข้อมูล </button>
+                    <button type="submit" class="btn btn-success ">เพิ่มข้อมูล </button>
                     <a type="button" class="btn btn-danger " href="..\Pre_Order.php">ยกเลิก</a>
                 </div>
             </form>
-
         </div>
         <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous">
         </script>

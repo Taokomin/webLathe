@@ -30,9 +30,10 @@ if (!$_SESSION["UserID"]) {
                     </li>
             </div>
             <div>
-            <a style="color:white; display: flex; width: 200px;">
-                    <iconify-icon icon="gg:profile" width="32" height="32"></iconify-icon><?php echo ($_SESSION['User']); ?>
-                    <?php ?>
+                <a style="color:white; display: flex; width: 200px;">
+                    <iconify-icon icon="gg:profile" width="32" height="32"></iconify-icon><?php 
+                    require('Function\getEmployeeName.php');
+                    echo getEmployeeName($_SESSION['User']); ?>
                 </a>
             </div>
             <div>
@@ -78,7 +79,7 @@ if (!$_SESSION["UserID"]) {
                             </ul>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link active" href="customer_order.php">ข้อมูลการสั่งซื้อสินค้าจากลูกค้า</a>
+                            <a class="nav-link active" href="Pre_Order.php">ข้อมูลการสั่งซื้อสินค้าจากลูกค้า</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link active" href="Deliver.php">ข้อมูลการส่งมอบสินค้า</a>
@@ -123,8 +124,8 @@ if (!$_SESSION["UserID"]) {
                         <th>รหัสวัสดุและอุปกรณ์</th>
                         <th>ชื่อวัสดุและอุปกรณ์</th>
                         <th>จำนวน</th>
-                        <th>รหัสหน่วยนับ</th>
-                        <th>รหัสประเภทวัสดุและอุปกรณ์</th>
+                        <th>หน่วยนับ</th>
+                        <th>ประเภทวัสดุและอุปกรณ์</th>
                         <th>การดำเนินการ</th>
                     </tr>
                 </thead>
@@ -152,7 +153,7 @@ if (!$_SESSION["UserID"]) {
                                 <a href="Edit_Material/Edit_Material.php?Material_id=<?php echo $values["Material_id"]; ?>" class="btn btn-primary">
                                     <iconify-icon icon="el:file-edit"></iconify-icon>
                                 </a>
-                                <a onclick="return confirm('คุณแน่ใจหรือว่าต้องการลบรายการนี้?')" href="Delete_Prefix_Name/Delete_Prefix_Name.php?Material_id=<?php echo $values["Material_id"]; ?>" class='btn btn-danger'>
+                                <a onclick="return confirm('คุณแน่ใจหรือว่าต้องการลบรายการนี้?')" href="Delete_Material/Delete_Material.php?Material_id=<?php echo $values["Material_id"]; ?>" class='btn btn-danger'>
                                     <iconify-icon icon="ant-design:delete-outlined"></iconify-icon>
                                 </a>
                             </td>

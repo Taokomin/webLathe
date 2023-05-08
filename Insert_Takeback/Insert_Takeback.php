@@ -112,7 +112,7 @@ if (!$_SESSION["UserID"]) {
                     </script>
                 </div>
                 <?php
-                require('C:\xampp\XAMXUN\htdocs\Lathe_application\config\condb.php');
+                require('C:\xampp\XAMXUN\htdocs\webLathe\config\condb.php');
                 $query1 = "SELECT pm.*, u.Unit_name
                 FROM pickup_material AS pm
                 INNER JOIN unit AS u ON pm.Unit_id = u.Unit_id
@@ -127,7 +127,7 @@ if (!$_SESSION["UserID"]) {
                                         } ?>">-กรุณาเลือก-</option>
                         <?php foreach ($result1 as $results) { ?>
                             <option value="<?php echo $results["PickupMaterial_id"]; ?>">
-                                <?php echo $results["Material_name"]. " " .$results["PickupMaterial_quantity"]. " " .$results["Unit_name"]; ?>
+                                <?php echo $results["PickupMaterial_id"] ; ?>
                             </option>
                         <?php } ?>
                     </select>
@@ -149,7 +149,7 @@ if (!$_SESSION["UserID"]) {
                     }
                 </script>
                 <?php
-                require('C:\xampp\XAMXUN\htdocs\Lathe_application\config\condb.php');
+                require('C:\xampp\XAMXUN\htdocs\webLathe\config\condb.php');
 
                 // Check if a PickupMaterial_id has been selected
                 if (isset($_GET['PickupMaterial_id'])) {

@@ -30,9 +30,10 @@ if (!$_SESSION["UserID"]) {
                     </li>
             </div>
             <div>
-            <a style="color:white; display: flex; width: 200px;">
-                    <iconify-icon icon="gg:profile" width="32" height="32"></iconify-icon><?php echo ($_SESSION['User']); ?>
-                    <?php ?>
+                <a style="color:white; display: flex; width: 200px;">
+                    <iconify-icon icon="gg:profile" width="32" height="32"></iconify-icon><?php 
+                    require('Function\getEmployeeName.php');
+                    echo getEmployeeName($_SESSION['User']); ?>
                 </a>
             </div>
             <div>
@@ -121,7 +122,7 @@ if (!$_SESSION["UserID"]) {
                     <tr>
                         <th>ลำดับ</th>
                         <th>รหัสคู่ค้า</th>
-                        <th>รหัสคำนำหน้าชื่อ</th>
+                        <th>คำนำหน้าชื่อ</th>
                         <th>ชื่อผู้ติดต่อ</th>
                         <th>นามสกุลผู้ติดต่อ</th>
                         <th>เบอร์โทรผู้ติดต่อ</th>

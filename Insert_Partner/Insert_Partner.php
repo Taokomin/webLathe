@@ -115,8 +115,12 @@ function increaseNumPr($Auto_number)
                 }
             </script>
             <div class="mb-3">
-                <label for="Partner_company " class="form-label">บริษัทคู่ค้า</label>
-                <input type="text" class="form-control" name="Partner_company " required>
+                <label for="Partner_company" class="form-label">อีเมล</label>
+                <input type="email" class="form-control" name="Partner_email" required>
+            </div>
+            <div class="mb-3">
+                <label for="Partner_company" class="form-label">บริษัทคู่ค้า</label>
+                <input type="text" class="form-control" name="Partner_company" required>
             </div>
             <div class="modal-footer">
                 <button type="submit" class="btn btn-success ">เพิ่มข้อมูล </button>

@@ -55,23 +55,44 @@ function increaseNumPn($ID)
             </div>
             <div class="mb-3">
                 <label for="Password" class="form-label">รหัสผ่าน</label>
-                <input type="text" class="form-control" name="Password" required>
+                <input type="password" class="form-control" name="Password" id="password" required>
             </div>
             <div class="mb-3">
-                <label for="Firstname" class="form-label">ชื่อ</label>
-                <input type="text" class="form-control" name="Firstname" required>
+                <label for="ConfirmPassword" class="form-label">ยืนยันรหัสผ่าน</label>
+                <input type="password" class="form-control" name="ConfirmPassword" id="confirmPassword" required>
             </div>
+            <?php
+            require('C:\xampp\XAMXUN\htdocs\webLathe\config\condb.php');
+            $sql1 = $con;
+            $query1 = "SELECT * FROM employee ORDER BY Employee_id asc";
+            $result1 = mysqli_query($sql1, $query1);
+            ?>
             <div class="mb-3">
-                <label for="Lastname" class="form-label">นามสกุล</label>
-                <input type="text" class="form-control" name="Lastname" required>
+                <label for="Employee_id" class="form-label">ชื่อ-นามสกุล</label>
+                <select class="form-select" aria-label="Default select example" name="Employee_id" required>
+                    <option value="">-กรุณาเลือก-</option>
+                    <?php foreach ($result1 as $results) { ?>
+                        <option value="<?php echo $results["Employee_id"]; ?>">
+                            <?php echo $results["Employee_name"] . " " . $results["Employee_surname"]; ?>
+                        </option>
+                    <?php } ?>
+                </select>
             </div>
+            <?php
+            require('C:\xampp\XAMXUN\htdocs\webLathe\config\condb.php');
+            $sql2 = $con;
+            $query2 = "SELECT * FROM license ORDER BY License_id asc";
+            $result2 = mysqli_query($sql2, $query2);
+            ?>
             <div class="mb-3">
-                <label for="Userlevel" class="form-label">สิทธิการใช้งาน</label>
-                <select class="form-select" aria-label="Default select example" name="Userlevel" required>
-                    <option value="">-กรุณาเลือกสิทธิการใช้งาน-</option>
-                    <option value="P">บุคลากร(P)</option>
-                    <option value="M">ผู้จัดการ(M)</option>
-                    <option value="E">ผู้บริหาร(E)</option>
+                <label for="License_id" class="form-label">สิทธิการใช้งาน</label>
+                <select class="form-select" aria-label="Default select example" name="License_id" required>
+                    <option value="">-กรุณาเลือก-</option>
+                    <?php foreach ($result2 as $results) { ?>
+                        <option value="<?php echo $results["License_id"]; ?>">
+                            <?php echo $results["License_name"]; ?>
+                        </option>
+                    <?php } ?>
                 </select>
             </div>
             <div class="modal-footer">
@@ -79,7 +100,6 @@ function increaseNumPn($ID)
                 <a type="button" class="btn btn-danger " href="..\User.php">ยกเลิก</a>
             </div>
         </form>
-
     </div>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous">
     </script>

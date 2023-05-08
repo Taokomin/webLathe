@@ -1,26 +1,29 @@
 <?php
-require('C:\xampp\XAMXUN\htdocs\webLathe\config\condb.php');
+if ($_POST["Password"] === $_POST["Confirm_password"]) {
+    $ID = $_POST['ID'];
+    $Username = $_POST['Username'];
+    $Password = $_POST['Password'];
+    $Employee_id = $_POST['Employee_id'];
+    $License_id = $_POST['License_id'];
 
-$ID = $_POST['ID'];
-$Username = $_POST['Username'];
-$Password = $_POST['Password'];
-$Firstname = $_POST['Firstname'];
-$Lastname 	= $_POST['Lastname'];
-$Userlevel = $_POST['Userlevel'];
+    require('C:\xampp\XAMXUN\htdocs\webLathe\config\condb.php');
+    $con;
+    if (!$con) {
+        die("Connection failed: " . mysqli_connect_error());
+    }
 
-$sql = "INSERT INTO user (ID, Username, Password, Firstname, Lastname, Userlevel)
-        VALUES ('$ID', '$Username', '$Password', '$Firstname', '$Lastname', '$Userlevel')";
 
-if (mysqli_query($con, $sql)) {
-    echo "<script type='text/javascript'>";
-    echo "alert('เพิ่มข้อมูลเรียบร้อยแล้ว');";
-    echo "window.location.href='../User.php';";
-    echo "</script>";
+    $sql = "INSERT INTO user (ID,Username, Password, Employee_id,License_id) VALUES ('$ID','$Username', '$Password', '$Employee_id', '$License_id')";
+
+    if (mysqli_query($con, $sql)) {
+        echo "<script>alert('ใส่ข้อมูลเรียบร้อยแล้ว!')</script>";
+    } else {
+        echo "<script>alert('เกิดข้อผิดพลาดในการแทรกข้อมูล: " . mysqli_error($con) . "')</script>";
+    }
+
+
+    mysqli_close($con);
 } else {
-    echo "<script type='text/javascript'>";
-    echo "alert('บางอย่างผิดพลาด! กรุณาลองอีกครั้ง!');";
-    echo "window.location.href='Insert_User_Name.php';";
-    echo "</script>";
-}
 
-exit();
+    echo "<script>alert('รหัสผ่านไม่ตรงกัน.')</script>";
+}
