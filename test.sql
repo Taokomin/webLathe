@@ -328,3 +328,22 @@ CREATE TABLE `accept_material_detail` (
   AcceptMaterial_id varchar(4) NOT NULL,
   FOREIGN KEY (AcceptMaterial_id) REFERENCES accept_material(AcceptMaterial_id)
 );
+
+CREATE TABLE `pickup_material` ( 
+  PickupMaterial_id varchar(4) PRIMARY KEY, 
+  PickupMaterial_day varchar(10) NOT NULL, 
+  Employee_id varchar(4) NOT NULL,
+  PickupMaterial_status varchar(4) NOT NULL
+);
+
+CREATE TABLE `pickup_material_detail` ( 
+  PickupMaterial_detail_id varchar(5) PRIMARY KEY, 
+  AcceptMaterial_detail varchar(100) NULL,
+  PickupMaterial_quantity int NOT NULL, 
+  Counting_unit varchar(10) NOT NULL, 
+  AcceptMaterial_price int NOT NULL, 
+  Price_unit varchar(4) NOT NULL,
+  MaterialType_id varchar(4) NOT NULL,
+  AcceptMaterial_id varchar(4) NOT NULL,
+  FOREIGN KEY (AcceptMaterial_id) REFERENCES accept_material(AcceptMaterial_id)
+);

@@ -292,7 +292,7 @@ if (!$_SESSION["UserID"]) {
     }
 
     .container {
-        max-width: 1100px;
+        max-width: 1000px;
         width: 100%;
         background-color: #fff;
         padding: 25px 30px;

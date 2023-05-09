@@ -31,9 +31,9 @@ if (!$_SESSION["UserID"]) {
             </div>
             <div>
                 <a style="color:white; display: flex; width: 200px;">
-                    <iconify-icon icon="gg:profile" width="32" height="32"></iconify-icon><?php 
-                    require('Function\getEmployeeName.php');
-                    echo getEmployeeName($_SESSION['User']); ?>
+                    <iconify-icon icon="gg:profile" width="32" height="32"></iconify-icon><?php
+                                                                                            require('Function\getEmployeeName.php');
+                                                                                            echo getEmployeeName($_SESSION['User']); ?>
                 </a>
             </div>
             <div>
@@ -122,11 +122,11 @@ if (!$_SESSION["UserID"]) {
                     <tr>
                         <th style="width: 2%;">ลำดับ</th>
                         <th>รหัสสั่งซื้อวัสดุและอุปกรณ์</th>
-                        <th>วันที่สั่งซื้อ</th>
-                        <th>รหัสสั่งซื้อวัสดุและอุปกรณ์</th>
-                        <th>วันที่สั่งซื้อ</th>
-                        <th style="width: 4%;">ชื่อวัสดุและอุปกรณ์</th>
+                        <th>วันที่รับเข้า</th>
+                        <th>ชื่อวัสดุและอุปกรณ์</th>
                         <th style="width: 2%;">จำนวน</th>
+                        <th style="width: 2%;">หน่วยนับ</th>
+                        <th style="width: 2%;">ราคา</th>
                         <th style="width: 2%;">หน่วยนับ</th>
                         <th>ประเภทวัสดุและอุปกรณ์</th>
                         <th>ชื่อคู่ค้า</th>
@@ -137,25 +137,36 @@ if (!$_SESSION["UserID"]) {
                 <tbody>
                     <?php
                     require('C:\xampp\XAMXUN\htdocs\webLathe\config\condb.php');
-                    $query = "SELECT am.*, m.Material_name
-                    FROM accept_material as am
-                    INNER JOIN material AS m ON am.Material_id = m.Material_id
-                    ORDER BY m.Material_id ASC";
+                    $query = "SELECT am.*,amd.AcceptMaterial_detail,amd.AcceptMaterial_quantity,amd.AcceptMaterial_price,m.Material_name, p.Partner_name, p.Partner_surname, e.Employee_name, e.Employee_surname, 
+          mt.MaterialType_name,
+          u.Unit_id AS Counting_unit_id, u.Unit_name AS Counting_unit_name,
+          u2.Unit_id AS Price_unit_id, u2.Unit_name AS Price_unit_name
+          FROM accept_material AS am
+          INNER JOIN accept_material_detail AS amd ON am.AcceptMaterial_id = amd.AcceptMaterial_id
+          INNER JOIN material AS m ON amd.AcceptMaterial_detail = m.Material_id 
+          INNER JOIN material_type AS mt ON amd.MaterialType_id = mt.MaterialType_id
+          INNER JOIN unit AS u ON amd.Counting_unit = u.Unit_id
+          INNER JOIN unit AS u2 ON amd.Price_unit = u2.Unit_id
+          INNER JOIN partner AS p ON am.Partner_id = p.Partner_id
+          INNER JOIN employee AS e ON am.Employee_id = e.Employee_id
+          ORDER BY am.AcceptMaterial_day DESC";
+
                     $result = mysqli_query($con, $query);
+                    $i = 1;
                     while ($values = mysqli_fetch_assoc($result)) {
                     ?>
                         <tr>
-                            <td><?php echo $values["Auto_number"]; ?></td>
-                            <td><?php echo $values["AcceptMaterial_id"]; ?></td>
-                            <td><?php echo date("d/m/Y", strtotime($values["AcceptMaterial_day"] . " UTC")); ?></td>
-                            <td><?php echo $values["BuyMaterial_id"]; ?></td>
-                            <td><?php echo date("d/m/Y", strtotime($values["BuyMaterial_day"] . " UTC")); ?></td>
-                            <td><?php echo $values["Material_name"]; ?></td>
-                            <td><?php echo $values["BuyMaterial_quantity"]; ?></td>
-                            <td><?php echo $values["Unit_id"]; ?></td>
-                            <td><?php echo $values["MaterialType_id"]; ?></td>
-                            <td><?php echo $values["Partner_id"]; ?></td>
-                            <td><?php echo $values["Employee_id"]; ?></td>
+                            <td align="center"><?php echo $i++; ?></td>
+                            <td align="center"><?php echo $values["AcceptMaterial_id"]; ?></td>
+                            <td align="center"><?php echo date("d/m/Y", strtotime($values["AcceptMaterial_day"] . " UTC")); ?></td>
+                            <td align="center"><?php echo $values["Material_name"]; ?></td>
+                            <td align="center"><?php echo $values["AcceptMaterial_quantity"]; ?></td>
+                            <td align="center"><?php echo $values["Counting_unit_name"]; ?></td>
+                            <td align="center"><?php echo $values["AcceptMaterial_price"]; ?></td>
+                            <td align="center"><?php echo $values["Price_unit_name"]; ?></td>
+                            <td align="center"><?php echo $values["MaterialType_name"]; ?></td>
+                            <td align="center"><?php echo $values["Employee_name"] . " " . $values["Employee_surname"]; ?></td>
+                            <td align="center"><?php echo $values["Partner_name"] . " " . $values["Partner_surname"]; ?></td>
                             <td>
                                 <a href="Edit_Accept_Material/Edit_Accept_Material.php?AcceptMaterial_id=<?php echo $values["AcceptMaterial_id"]; ?>" class="btn btn-primary">
                                     <iconify-icon style="width: 14px; height: 14px" icon="el:file-edit"></iconify-icon>
@@ -169,6 +180,7 @@ if (!$_SESSION["UserID"]) {
                     }
                     ?>
                 </tbody>
+
             </table>
         </div>
         <script src="https://code.iconify.design/iconify-icon/1.0.0/iconify-icon.min.js"></script>
