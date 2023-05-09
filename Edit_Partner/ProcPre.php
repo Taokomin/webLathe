@@ -4,7 +4,7 @@ $Auto_number = $_POST['Auto_number'];
 $Partner_id = $_POST['Partner_id'];
 $Prefix_id = $_POST['Prefix_id'];
 $Partner_name = $_POST['Partner_name'];
-$Partner_surname 	= $_POST['Partner_surname '];
+$Partner_surname = $_POST['Partner_surname'];
 $Partner_number = $_POST['Partner_number'];
 $Partner_company = $_POST['Partner_company'];
 $sql = "UPDATE partner SET  Prefix_id = '$Prefix_id',Partner_name = '$Partner_name',Partner_surname = '$Partner_surname',Partner_number = '$Partner_number',Partner_company = '$Partner_company' WHERE Partner_id = '$Partner_id'";

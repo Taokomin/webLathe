@@ -16,6 +16,9 @@ if ($result1['Prefix_id']) {
   $GLOBALS['Prefix_id'] = $result1['Prefix_id'];
 }
 
+
+
+
 // Get the latest Auto_number from the database
 $sql2 = "SELECT Auto_number FROM prefix_name ORDER BY Auto_number DESC LIMIT 1";
 $query2 = $con->query($sql2);

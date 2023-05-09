@@ -53,17 +53,17 @@ $values = mysqli_fetch_assoc($result);
             $sql1 = $con;
             $query1 = "SELECT * FROM unit ORDER BY Unit_id asc";
             $result1 = mysqli_query($sql1, $query1);
-            $default_Unit_id = "";
-            if (isset($values['Unit_id'])) {
-                $default_Unit_id = $values['Unit_id'];
+            $default_Counting_unit = "";
+            if (isset($values['Counting_unit'])) {
+                $default_Counting_unit = $values['Counting_unit'];
             }
             ?>
             <div class="mb-3">
-                <label for="Unit_id" class="form-label">เลือกหน่วยนับ</label>
-                <select class="form-select" aria-label="Default select example" name="Unit_id" required>
+                <label for="Counting_unit" class="form-label">เลือกหน่วยนับ</label>
+                <select class="form-select" aria-label="Default select example" name="Counting_unit" required>
                     <option value="">-กรุณาเลือก-</option>
                     <?php foreach ($result1 as $results) { ?>
-                        <?php $selected = ($results["Unit_id"] == $default_Unit_id) ? "selected" : ""; ?>
+                        <?php $selected = ($results["Unit_id"] == $default_Counting_unit) ? "selected" : ""; ?>
                         <option value="<?php echo $results["Unit_id"]; ?>" <?php echo $selected; ?>>
                             <?php echo $results["Unit_name"]; ?>
                         </option>
@@ -93,7 +93,32 @@ $values = mysqli_fetch_assoc($result);
                     <?php } ?>
                 </select>
             </div>
-
+            <?php
+            require('C:\xampp\XAMXUN\htdocs\webLathe\config\condb.php');
+            $sql3 = $con;
+            $query3 = "SELECT * FROM unit ORDER BY Unit_id asc";
+            $result3 = mysqli_query($sql3, $query3);
+            $default_Price_unit = "";
+            if (isset($values['Price_unit'])) {
+                $default_Price_unit = $values['Price_unit'];
+            }
+            ?>
+            <div class="mb-3">
+                <label for="Material_price" class="form-label">ราคา</label>
+                <input type="text" class="form-control" name="Material_price" value="<?php echo $values["Material_price"]; ?>" required pattern="[0-9]+" onkeypress="return isNumberKey(event)">
+            </div>
+            <div class="mb-3">
+                <label for="Price_unit" class="form-label">เลือกหน่วยนับ</label>
+                <select class="form-select" aria-label="Default select example" name="Price_unit" required>
+                    <option value="">-กรุณาเลือก-</option>
+                    <?php foreach ($result3 as $results) { ?>
+                        <?php $selected = ($results["Unit_id"] == $default_Price_unit) ? "selected" : ""; ?>
+                        <option value="<?php echo $results["Unit_id"]; ?>" <?php echo $selected; ?>>
+                            <?php echo $results["Unit_name"]; ?>
+                        </option>
+                    <?php } ?>
+                </select>
+            </div>
             <div class="modal-footer">
                 <button type="submit" class="btn btn-success ">เพิ่มข้อมูล </button>
                 <a type="button" class="btn btn-danger " href="..\Material.php">ยกเลิก</a>

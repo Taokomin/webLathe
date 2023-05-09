@@ -6,9 +6,9 @@ if (!$con) {
 
 $GLOBALS['maxIdLength'] = 3;
 $GLOBALS['BuyMaterial_id'] = '0';
-$GLOBALS['Auto_number'] = '0';
+$GLOBALS['BuyMaterial_detail_id'] = '0';
 
-// Get the latest BuyMaterial_id from the database
+
 $sql1 = "SELECT BuyMaterial_id FROM buy_material ORDER BY BuyMaterial_id DESC LIMIT 1";
 $query1 = $con->query($sql1);
 $result1 = $query1->fetch_assoc();
@@ -16,16 +16,13 @@ if (isset($result1['BuyMaterial_id'])) {
     $GLOBALS['BuyMaterial_id'] = $result1['BuyMaterial_id'];
 }
 
-
-// Get the latest Auto_number from the database
-$sql2 = "SELECT Auto_number FROM buy_material ORDER BY Auto_number DESC LIMIT 1";
-$query2 = $con->query($sql2);
-$result2 = $query2->fetch_assoc();
-if (isset($result2['Auto_number'])) {
-    $GLOBALS['Auto_number'] = $result2['Auto_number'];
+$sql1 = "SELECT BuyMaterial_detail_id FROM buy_material_detail ORDER BY BuyMaterial_detail_id DESC LIMIT 1";
+$query1 = $con->query($sql1);
+$result1 = $query1->fetch_assoc();
+if (isset($result1['BuyMaterial_detail_id'])) {
+    $GLOBALS['BuyMaterial_detail_id'] = $result1['BuyMaterial_detail_id'];
 }
 
-// Function to increase BuyMaterial_id
 function increaseIdBm($BuyMaterial_id)
 {
     $matchId = preg_replace('/[^0-9]/', '', $BuyMaterial_id);
@@ -41,15 +38,22 @@ function increaseIdBm($BuyMaterial_id)
 
     return 'BM' . $concatIdWithString;
 }
-
-// Function to increase Auto_number
-function increaseNumBm($Auto_number)
+function increaseIdBmd($BuyMaterial_detail_id)
 {
-    $matchId = preg_replace('/[^0-9]/', '', $Auto_number);
-    $Int = (int)$matchId;
-    $newId = $Int + 1;
-    return $newId;
+    $matchId = preg_replace('/[^0-9]/', '', $BuyMaterial_detail_id);
+    $convertStringToInt = (int)$matchId;
+
+    $concatIdWithString = (string)($convertStringToInt + 1);
+
+    $round = 0;
+    while ($round < $GLOBALS['maxIdLength'] - strlen($concatIdWithString)) {
+        $concatIdWithString = '0' . $concatIdWithString;
+        $round += 1;
+    }
+
+    return 'BMD' . $concatIdWithString;
 }
+
 ?>
 <?php session_start(); ?>
 <?php
@@ -73,22 +77,18 @@ if (!$_SESSION["UserID"]) {
         <div class="container">
             <h1 class="mt-5">เพิ่มข้อมูลสั่งซื้อวัสดุและอุปกรณ์</h1>
             <hr>
-            <form action="ProcBmi.php" method="POST">
-                <div class="mb-3">
-                    <!-- <label for="Auto_number" class="form-label">ลำดับ</label> -->
-                    <input type="hidden" class="form-control" name="Auto_number" value="<?php echo (increaseNumBm($GLOBALS['Auto_number'])); ?>" readonly>
-                </div>
-                <div class="mb-3">
-                    <label for="BuyMaterial_id" class="form-label">รหัสสั่งซื้อวัสดุและอุปกรณ์</label>
+            <form action="ProcBmi.php" method="post">
+                <div class="mb-3" style="display: inline-block;width : 166px;">
+                    <label for="BuyMaterial_id" class="form-label">รหัสสั่งสินค้าจากลูกค้า</label>
                     <input type="text" class="form-control" name="BuyMaterial_id" value="<?php echo (increaseIdBm($GLOBALS['BuyMaterial_id'])); ?>" readonly>
                 </div>
-                <div class="mb-3">
-                    <label for="BuyMaterial_day" class="form-label">วันที่สั่งซื้อ</label>
+                <div class="mb-3" style="display: inline-block;width : 166px;">
+                    <label for="BuyMaterial_day" class="form-label">วันที่สั่ง</label>
                     <input type="date" class="form-control" name="BuyMaterial_day" id="BuyMaterial_day" value="<?php echo date('Y-m-d'); ?>" required>
                     <script type='text/javascript'>
                         var highlight_dates = ['1-5-2020', '11-5-2020', '18-5-2020', '28-5-2020', '1-7-2023', '15-7-2023'];
                         $(document).ready(function() {
-                            $('#BuyMaterial_day').BuyMaterial_day({
+                            $('#BuyMaterial_day').PreOrder_day({
                                 beforeShowDay: function(date) {
                                     var month = date.getMonth() + 1;
                                     var year = date.getFullYear();
@@ -104,97 +104,182 @@ if (!$_SESSION["UserID"]) {
                         });
                     </script>
                 </div>
-                <?php
-                require('C:\xampp\XAMXUN\htdocs\Lathe_application\config\condb.php');
-                $sql = $con;
-                $query = "SELECT * FROM material ORDER BY Material_id asc";
-                $result = mysqli_query($sql, $query);
-                ?>
-                <div class="mb-3">
-                    <label for="Material_id" class="form-label">เลือกรหัสวัสดุและอุปกรณ์</label>
-                    <select class="form-select" aria-label="Default select example" name="Material_id" required>
-                        <option value="">-กรุณาเลือก-</option>
-                        <?php foreach ($result as $results) { ?>
-                            <option value="<?php echo $results["Material_id"]; ?>">
-                                <?php echo $results["Material_name"]; ?>
-                            </option>
-                        <?php } ?>
-                    </select>
+                <div id="products">
+                    <div class="product">
+                        <div class="mb-3" style="display: inline-block;width : 166px;">
+                            <label for="product1_BuyMaterial_detail_id" class="form-label">รหัสรายการสั่งสินค้า</label>
+                            <input type="text" class="form-control" name="product_BuyMaterial_detail_id[]" value="<?php echo (increaseIdBmd($GLOBALS['BuyMaterial_detail_id'])); ?>" readonly>
+                        </div>
+                        <?php
+                        require('C:\xampp\XAMXUN\htdocs\webLathe\config\condb.php');
+                        $sql1 = $con;
+                        $query1 = "SELECT * FROM material ORDER BY Material_id asc";
+                        $result1 = mysqli_query($sql1, $query1);
+                        ?>
+                        <div class="mb-3" style="display: inline-block;width : 166px;">
+                            <label for="product1_BuyMaterial_detail" class="form-label">เลือกหน่วยนับ</label>
+                            <select class="form-select" aria-label="Default select example" name="product_BuyMaterial_detail[]" required>
+                                <option value="">-กรุณาเลือก-</option>
+                                <?php foreach ($result1 as $results) { ?>
+                                    <option value="<?php echo $results["Material_id"]; ?>">
+                                        <?php echo $results["Material_name"]; ?>
+                                    </option>
+                                <?php } ?>
+                            </select>
+                        </div>
+                        <div class="mb-3" style="display: inline-block;width : 120px;">
+                            <label for="product1_BuyMaterial_quantity" class="form-label">จำนวน</label>
+                            <input type="tel" class="form-control" name="product_BuyMaterial_quantity[]" required pattern="[0-9]+" onkeypress="return isNumberKey(event)">
+                        </div>
+                        <?php
+                        require('C:\xampp\XAMXUN\htdocs\webLathe\config\condb.php');
+                        $sql1 = $con;
+                        $query1 = "SELECT * FROM unit ORDER BY Unit_id asc";
+                        $result1 = mysqli_query($sql1, $query1);
+                        ?>
+                        <div class="mb-3" style="display: inline-block;width : 166px;">
+                            <label for="product1_Counting_unit" class="form-label">เลือกหน่วยนับ</label>
+                            <select class="form-select" aria-label="Default select example" name="product_Counting_unit[]" required>
+                                <option value="">-กรุณาเลือก-</option>
+                                <?php foreach ($result1 as $results) { ?>
+                                    <option value="<?php echo $results["Unit_id"]; ?>">
+                                        <?php echo $results["Unit_name"]; ?>
+                                    </option>
+                                <?php } ?>
+                            </select>
+                        </div>
+                        <div class="mb-3" style="display: inline-block;width : 120px;">
+                            <label for="product1_BuyMaterial_price" class="form-label">ราคา</label>
+                            <input type="text" class="form-control" name="product_BuyMaterial_price[]" required onkeypress="return isNumberKey(event)">
+                        </div>
+                        <?php
+                        require('C:\xampp\XAMXUN\htdocs\webLathe\config\condb.php');
+                        $sql1 = $con;
+                        $query1 = "SELECT * FROM unit ORDER BY Unit_id asc";
+                        $result1 = mysqli_query($sql1, $query1);
+                        ?>
+                        <div class="mb-3" style="display: inline-block;width : 166px;">
+                            <label for="product1_Price_unit" class="form-label">เลือกหน่วยนับ</label>
+                            <select class="form-select" aria-label="Default select example" name="product_Price_unit[]" required>
+                                <option value="">-กรุณาเลือก-</option>
+                                <?php foreach ($result1 as $results) { ?>
+                                    <option value="<?php echo $results["Unit_id"]; ?>">
+                                        <?php echo $results["Unit_name"]; ?>
+                                    </option>
+                                <?php } ?>
+                            </select>
+                        </div>
+                        <?php
+                        require('C:\xampp\XAMXUN\htdocs\webLathe\config\condb.php');
+                        $sql1 = $con;
+                        $query1 = "SELECT * FROM material_type ORDER BY MaterialType_id asc";
+                        $result1 = mysqli_query($sql1, $query1);
+                        ?>
+                        <div class="mb-3" style="display: inline-block;width : 166px;">
+                            <label for="product1_Price_unit" class="form-label">ประเภทวัสดุอุปกรณ์</label>
+                            <select class="form-select" aria-label="Default select example" name="product_Price_unit[]" required>
+                                <option value="">-กรุณาเลือก-</option>
+                                <?php foreach ($result1 as $results) { ?>
+                                    <option value="<?php echo $results["MaterialType_id"]; ?>">
+                                        <?php echo $results["MaterialType_name"]; ?>
+                                    </option>
+                                <?php } ?>
+                            </select>
+                        </div>
+                    </div>
                 </div>
-                <div class="mb-3">
-                    <label for="BuyMaterial_quantity" class="form-label">จำนวน</label>
-                    <input type="text" class="form-control" name="BuyMaterial_quantity" required onkeypress="return isNumberKey(event)">
-                </div>
+                <button type="button" onclick="addProduct()" class="btn btn-primary">เพิ่มรายการสั่งซื้อ</button>
+                <br><br>
                 <script>
-                    function isNumberKey(evt) {
-                        var charCode = (evt.which) ? evt.which : event.keyCode;
-                        if (charCode > 31 && (charCode < 48 || charCode > 57)) {
-                            return false;
-                        }
-                        return true;
+                    function addProduct() {
+                        // Find the products container
+                        const productsContainer = document.querySelector("#products");
+
+                        // Clone the first product element
+                        const newProduct = productsContainer.firstElementChild.cloneNode(true);
+
+                        // Find all input elements and clear their values
+                        const inputElements = newProduct.querySelectorAll("input");
+                        inputElements.forEach((input) => {
+                            input.value = "";
+                        });
+
+                        // Find all select elements and set their selected index to 0
+                        const selectElements = newProduct.querySelectorAll("select");
+                        selectElements.forEach((select) => {
+                            select.selectedIndex = 0;
+                        });
+
+                        // Update the order item code
+                        const lastProduct = productsContainer.lastElementChild;
+                        const lastProductCode = lastProduct.querySelector('[name="product_BuyMaterial_detail_id[]"]').value;
+                        const newProductCode = 'BMD' + (parseInt(lastProductCode.substr(3)) + 1).toString().padStart(2, '0');
+                        newProduct.querySelector('[name="product_BuyMaterial_detail_id[]"]').value = newProductCode;
+
+                        // Append the new product to the products container
+                        productsContainer.appendChild(newProduct);
                     }
                 </script>
+
                 <?php
-                require('C:\xampp\XAMXUN\htdocs\Lathe_application\config\condb.php');
-                $sql1 = $con;
-                $query1 = "SELECT * FROM unit ORDER BY Unit_id asc";
-                $result1 = mysqli_query($sql1, $query1);
-                ?>
-                <div class="mb-3">
-                    <label for="Unit_id" class="form-label">รหัสหน่วยนับ</label>
-                    <select class="form-select" aria-label="Default select example" name="Unit_id" required>
-                        <option value="">-กรุณาเลือก-</option>
-                        <?php foreach ($result1 as $results) { ?>
-                            <option value="<?php echo $results["Unit_id"]; ?>">
-                                <?php echo $results["Unit_name"]; ?>
-                            </option>
-                        <?php } ?>
-                    </select>
-                </div>
-                <?php
-                require('C:\xampp\XAMXUN\htdocs\Lathe_application\config\condb.php');
+                require('C:\xampp\XAMXUN\htdocs\webLathe\config\condb.php');
                 $sql2 = $con;
-                $query2 = "SELECT * FROM material_type ORDER BY MaterialType_id asc";
+                $query2 = "SELECT Partner_id, Partner_name, Partner_surname FROM Partner ORDER BY Partner_id ASC";
                 $result2 = mysqli_query($sql2, $query2);
                 ?>
-                <div class="mb-3">
-                    <label for="MaterialType_id" class="form-label">เลือกคำนำหน้าชื่อ</label>
-                    <select class="form-select" aria-label="Default select example" name="MaterialType_id" required>
-                        <option value="">-กรุณาเลือก-</option>
-                        <?php foreach ($result2 as $results) { ?>
-                            <option value="<?php echo $results["MaterialType_id"]; ?>">
-                                <?php echo $results["MaterialType_name"]; ?>
-                            </option>
-                        <?php } ?>
-                    </select>
-                </div>
-                <div class="mb-3">
-                    <label for="Employee_id" class="form-label">ชื่อพนักงาน</label>
-                    <input type="text" class="form-control" name="Employee_id" value="<?php echo ($_SESSION['User']); ?> <?php ?>" readonly>
-                </div>
-                <?php
-                require('C:\xampp\XAMXUN\htdocs\Lathe_application\config\condb.php');
-                $sql3 = $con;
-                $query3 = "SELECT * FROM partner ORDER BY Partner_id  asc";
-                $result3 = mysqli_query($sql3, $query3);
-                ?>
-                <div class="mb-3">
-                    <label for="Partner_id" class="form-label">รหัสคู่ค้า</label>
+                <div class="mb-3" style="display: inline-block;">
+                    <label for="Partner_id" class="form-label">ชื่อคู่ค้า</label>
                     <select class="form-select" aria-label="Default select example" name="Partner_id" required>
                         <option value="">-กรุณาเลือก-</option>
-                        <?php foreach ($result3 as $results) { ?>
+                        <?php foreach ($result2 as $results) { ?>
                             <option value="<?php echo $results["Partner_id"]; ?>">
-                                <?php echo $results["Partner_name"]; ?> <?php echo $results["Partner_surname"]; ?>
+                                <?php echo $results["Partner_name"] . " " . $results["Partner_surname"]; ?>
                             </option>
                         <?php } ?>
                     </select>
                 </div>
-                <div class="mb-3">
+                <?php
+
+                function getEmployeeName($userId)
+                {
+                    require('C:\xampp\XAMXUN\htdocs\webLathe\config\condb.php');
+                    $db = $con;
+
+
+                    $query = "SELECT CONCAT(Employee_name, ' ', Employee_surname) AS full_name FROM employee WHERE Employee_id = ?";
+                    $stmt = $db->prepare($query);
+                    $stmt->bind_param('s', $userId);
+                    $stmt->execute();
+                    $result = $stmt->get_result();
+                    $row = $result->fetch_assoc();
+
+                    return $row['full_name'];
+                }
+
+                ?>
+
+                <div class="mb-3" style="display: inline-block;">
+                    <label for="Employee_id" class="form-label">ชื่อพนักงาน</label>
+                    <input type="text" class="form-control" value="<?php echo getEmployeeName($_SESSION['User']); ?>" readonly>
+                    <input type="hidden" class="form-control" name="Employee_id" value="<?php echo ($_SESSION['User']); ?> <?php ?>" readonly>
+                </div>
+                <?php
+                require('C:\xampp\XAMXUN\htdocs\webLathe\config\condb.php');
+                $sql3 = $con;
+                $query3 = "SELECT status_id,status_name FROM status ORDER BY status_id ASC";
+                $result3 = mysqli_query($sql3, $query3);
+                ?>
+                <div class="mb-3" style="display: inline-block;">
                     <label for="BuyMaterial_status" class="form-label">สถานะ</label>
-                    <input type="text" class="form-control" name="BuyMaterial_status" value="รออนุมัติ" readonly>
+                    <?php while ($row = mysqli_fetch_assoc($result3)) : ?>
+                        <?php if ($row['status_id'] === 'ST01') : ?>
+                            <input type="hidden" class="form-control" name="BuyMaterial_status" value="<?php echo $row['status_id']; ?>" readonly>
+                            <input type="text" class="form-control" value="<?php echo $row['status_name']; ?>" readonly>
+                        <?php endif; ?>
+                    <?php endwhile; ?>
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-success">เพิ่มข้อมูล </button>
+                    <button type="submit" class="btn btn-success ">เพิ่มข้อมูล </button>
                     <a type="button" class="btn btn-danger " href="..\Buy_Material.php">ยกเลิก</a>
                 </div>
             </form>
@@ -218,6 +303,7 @@ if (!$_SESSION["UserID"]) {
     }
 
     body {
+        height: 100vh;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -226,7 +312,7 @@ if (!$_SESSION["UserID"]) {
     }
 
     .container {
-        max-width: 700px;
+        max-width: 1000px;
         width: 100%;
         background-color: #fff;
         padding: 25px 30px;

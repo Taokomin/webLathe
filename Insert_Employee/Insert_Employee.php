@@ -124,7 +124,7 @@ function increaseNumEm($Auto_number)
             $result2 = mysqli_query($sql2, $query2);
             ?>
             <div class="mb-3">
-                <label for="EmployeeType_id" class="form-label">เลือกคำนำหน้าชื่อ</label>
+                <label for="EmployeeType_id" class="form-label">เลือกประเภทพนักงาน</label>
                 <select class="form-select" aria-label="Default select example" name="EmployeeType_id" required>
                     <option value="">-กรุณาเลือก-</option>
                     <?php foreach ($result2 as $results) { ?>
@@ -135,7 +135,6 @@ function increaseNumEm($Auto_number)
                 </select>
             </div>
             <div class="mb-3">
-                <!-- <label for="Employee_license" class="form-label">สิทธิการใช้งาน</label> -->
                 <input type="hidden" class="form-control" name="Employee_license" value="LC01" required>
             </div>
             <div class="modal-footer">

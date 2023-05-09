@@ -100,8 +100,8 @@ function increaseNumMr($Auto_number)
             $result1 = mysqli_query($sql1, $query1);
             ?>
             <div class="mb-3">
-                <label for="Unit_id" class="form-label">เลือกหน่วยนับ</label>
-                <select class="form-select" aria-label="Default select example" name="Unit_id" required>
+                <label for="Counting_unit" class="form-label">เลือกหน่วยนับ</label>
+                <select class="form-select" aria-label="Default select example" name="Counting_unit" required>
                     <option value="">-กรุณาเลือก-</option>
                     <?php foreach ($result1 as $results) { ?>
                         <option value="<?php echo $results["Unit_id"]; ?>">
@@ -127,7 +127,27 @@ function increaseNumMr($Auto_number)
                     <?php } ?>
                 </select>
             </div>
-
+            <div class="mb-3">
+                <label for="Material_price" class="form-label">ราคา</label>
+                <input type="text" class="form-control" name="Material_price" required pattern="[0-9]+" onkeypress="return isNumberKey(event)">
+            </div>
+            <?php
+            require('C:\xampp\XAMXUN\htdocs\Lathe_application\config\condb.php');
+            $sql3 = $con;
+            $query3 = "SELECT * FROM unit ORDER BY Unit_id asc";
+            $result3 = mysqli_query($sql3, $query3);
+            ?>
+            <div class="mb-3">
+                <label for="Price_unit" class="form-label">เลือกหน่วยนับ</label>
+                <select class="form-select" aria-label="Default select example" name="Price_unit" required>
+                    <option value="">-กรุณาเลือก-</option>
+                    <?php foreach ($result3 as $results) { ?>
+                        <option value="<?php echo $results["Unit_id"]; ?>">
+                            <?php echo $results["Unit_name"]; ?>
+                        </option>
+                    <?php } ?>
+                </select>
+            </div>
             <div class="modal-footer">
                 <button type="submit" class="btn btn-success ">เพิ่มข้อมูล </button>
                 <a type="button" class="btn btn-danger " href="..\Material.php">ยกเลิก</a>

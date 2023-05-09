@@ -31,9 +31,7 @@ if (!$_SESSION["UserID"]) {
             </div>
             <div>
                 <a style="color:white; display: flex; width: 200px;">
-                    <iconify-icon icon="gg:profile" width="32" height="32"></iconify-icon><?php
-                                                                                            require('Function\getEmployeeName.php');
-                                                                                            echo getEmployeeName($_SESSION['User']); ?>
+                    <iconify-icon icon="gg:profile" width="32" height="32"></iconify-icon><?php require('Function\getEmployeeName.php');echo getEmployeeName($_SESSION['User']); ?>
                 </a>
             </div>
             <div>
@@ -121,7 +119,7 @@ if (!$_SESSION["UserID"]) {
                 <thead>
                     <tr>
                         <th>ลำดับ</th>
-                        <th>รหัสสั่งสินค้า </th>
+                        <th>รหัสสั่งสินค้า</th>
                         <th>วันที่สั่ง</th>
                         <th>สินค้าที่สั่งทำ</th>
                         <th>จำนวน</th>
@@ -136,7 +134,7 @@ if (!$_SESSION["UserID"]) {
                 <tbody>
                     <?php
                     require('C:\xampp\XAMXUN\htdocs\webLathe\config\condb.php');
-                    $query = "SELECT po.*, pod.PreOrder_detail, pod.PreOrder_quantity, u.Unit_id, u3.Unit_name AS Counting_unit_name,
+                    $query = "SELECT po.*,pod.PreOrder_detail, pod.PreOrder_quantity, u.Unit_id AS Counting_unit_id, u3.Unit_name AS Counting_unit_name,
           pod.PreOrder_price, u2.Unit_id AS Price_unit_id, u4.Unit_name AS Price_unit_name,
           pod.PreOrder_quantity, c.Customer_name, c.Customer_surname, e.Employee_name, e.Employee_surname
           FROM pre_order AS po
@@ -167,7 +165,7 @@ if (!$_SESSION["UserID"]) {
                             <td align="center"><?php echo $values["Employee_name"] . " " . $values["Employee_surname"]; ?></td>
                             <td align="center">
 
-                                <!-- <a href="Pdf_Pre_Order_id.php?Auto_number=<?php echo $values['Auto_number']; ?>" class="btn btn-warning"><iconify-icon icon="bxs:file-pdf" style="width: 14px; height: 14px"></iconify-icon></a> -->
+                                <a href="Pdf_Pre_Order_id.php?PreOrder_id=<?php echo $values['PreOrder_id']; ?>" class="btn btn-warning"><iconify-icon icon="bxs:file-pdf" style="width: 14px; height: 14px"></iconify-icon></a>
                                 <a href="Edit_Pre_Order/Edit_Pre_Order.php?PreOrder_id=<?php echo $values["PreOrder_id"]; ?>" class="btn btn-primary">
                                     <iconify-icon icon="el:file-edit"></iconify-icon>
                                 </a>

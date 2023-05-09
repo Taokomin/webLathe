@@ -31,9 +31,9 @@ if (!$_SESSION["UserID"]) {
             </div>
             <div>
                 <a style="color:white; display: flex; width: 200px;">
-                    <iconify-icon icon="gg:profile" width="32" height="32"></iconify-icon><?php 
-                    require('Function\getEmployeeName.php');
-                    echo getEmployeeName($_SESSION['User']); ?>
+                    <iconify-icon icon="gg:profile" width="32" height="32"></iconify-icon><?php
+                                                                                            require('Function\getEmployeeName.php');
+                                                                                            echo getEmployeeName($_SESSION['User']); ?>
                 </a>
             </div>
             <div>
@@ -123,12 +123,12 @@ if (!$_SESSION["UserID"]) {
                         <th style="width: 2%;">ลำดับ</th>
                         <th style="width: 5%;">รหัสส่งมอบ</th>
                         <th style="width: 5%;">วันที่ส่งมอบ</th>
-                        <th style="width: 5%;">รหัสสั่งสินค้า</th>
-                        <th style="width: 4%;">วันที่สั่ง</th>
-                        <th style="width: 5%;">รายละเอียดการสั่งสินค้า</th>
+                        <th style="width: 5%;">สินค้า</th>
                         <th style="width: 2%;">จำนวน</th>
                         <th style="width: 4%;">หน่วยนับ</th>
-                        <th style="width: 3%;">ลูกค้า</th>
+                        <th style="width: 2%;">ราคา</th>
+                        <th style="width: 4%;">หน่วยนับ</th>
+                        <th style="width: 3%;">ชื่อลูกค้า</th>
                         <th>ที่อยู่ที่ส่งมอบ</th>
                         <th style="width: 3%;">ชื่อพนักงาน</th>
                         <th>การดำเนินการ</th>
@@ -137,24 +137,37 @@ if (!$_SESSION["UserID"]) {
                 <tbody>
                     <?php
                     require('C:\xampp\XAMXUN\htdocs\webLathe\config\condb.php');
-                    $query = "SELECT * FROM deliver ORDER BY Deliver_id ASC";
+                    $query = "SELECT *, u.Unit_id AS Counting_unit_id, u3.Unit_name AS Counting_unit_name, u2.Unit_id AS Price_unit_id, u4.Unit_name AS Price_unit_name , c.Customer_name, c.Customer_surname, e.Employee_name, e.Employee_surname
+          FROM deliver AS d
+          INNER JOIN deliver_detail AS dd ON d.Deliver_id = dd.Deliver_id
+          INNER JOIN unit AS u ON dd.Counting_unit = u.Unit_id
+          INNER JOIN unit AS u2 ON dd.Price_unit = u2.Unit_id
+          INNER JOIN unit AS u3 ON dd.Counting_unit = u3.Unit_id
+          INNER JOIN unit AS u4 ON dd.Price_unit = u4.Unit_id
+          INNER JOIN customer AS c ON dd.Customer_id = c.Customer_id
+          INNER JOIN employee AS e ON d.Employee_id = e.Employee_id
+          ";
+
+
+
                     $result = mysqli_query($con, $query);
+                    $i = 1;
                     while ($values = mysqli_fetch_assoc($result)) {
                     ?>
                         <tr>
-                            <td><?php echo $values["Auto_number"]; ?></td>
-                            <td><?php echo $values["Deliver_id"]; ?></td>
-                            <td><?php echo date("d/m/Y", strtotime($values["Deliver_day"]. " UTC")); ?></td>
-                            <td><?php echo $values["PreOrder_id"]; ?></td>
-                            <td><?php echo date("d/m/Y", strtotime($values["PreOrder_day"] . " UTC")); ?></td>
-                            <td><?php echo $values["PreOrder_detail"]; ?></td>
-                            <td><?php echo $values["PreOrder_quantity"]; ?></td>
-                            <td><?php echo $values["Unit_id"]; ?></td>
-                            <td><?php echo $values["Customer_id"]; ?></td>
-                            <td><?php echo $values["Deliver_address"]; ?></td>
-                            <td><?php echo $values["Employee_id"]; ?></td>
-                            <td>
-                                <a href="Pdf_Deliver_id.php?Auto_number=<?php echo $values['Auto_number']; ?>" class="btn btn-warning"><iconify-icon icon="bxs:file-pdf" style="width: 14px; height: 14px"></iconify-icon></a>
+                            <td align="center"><?php echo $i++; ?></td>
+                            <td align="center"><?php echo $values["Deliver_id"]; ?></td>
+                            <td align="center"><?php echo date("d/m/Y", strtotime($values["Deliver_day"] . " UTC")); ?></td>
+                            <td align="center"><?php echo $values["Deliver_detail"]; ?></td>
+                            <td align="center"><?php echo $values["Deliver_quantity"]; ?></td>
+                            <td align="center"><?php echo $values["Counting_unit_name"]; ?></td>
+                            <td align="center"><?php echo $values["Deliver_price"]; ?></td>
+                            <td align="center"><?php echo $values["Price_unit_name"]; ?></td>
+                            <td align="center"><?php echo $values["Customer_name"] . " " . $values["Customer_surname"]; ?></td>
+                            <td align="center"><?php echo $values["Deliver_address"]; ?></td>
+                            <td align="center"><?php echo $values["Employee_name"] . " " . $values["Employee_surname"]; ?></td>
+                            <td align="center">
+                                <a href="Pdf_Deliver_id.php?Deliver_id=<?php echo $values['Deliver_id']; ?>" class="btn btn-warning"><iconify-icon icon="bxs:file-pdf" style="width: 14px; height: 14px"></iconify-icon></a>
                                 <a href="Edit_Deliver/Edit_Deliver.php?Deliver_id=<?php echo $values["Deliver_id"]; ?>" class="btn btn-primary"><iconify-icon style="width: 14px; height: 14px" icon="el:file-edit"></iconify-icon></a>
                                 <a onclick="return confirm('คุณแน่ใจหรือว่าต้องการลบรายการนี้?')" href="Delete_Deliver/Delete_Deliver.php?Deliver_id=<?php echo $values["Deliver_id"]; ?>" class='btn btn-danger'><iconify-icon style="width: 14px; height: 14px" icon="ant-design:delete-outlined"></iconify-icon></a>
                             </td>
@@ -203,7 +216,7 @@ if (!$_SESSION["UserID"]) {
     </html>
     <style>
         #deliver_table {
-            font-size: 12px;
+            font-size: 14px;
             table-layout: fixed
         }
 

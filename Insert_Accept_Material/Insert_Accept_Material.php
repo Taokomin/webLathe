@@ -16,16 +16,6 @@ if (isset($result1['AcceptMaterial_id'])) {
     $GLOBALS['AcceptMaterial_id'] = $result1['AcceptMaterial_id'];
 }
 
-
-
-$sql2 = "SELECT Auto_number FROM accept_material ORDER BY Auto_number DESC LIMIT 1";
-$query2 = $con->query($sql2);
-$result2 = $query2->fetch_assoc();
-if (isset($result2['Auto_number'])) {
-    $GLOBALS['Auto_number'] = $result2['Auto_number'];
-}
-
-
 function increaseIdAm($AcceptMaterial_id)
 {
     $matchId = preg_replace('/[^0-9]/', '', $AcceptMaterial_id);
@@ -42,14 +32,6 @@ function increaseIdAm($AcceptMaterial_id)
     return 'AM' . $concatIdWithString;
 }
 
-
-function increaseNumAm($Auto_number)
-{
-    $matchId = preg_replace('/[^0-9]/', '', $Auto_number);
-    $Int = (int)$matchId;
-    $newId = $Int + 1;
-    return $newId;
-}
 ?>
 <?php session_start(); ?>
 <?php
@@ -74,15 +56,11 @@ if (!$_SESSION["UserID"]) {
             <h1 class="mt-5">เพิ่มข้อมูลรับเข้าวัสดุและอุปกรณ์</h1>
             <hr>
             <form id="myForm" method="GET">
-                <div class="mb-3">
-                    <!-- <label for="Auto_number" class="form-label">ลำดับ</label> -->
-                    <input type="hidden" class="form-control" name="Auto_number" value="<?php echo (increaseNumAm($GLOBALS['Auto_number'])); ?>" readonly>
-                </div>
-                <div class="mb-3">
-                    <label for="AcceptMaterial_id" class="form-label">รหัสรับเข้าวัสดุและอุปกรณ์</label>
+                <div class="mb-3" style="display: inline-block;width : 166px;">
+                    <label for="AcceptMaterial_id" class="form-label">รหัสรับเข้า</label>
                     <input type="text" class="form-control" name="AcceptMaterial_id" value="<?php echo (increaseIdAm($GLOBALS['AcceptMaterial_id'])); ?>" readonly>
                 </div>
-                <div class="mb-3">
+                <div class="mb-3" style="display: inline-block;width : 166px;">
                     <label for="AcceptMaterial_day" class="form-label">วันที่รับเข้า</label>
                     <input type="date" class="form-control" name="AcceptMaterial_day" id="AcceptMaterial_day" value="<?php echo date('Y-m-d'); ?>" required>
                     <script type='text/javascript'>
@@ -106,27 +84,26 @@ if (!$_SESSION["UserID"]) {
                 </div>
                 <?php
                 require('C:\xampp\XAMXUN\htdocs\Lathe_application\config\condb.php');
-                $query1 = "SELECT bm.*, m.Material_name, u.Unit_name
-                FROM buy_material AS bm
-                INNER JOIN material AS m ON bm.Material_id = m.Material_id 
-                INNER JOIN unit AS u ON bm.Unit_id = u.Unit_id
-                WHERE BuyMaterial_status = 'อนุมัติ' ORDER BY BuyMaterial_id ASC";
+                $query1 = "SELECT bmd.* 
+                FROM buy_material_detail  as bmd 	
+                INNER JOIN buy_material as bm ON bmd.BuyMaterial_detail_id = bm.BuyMaterial_id
+                WHERE BuyMaterial_status = 'ST02' ORDER BY BuyMaterial_id ASC";
                 $result1 = mysqli_query($con, $query1);
                 ?>
-                <div class="mb-3">
-                    <label for="searchInput" class="form-label">เลือกวัสดุและอุปกรณ์</label>
-                    <select class="form-select" aria-label="Default select example" name="BuyMaterial_id" required>
-                        <option value="<?php if (isset($_GET['BuyMaterial_id'])) {
-                                            echo htmlspecialchars($_GET['BuyMaterial_id']);
+                <div class="mb-3" style="width : 166px;">
+                    <label for="searchInput" class="form-label">เลือกรหัสสั่งซื้อ</label>
+                    <select class="form-select" aria-label="Default select example" name="BuyMaterial_detail_id" required>
+                        <option value="<?php if (isset($_GET['BuyMaterial_detail_id'])) {
+                                            echo htmlspecialchars($_GET['BuyMaterial_detail_id']);
                                         } ?>">-กรุณาเลือก-</option>
                         <?php foreach ($result1 as $results) { ?>
-                            <option value="<?php echo $results["BuyMaterial_id"]; ?>">
-                                <?php echo $results["Material_name"]. " " .$results["BuyMaterial_quantity"]. " " .$results["Unit_name"]; ?>
+                            <option value="<?php echo $results["BuyMaterial_detail_id"]; ?>">
+                                <?php echo $results["BuyMaterial_detail_id"]; ?>
                             </option>
                         <?php } ?>
                     </select>
                 </div>
-                <div class="mb-3">
+                <div class="mb-3" >
                     <button type="submit" class="btn btn-primary" id="searchBtn" onclick="submitSearch()">แสดงข้อมูล</button>
                 </div>
                 <script>
@@ -165,39 +142,39 @@ if (!$_SESSION["UserID"]) {
 
                         $row = mysqli_fetch_assoc($result);
 
-                        echo '<div class="mb-3">';
+                        echo '<div class="mb-3" style="display: inline-block;width : 120px;">';
                         // echo '<label for="BuyMaterial_id" class="form-label">รหัสสั่งซื้อวัสดุและอุปกรณ์</label>';
                         echo '<input type="hidden" class="form-control" name="BuyMaterial_id" value="' . $row['BuyMaterial_id'] . '" readonly>';
                         echo '</div>';
 
-                        echo '<div class="mb-3">';
+                        echo '<div class="mb-3" style="display: inline-block;width : 120px;">';
                         // echo '<label for="BuyMaterial_day" class="form-label">วันที่สั่งซื้อ</label>';
                         echo '<input type="hidden" class="form-control" name="BuyMaterial_day" value="' . $row['BuyMaterial_day'] . '" readonly>';
                         echo '</div>'; 
 
-                        echo '<div class="mb-3">';
+                        echo '<div class="mb-3" style="display: inline-block;width : 120px;">';
                         echo '<label for="Material_id" class="form-label">รหัสวัสดุและอุปกรณ์</label>';
                         echo '<input type="text" class="form-control"  value="' . $row['Material_name'] . '" readonly>';
                         echo '<input type="hidden" class="form-control" name="Material_id" value="' . $row['Material_id'] . '" readonly>';
                         echo '</div>';
 
 
-                        echo '<div class="mb-3">';
+                        echo '<div class="mb-3" style="display: inline-block;width : 120px;">';
                         echo '<label for="BuyMaterial_quantity" class="form-label">จำนวน</label>';
                         echo '<input type="text" class="form-control" name="BuyMaterial_quantity" value="' . $row['BuyMaterial_quantity'] . '" readonly>';
                         echo '</div>';
 
-                        echo '<div class="mb-3">';
+                        echo '<div class="mb-3" style="display: inline-block;width : 120px;">';
                         echo '<label for="Unit_id" class="form-label">หน่วยนับ</label>';
                         echo '<input type="text" class="form-control" name="Unit_id" value="' . $row['Unit_name'] . '" readonly>';
                         echo '</div>';
 
-                        echo '<div class="mb-3">';
+                        echo '<div class="mb-3" style="display: inline-block;width : 120px;">';
                         echo '<label for="MaterialType_id" class="form-label">ประเภทวัสดุและอุปกรณ์</label>';
                         echo '<input type="text" class="form-control" name="MaterialType_id" value="' . $row["MaterialType_name"] . '" readonly>';
                         echo '</div>';
 
-                        echo '<div class="mb-3">';
+                        echo '<div class="mb-3" style="display: inline-block;width : 120px;">';
                         echo '<label for="Partner_id" class="form-label">ชื่อคู่ค้า</label>';
                         echo '<input type="text" class="form-control" name="Partner_id" value="' . $row["Partner_name"] . " " . $row["Partner_surname"] . '" readonly>';
                         echo '</div>';
@@ -207,9 +184,46 @@ if (!$_SESSION["UserID"]) {
                     }
                 }
                 ?>
-                <div class="mb-3">
+                <?php
+                require('C:\xampp\XAMXUN\htdocs\webLathe\config\condb.php');
+                $sql2 = $con;
+                $query2 = "SELECT Partner_id, Partner_name, Partner_surname FROM Partner ORDER BY Partner_id ASC";
+                $result2 = mysqli_query($sql2, $query2);
+                ?>
+                <div class="mb-3" style="display: inline-block;">
+                    <label for="Partner_id" class="form-label">ชื่อคู่ค้า</label>
+                    <select class="form-select" aria-label="Default select example" name="Partner_id" required>
+                        <option value="">-กรุณาเลือก-</option>
+                        <?php foreach ($result2 as $results) { ?>
+                            <option value="<?php echo $results["Partner_id"]; ?>">
+                                <?php echo $results["Partner_name"] . " " . $results["Partner_surname"]; ?>
+                            </option>
+                        <?php } ?>
+                    </select>
+                </div>
+                <?php
+                function getEmployeeName($userId)
+                {
+                    require('C:\xampp\XAMXUN\htdocs\webLathe\config\condb.php');
+                    $db = $con;
+
+
+                    $query = "SELECT CONCAT(Employee_name, ' ', Employee_surname) AS full_name FROM employee WHERE Employee_id = ?";
+                    $stmt = $db->prepare($query);
+                    $stmt->bind_param('s', $userId);
+                    $stmt->execute();
+                    $result = $stmt->get_result();
+                    $row = $result->fetch_assoc();
+
+                    return $row['full_name'];
+                }
+
+                ?>
+
+                <div class="mb-3" style="display: inline-block;width : 166px;">
                     <label for="Employee_id" class="form-label">ชื่อพนักงาน</label>
-                    <input type="text" class="form-control" name="Employee_id" value="<?php echo ($_SESSION['User']); ?> <?php ?>" readonly>
+                    <input type="text" class="form-control" value="<?php echo getEmployeeName($_SESSION['User']); ?>" readonly>
+                    <input type="hidden" class="form-control" name="Employee_id" value="<?php echo ($_SESSION['User']); ?> <?php ?>" readonly>
                 </div>
 
                 <div class="modal-footer">

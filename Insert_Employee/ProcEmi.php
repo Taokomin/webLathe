@@ -4,7 +4,7 @@ $Auto_number = $_POST['Auto_number'];
 $Employee_id = $_POST['Employee_id'];
 $Prefix_id = $_POST['Prefix_id'];
 $Employee_name = $_POST['Employee_name'];
-$Employee_surname 	= $_POST['Employee_surname '];
+$Employee_surname = $_POST['Employee_surname'];
 $Employee_number = $_POST['Employee_number'];
 $Employee_address = $_POST['Employee_address'];
 $EmployeeType_id = $_POST['EmployeeType_id'];
@@ -15,7 +15,7 @@ $Employee_license = $_POST['Employee_license'];
   Employee_id,
   Prefix_id,
   Employee_name,
-  Employee_surname ,
+  Employee_surname,
   Employee_number,
   Employee_address,
   EmployeeType_id,
@@ -27,7 +27,7 @@ $Employee_license = $_POST['Employee_license'];
   '$Employee_id',
   '$Prefix_id',
   '$Employee_name',
-  '$Employee_surname ',
+  '$Employee_surname',
   '$Employee_number',
   '$Employee_address',
   '$EmployeeType_id',

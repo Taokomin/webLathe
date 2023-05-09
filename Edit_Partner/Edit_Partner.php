@@ -21,7 +21,7 @@ $values = mysqli_fetch_assoc($result);
     <div class="container">
         <h1 class="mt-5">แก้ไขข้อมูลคู่ค้า</h1>
         <hr>
-        <form action="ProcPni.php" method="post">
+        <form action="ProcPre.php" method="post">
         <input type="hidden" value="<?php echo $values["Partner_id"]; ?>" name="Partner_id">
             <div class="mb-3">
                 <!-- <label for="Auto_number" class="form-label">ลำดับ</label> -->
@@ -79,7 +79,7 @@ $values = mysqli_fetch_assoc($result);
                 <input type="text" class="form-control" name="Partner_company" value="<?php echo $values['Partner_company']; ?>" required>
             </div>
             <div class="modal-footer">
-                <button type="submit" class="btn btn-success ">เพิ่มข้อมูล </button>
+                <button type="submit" class="btn btn-success ">แก้ไขข้อมูล </button>
                 <a type="button" class="btn btn-danger " href="..\Partner.php">ยกเลิก</a>
             </div>
         </form>

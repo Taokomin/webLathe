@@ -126,18 +126,21 @@ if (!$_SESSION["UserID"]) {
                         <th>จำนวน</th>
                         <th>หน่วยนับ</th>
                         <th>ประเภทวัสดุและอุปกรณ์</th>
+                        <th>ราคา</th>
+                        <th>หน่วยนับ</th>
                         <th>การดำเนินการ</th>
                     </tr>
                 </thead>
                 <tbody>
                     <?php
                     require('C:\xampp\XAMXUN\htdocs\webLathe\config\condb.php');
-                    $query = "
-                    SELECT m.*, u.Unit_name, mt.MaterialType_name
+                    $query = "SELECT m.*, u.Unit_id as Counting_unit, u.Unit_name as Counting_unit_name, u2.Unit_id as Price_unit , u2.Unit_name as Price_unit_name , u.Unit_name, u2.Unit_name, mt.MaterialType_name
                     FROM material as m 
-                    INNER JOIN unit as u ON m.Unit_id = u.Unit_id
+                    INNER JOIN unit as u ON m.Counting_unit = u.Unit_id
+                    INNER JOIN unit as u2 ON m.Price_unit = u2.Unit_id
                     INNER JOIN material_type as mt ON m.MaterialType_id = mt.MaterialType_id
                     ORDER BY u.Unit_id, mt.MaterialType_id ASC";
+          
 
                     $result = mysqli_query($con, $query);
                     while ($values = mysqli_fetch_assoc($result)) {
@@ -147,8 +150,10 @@ if (!$_SESSION["UserID"]) {
                             <td><?php echo $values["Material_id"]; ?></td>
                             <td><?php echo $values["Material_name"]; ?></td>
                             <td><?php echo $values["Material_quantity"]; ?></td>
-                            <td><?php echo $values["Unit_name"]; ?></td>
+                            <td><?php echo $values["Counting_unit_name"]; ?></td>
                             <td><?php echo $values["MaterialType_name"]; ?></td>
+                            <td><?php echo $values["Material_price"]; ?></td>
+                            <td><?php echo $values["Price_unit_name"]; ?></td>
                             <td>
                                 <a href="Edit_Material/Edit_Material.php?Material_id=<?php echo $values["Material_id"]; ?>" class="btn btn-primary">
                                     <iconify-icon icon="el:file-edit"></iconify-icon>

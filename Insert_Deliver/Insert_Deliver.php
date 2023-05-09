@@ -1,40 +1,39 @@
 <?php
 require('C:\xampp\XAMXUN\htdocs\webLathe\config\condb.php');
+
 if (!$con) {
     mysqli_connect_errno();
 }
 
-$GLOBALS['maxIdLength'] = 3;
-$GLOBALS['Deliver_id'] = '0';
-$GLOBALS['Auto_number'] = '0';
+$maxIdLength = 3;
+$Deliver_id = '0';
+$Deliver_detail_id = '0';
 
-// Get the latest Deliver_id from the database
 $sql1 = "SELECT Deliver_id FROM deliver ORDER BY Deliver_id DESC LIMIT 1";
 $query1 = $con->query($sql1);
 $result1 = $query1->fetch_assoc();
 if (isset($result1['Deliver_id'])) {
-    $GLOBALS['Deliver_id'] = $result1['Deliver_id'];
+    $Deliver_id = $result1['Deliver_id'];
 }
 
-
-// Get the latest Auto_number from the database
-$sql2 = "SELECT Auto_number FROM deliver ORDER BY Auto_number DESC LIMIT 1";
+$sql2 = "SELECT Deliver_detail_id FROM deliver_detail ORDER BY Deliver_detail_id DESC LIMIT 1";
 $query2 = $con->query($sql2);
 $result2 = $query2->fetch_assoc();
-if (isset($result2['Auto_number'])) {
-    $GLOBALS['Auto_number'] = $result2['Auto_number'];
+if (isset($result2['Deliver_detail_id'])) {
+    $Deliver_detail_id = $result2['Deliver_detail_id'];
 }
 
-// Function to increase Deliver_id
 function increaseIdDv($Deliver_id)
 {
-    $matchId = preg_replace('/[^0-9]/', '', $Deliver_id);
-    $convertStringToInt = (int)$matchId;
+    global $maxIdLength;
 
-    $concatIdWithString = (string)($convertStringToInt + 1);
+    $matchId = preg_replace('/[^0-9]/', '', $Deliver_id);
+    $convertStringToInt = (int) $matchId;
+
+    $concatIdWithString = (string) ($convertStringToInt + 1);
 
     $round = 0;
-    while ($round < $GLOBALS['maxIdLength'] - strlen($concatIdWithString)) {
+    while ($round < $maxIdLength - strlen($concatIdWithString)) {
         $concatIdWithString = '0' . $concatIdWithString;
         $round += 1;
     }
@@ -42,14 +41,24 @@ function increaseIdDv($Deliver_id)
     return 'DV' . $concatIdWithString;
 }
 
-// Function to increase Auto_number
-function increaseNumDv($Auto_number)
+function increaseIdDvd($Deliver_detail_id)
 {
-    $matchId = preg_replace('/[^0-9]/', '', $Auto_number);
-    $Int = (int)$matchId;
-    $newId = $Int + 1;
-    return $newId;
+    global $maxIdLength;
+
+    $matchId = preg_replace('/[^0-9]/', '', $Deliver_detail_id);
+    $convertStringToInt = (int) $matchId;
+
+    $concatIdWithString = (string) ($convertStringToInt + 1);
+
+    $round = 0;
+    while ($round < $maxIdLength - strlen($concatIdWithString)) {
+        $concatIdWithString = '0' . $concatIdWithString;
+        $round += 1;
+    }
+
+    return 'DVD' . $concatIdWithString;
 }
+
 ?>
 <?php
 require('C:\xampp\XAMXUN\htdocs\webLathe\config\condb.php');
@@ -79,26 +88,22 @@ if (!$_SESSION["UserID"]) {
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>เพิ่มข้อมูลรหัสส่งมอบ</title>
+        <title>เพิ่มข้อมูลการส่งมอบ</title>
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css" integrity="sha384-r4NyP46KrjDleawBgD5tp8Y7UzmLA05oM1iAEQ17CSuDqnUK2+k9luXQOfXJCJ4I" crossorigin="anonymous">
         <link rel="icon" href="..\picture\Title-logo.png" type="image/icon type">
     </head>
 
     <body>
         <div class="container">
-            <h1 class="mt-5">เพิ่มข้อมูลรหัสส่งมอบ</h1>
+            <h1 class="mt-5">เพิ่มข้อมูลการส่งมอบ</h1>
             <hr>
             <form id="myForm" method="GET">
-                <div class="mb-3">
-                    <!-- <label for="Auto_number" class="form-label">ลำดับ</label> -->
-                    <input type="hidden" class="form-control" name="Auto_number" value="<?php echo (increaseNumDv($GLOBALS['Auto_number'])); ?>" readonly>
-                </div>
-                <div class="mb-3">
+                <div class="mb-3" style="display: inline-block;width : 166px;">
                     <label for="Deliver_id" class="form-label">รหัสส่งมอบ</label>
                     <input type="text" class="form-control" name="Deliver_id" value="<?php echo (increaseIdDv($GLOBALS['Deliver_id'])); ?>" readonly>
                 </div>
-                <div class="mb-3">
-                    <label for="Deliver_day" class="form-label">วั่นที่สั่ง</label>
+                <div class="mb-3" style="display: inline-block;width : 166px;">
+                    <label for="Deliver_day" class="form-label">วันที่ส่งมอบ</label>
                     <input type="date" class="form-control" name="Deliver_day" id="Deliver_day" value="<?php echo date('Y-m-d'); ?>" required>
                     <script type='text/javascript'>
                         var highlight_dates = ['1-5-2020', '11-5-2020', '18-5-2020', '28-5-2020', '1-7-2023', '15-7-2023'];
@@ -120,25 +125,24 @@ if (!$_SESSION["UserID"]) {
                     </script>
                 </div>
                 <?php
-                require('C:\xampp\XAMXUN\htdocs\Lathe_application\config\condb.php');
-                $query1 = "SELECT po.*, u.Unit_name
-                FROM pre_order AS po
-                INNER JOIN unit AS u ON po.Unit_id = u.Unit_id ORDER BY PreOrder_id ASC";
-                $result1 = mysqli_query($con, $query1);
+                require('C:\xampp\XAMXUN\htdocs\webLathe\config\condb.php');
+
+                $query1 = "SELECT * FROM pre_order_detail ORDER BY PreOrder_detail_id ASC";
+                $result1 = mysqli_query($con, $query1) or die("Error: " . mysqli_error($con));
                 ?>
-                <div class="mb-3">
-                    <label for="searchInput" class="form-label">เลือกรหัสสั่งซื้อสินค้าจากลูกค้า</label>
-                    <select class="form-select" aria-label="Default select example" name="PreOrder_id" required>
-                        <option value="<?php if (isset($_GET['PreOrder_id'])) {
-                                            echo htmlspecialchars($_GET['PreOrder_id']);
-                                        } ?>">-กรุณาเลือก-</option>
-                        <?php foreach ($result1 as $results) { ?>
-                            <option value="<?php echo $results["PreOrder_id"]; ?>">
-                                <?php echo $results["PreOrder_detail"]. " " .$results["PreOrder_quantity"]. " " .$results["Unit_name"]; ?>
+
+                <div class="mb-3" style="width: 166px;">
+                    <label for="searchInput" class="form-label">เลือกรหัสส่งมอบซื้อสินค้า</label>
+                    <select class="form-select" aria-label="Default select example" name="PreOrder_detail_id" id="pre-order-select" required>
+                        <option value="">-กรุณาเลือก-</option>
+                        <?php while ($results = mysqli_fetch_assoc($result1)) { ?>
+                            <option value="<?php echo htmlspecialchars($results["PreOrder_detail_id"]); ?>">
+                                <?php echo $results["PreOrder_detail_id"]; ?>
                             </option>
                         <?php } ?>
                     </select>
                 </div>
+
                 <div class="mb-3">
                     <button type="submit" class="btn btn-primary" id="searchBtn" onclick="submitSearch()">แสดงข้อมูล</button>
                 </div>
@@ -156,75 +160,107 @@ if (!$_SESSION["UserID"]) {
                     }
                 </script>
                 <?php
-                require('C:\xampp\XAMXUN\htdocs\Lathe_application\config\condb.php');
+                require('C:\xampp\XAMXUN\htdocs\webLathe\config\condb.php');
 
-                // Check if a PreOrder_id has been selected
-                if (isset($_GET['PreOrder_id'])) {
+                if (isset($_GET['PreOrder_detail_id'])) {
+                    $PreOrder_detail_id = mysqli_real_escape_string($con, $_GET['PreOrder_detail_id']);
 
-                    $PreOrder_id = $_GET['PreOrder_id'];
+                    $query = "SELECT pod.*, po.Customer_id,po.PreOrder_day, u.Unit_id AS Counting_unit_id, u3.Unit_name AS Counting_unit_name,
+                pod.PreOrder_price, u2.Unit_id AS Price_unit_id, u4.Unit_name AS Price_unit_name , c.Customer_name, c.Customer_surname
+                FROM pre_order_detail AS pod
+                INNER JOIN pre_order po ON pod.PreOrder_id = po.PreOrder_id
+                INNER JOIN unit AS u ON pod.Counting_unit = u.Unit_id
+                INNER JOIN unit AS u2 ON pod.Price_unit = u2.Unit_id
+                INNER JOIN unit AS u3 ON pod.Counting_unit = u3.Unit_id
+                INNER JOIN unit AS u4 ON pod.Price_unit = u4.Unit_id
+                INNER JOIN customer AS c ON po.Customer_id = c.Customer_id
+                WHERE pod.PreOrder_detail_id = '$PreOrder_detail_id'";
 
-                    // Query the database for the selected PreOrder_id
-                    $query = "SELECT po.*, u.Unit_name, c.Customer_name, c.Customer_surname
-                            FROM pre_order AS po
-                            INNER JOIN unit AS u ON po.Unit_id = u.Unit_id
-                            INNER JOIN customer AS c ON po.Customer_id = c.Customer_id
-                            WHERE po.PreOrder_id = '$PreOrder_id'";
-                    $result = mysqli_query($con, $query);
 
-                    // If there is a result, display the information in textboxes
+                    $result = mysqli_query($con, $query) or die("Error: " . mysqli_error($con));
+
                     if (mysqli_num_rows($result) > 0) {
-
                         $row = mysqli_fetch_assoc($result);
 
-                        // Create textboxes to display information
-                        echo '<div class="mb-3">';
-                        echo '<label for="PreOrder_id" class="form-label">รหัสสั่งซื้อสินค้าจากลูกค้า</label>';
-                        echo '<input type="text" class="form-control" name="PreOrder_id" value="' . $row['PreOrder_id'] . '" readonly>';
+                        $deliverDetailId = increaseIdDvd($GLOBALS['Deliver_detail_id']);
+                        
+                        echo '<div class="mb-3" style="display: inline-block;width : 120px;">';
+                        echo '<label  class="form-label">รหัสสั่งสินค้า</label>';
+                        echo '<input type="hidden" class="form-control" name="Deliver_detail_id" value="' . $deliverDetailId . '" readonly>';
+                        echo '<input type="text" class="form-control"  value="' . $row['PreOrder_id'] . '" readonly>';
                         echo '</div>';
 
-                        echo '<div class="mb-3">';
-                        echo '<label for="PreOrder_day" class="form-label">วันที่สั่ง</label>';
-                        echo '<input type="text" class="form-control" name="PreOrder_day" value="' . $row['PreOrder_day'] . '" readonly>';
+                        echo '&nbsp;&nbsp;<div class="mb-3" style="display: inline-block;width : 120px;">';
+                        echo '<label for="Deliver_detail" class="form-label">สินค้าที่สั่งทำ</label>';
+                        echo '<input type="text" class="form-control" name="Deliver_detail" value="' . $row['PreOrder_detail'] . '" readonly>';
                         echo '</div>';
 
-                        echo '<div class="mb-3">';
-                        echo '<label for="PreOrder_detail" class="form-label">สินค้าที่สั่งทำ</label>';
-                        echo '<input type="text" class="form-control" name="PreOrder_detail" value="' . $row['PreOrder_detail'] . '" readonly>';
+                        echo '&nbsp;&nbsp;<div class="mb-3" style="display: inline-block;width : 120px;">';
+                        echo '<label for="Deliver_quantity" class="form-label">จำนวน</label>';
+                        echo '<input type="text" class="form-control" name="Deliver_quantity" value="' . $row['PreOrder_quantity'] . '" readonly>';
                         echo '</div>';
 
-                        echo '<div class="mb-3">';
-                        echo '<label for="PreOrder_quantity" class="form-label">จำนวน</label>';
-                        echo '<input type="text" class="form-control" name="PreOrder_quantity" value="' . $row['PreOrder_quantity'] . '" readonly>';
+                        echo '&nbsp;&nbsp;<div class="mb-3" style="display: inline-block;width : 120px;">';
+                        echo '<label for="Counting_unit" class="form-label">หน่วยนับ</label>';
+                        echo '<input type="text" class="form-control"  value="' . $row['Counting_unit_name'] . '" readonly>';
+                        echo '<input type="hidden" class="form-control" name="Counting_unit" value="' . $row['Counting_unit'] . '" readonly>';
                         echo '</div>';
 
-                        echo '<div class="mb-3">';
-                        echo '<label for="Unit_id" class="form-label">หน่วยนับ</label>';
-                        echo '<input type="text" class="form-control" name="Unit_id" value="' . $row['Unit_name'] . '" readonly>';
+                        echo '&nbsp;&nbsp;<div class="mb-3" style="display: inline-block;width : 120px;">';
+                        echo '<label for="Deliver_price" class="form-label">ราคา</label>';
+                        echo '<input type="text" class="form-control" name="Deliver_price" value="' . $row['PreOrder_price'] . '" readonly>';
                         echo '</div>';
 
-                        echo '<div class="mb-3">';
-                        echo '<label for="Customer_id" class="form-label">ลูกค้า</label>';
-                        echo '<input type="text" class="form-control" name="Customer_id" value="' . $row["Customer_name"] . " " . $row["Customer_surname"] . '" readonly>';
+                        echo '&nbsp;&nbsp;<div class="mb-3" style="display: inline-block;width : 120px;">';
+                        echo '<label for="Price_unit" class="form-label">หน่วยนับ</label>';
+                        echo '<input type="text" class="form-control"  value="' . $row['Price_unit_name'] . '" readonly>';
+                        echo '<input type="hidden" class="form-control" name="Price_unit" value="' . $row['Price_unit'] . '" readonly>';
+                        echo '</div>';
+
+                        echo '&nbsp;&nbsp;<div class="mb-3" style="display: inline-block;width : 166px;">';
+                        echo '<label for="Customer_id" class="form-label">ชื่อลูกค้า</label>';
+                        echo '<input type="text" class="form-control" value="' . $row["Customer_name"] . " " . $row["Customer_surname"] . '" readonly>';
+                        echo '<input type="hidden" class="form-control" name="Customer_id" value="' . $row["Customer_id"] . '" readonly>';
                         echo '</div>';
                     } else {
-                        // If no result is found, display an error message
                         echo '<p>ไม่พบข้อมูล Pre-Order ID ที่เลือก</p>';
                     }
                 }
                 ?>
+                <div class="mb-3" style="width : 940px;">
+                    <label for="Deliver_address" class="form-label">ที่อยู่ที่ส่งมอบ</label>
+                    <input type="text" class="form-control" name="Deliver_address" value="" required>
+                </div>
+                <?php
 
-                    <div class="mb-3">
-                        <label for="Deliver_address" class="form-label">ที่อยู่ที่ส่งมอบ</label>
-                        <input type="text" class="form-control" name="Deliver_address" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="Employee_id" class="form-label">ชื่อพนักงาน</label>
-                        <input type="text" class="form-control" name="Employee_id" value="<?php echo ($_SESSION['User']); ?> <?php ?>" readonly>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="submit" class="btn btn-success" onclick="submitData()">เพิ่มข้อมูล </button>
-                        <a type="button" class="btn btn-danger " href="..\Deliver.php">ยกเลิก</a>
-                    </div>
+                function getEmployeeName($userId)
+                {
+                    require('C:\xampp\XAMXUN\htdocs\webLathe\config\condb.php');
+                    $db = $con;
+
+
+                    $query = "SELECT CONCAT(Employee_name, ' ', Employee_surname) AS full_name FROM employee WHERE Employee_id = ?";
+                    $stmt = $db->prepare($query);
+                    $stmt->bind_param('s', $userId);
+                    $stmt->execute();
+                    $result = $stmt->get_result();
+                    $row = $result->fetch_assoc();
+
+                    return $row['full_name'];
+                }
+
+                ?>
+
+                <div class="mb-3" style="width : 166px;">
+                    <label for="Employee_id" class="form-label">ชื่อพนักงาน</label>
+                    <input type="text" class="form-control" value="<?php echo getEmployeeName($_SESSION['User']); ?>" readonly>
+                    <input type="hidden" class="form-control" name="Employee_id" value="<?php echo ($_SESSION['User']); ?> <?php ?>" readonly>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-success" onclick="submitData()">เพิ่มข้อมูล </button>
+                    <a type="button" class="btn btn-danger " href="..\Deliver.php">ยกเลิก</a>
+                </div>
             </form>
 
         </div>
@@ -247,7 +283,7 @@ if (!$_SESSION["UserID"]) {
     }
 
     body {
-        height: 125vh;
+        height: 100vh;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -256,7 +292,7 @@ if (!$_SESSION["UserID"]) {
     }
 
     .container {
-        max-width: 700px;
+        max-width: 1100px;
         width: 100%;
         background-color: #fff;
         padding: 25px 30px;

@@ -214,18 +214,19 @@ ADD PRIMARY KEY (`Material_id`);
   ALTER TABLE `pre_order` 
 ADD PRIMARY KEY (`PreOrder_id`);
 
-    CREATE TABLE `pre_order_detail` ( 
+    CREATE TABLE `material` ( 
   `Auto_number` int(11) NOT NULL, 
-  `PreOrder_detail_id` varchar(4) NOT NULL, 
-  `PreOrder_detail` varchar(100) NULL,
-  `PreOrder_quantity` int(100) NOT NULL, 
-  `unit_id` varchar(10) NOT NULL, 
-  `PreOrder_price` int(100) NOT NULL, 
-  `Employee_id` varchar(4) NOT NULL
+  `Material_id` varchar(4) NOT NULL, 
+  `Material_name` varchar(50) NULL,
+  `Material_quantity` int NULL,
+  `counting_id` varchar(4) NOT NULL, 
+  `MaterialType_id` varchar(4) NOT NULL, 
+  `Material_price` int NOT NULL,
+  `Price_unit` varchar(4) NOT NULL, 
   ) ENGINE = InnoDB DEFAULT CHARSET = utf8;
 
-  ALTER TABLE `pre_order_detail` 
-ADD PRIMARY KEY (`PreOrder_detail_id`);
+  ALTER TABLE `material` 
+ADD PRIMARY KEY (`Material_id`);
 
 -- Create the tb_po table
 CREATE TABLE tb_po (
@@ -270,4 +271,60 @@ CREATE TABLE tb_pod (
   ALTER TABLE `pre_order_detail` 
 ADD PRIMARY KEY (`PreOrder_detail_id`);
 
+  CREATE TABLE `deliver` ( 
+  Deliver_id varchar(4) PRIMARY KEY, 
+  Deliver_day date NOT NULL, 
+  Deliver_address varchar(50) NOT NULL,
+  Employee_id varchar(4) NOT NULL
+  );
+
+ CREATE TABLE `deliver_detail` ( 
+  Deliver_detail_id varchar(5) PRIMARY KEY, 
+  Deliver_detail varchar(100) NULL,
+  Deliver_quantity int NOT NULL, 
+  Counting_unit varchar(10) NOT NULL, 
+  Deliver_price int NOT NULL, 
+  Price_unit varchar(4) NOT NULL,
+  Customer_id varchar(4) NOT NULL,
+  Deliver_id varchar(4) NOT NULL,
+  FOREIGN KEY (Deliver_id) REFERENCES deliver(Deliver_id)
+);
+
+   CREATE TABLE `buy_material` ( 
+  BuyMaterial_id varchar(4) PRIMARY KEY, 
+  BuyMaterial_day varchar(10) NOT NULL, 
+  Partner_id varchar(4) NOT NULL,
+  Employee_id varchar(4) NOT NULL,
+  BuyMaterial_status varchar(4) NOT NULL
+  );
+
+ CREATE TABLE `buy_material_detail` ( 
+  BuyMaterial_detail_id varchar(5) PRIMARY KEY, 
+  BuyMaterial_detail varchar(100) NULL,
+  BuyMaterial_quantity int NOT NULL, 
+  Counting_unit varchar(10) NOT NULL, 
+  PreOrder_price int NOT NULL, 
+  Price_unit varchar(4) NOT NULL,
+  MaterialType_id varchar(4) NOT NULL,
+  BuyMaterial_id varchar(4) NOT NULL,
+  FOREIGN KEY (BuyMaterial_id) REFERENCES buy_material(BuyMaterial_id)
+);
   
+CREATE TABLE `accept_material` ( 
+  AcceptMaterial_id varchar(4) PRIMARY KEY, 
+  AcceptMaterial_day varchar(10) NOT NULL, 
+  Partner_id varchar(4) NOT NULL,
+  Employee_id varchar(4) NOT NULL
+);
+
+CREATE TABLE `accept_material_detail` ( 
+  AcceptMaterial_detail_id varchar(5) PRIMARY KEY, 
+  AcceptMaterial_detail varchar(100) NULL,
+  AcceptMaterial_quantity int NOT NULL, 
+  Counting_unit varchar(10) NOT NULL, 
+  AcceptMaterial_price int NOT NULL, 
+  Price_unit varchar(4) NOT NULL,
+  MaterialType_id varchar(4) NOT NULL,
+  AcceptMaterial_id varchar(4) NOT NULL,
+  FOREIGN KEY (AcceptMaterial_id) REFERENCES accept_material(AcceptMaterial_id)
+);

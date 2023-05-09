@@ -1,54 +1,65 @@
 <?php
 require('C:\xampp\XAMXUN\htdocs\webLathe\config\condb.php');
-$Auto_number = $_GET['Auto_number'];
 $Deliver_id = $_GET['Deliver_id'];
 $Deliver_day = $_GET['Deliver_day'];
-$PreOrder_id = $_GET['PreOrder_id'];
-$PreOrder_day	= $_GET['PreOrder_day'];
-$PreOrder_detail = $_GET['PreOrder_detail'];
-$PreOrder_quantity = $_GET['PreOrder_quantity'];
-$Unit_id = $_GET['Unit_id'];
-$Customer_id = $_GET['Customer_id'];
 $Deliver_address = $_GET['Deliver_address'];
 $Employee_id = $_GET['Employee_id'];
-  $sql = "INSERT INTO deliver
+
+
+$Deliver_detail_id = $_GET['Deliver_detail_id'];
+$Deliver_detail = $_GET['Deliver_detail'];
+$Deliver_quantity = $_GET['Deliver_quantity'];
+$Counting_unit = $_GET['Counting_unit'];
+$Deliver_price = $_GET['Deliver_price'];
+$Price_unit = $_GET['Price_unit'];
+$Customer_id = $_GET['Customer_id'];
+$Deliver_id = $_GET['Deliver_id'];
+$sql = "INSERT INTO deliver
   (
-  Auto_number,
   Deliver_id,
   Deliver_day,
-  PreOrder_id,
-  PreOrder_day,
-  PreOrder_detail,
-  PreOrder_quantity,
-  Unit_id,
-  Customer_id,
   Deliver_address,
   Employee_id
   ) 
   VALUES
   (
-  '$Auto_number',
   '$Deliver_id',
   '$Deliver_day',
-  '$PreOrder_id',
-  '$PreOrder_day',
-  '$PreOrder_detail',
-  '$PreOrder_quantity',
-  '$Unit_id',
-  '$Customer_id',
   '$Deliver_address',
   '$Employee_id'
   )";
-    $result = mysqli_query($con, $sql) or die("เกิดข้อผิดพลาดเกิดขึ้น");
-    if ($result) {
-        echo "<script type='text/javascript'>";
-        echo "alert('เพิ่มข้อมูลเรียบร้อยแล้ว');";
-        echo "window.location.href='../Deliver.php';";
-        echo "</script>";
-    } else {
-        echo "<script type='text/javascript'>";
-        echo "alert('บางอย่างผิดพลาด! กรุณาลองอีกครั้ง!');";
-        echo "window.location.href='Insert_Deliver.php';";
-        echo "</script>";
-    }
+$sql1 = "INSERT INTO deliver_detail
+    (
+    Deliver_detail_id,
+    Deliver_detail,
+    Deliver_quantity,
+    Counting_unit,
+    Deliver_price,
+    Price_unit,
+    Customer_id,
+    Deliver_id
+    ) 
+    VALUES
+    (
+    '$Deliver_detail_id',
+    '$Deliver_detail',
+    '$Deliver_quantity',
+    '$Counting_unit',
+    '$Deliver_price',
+    '$Price_unit',
+    '$Customer_id',
+    '$Deliver_id'
+    )";
+$result = mysqli_query($con, $sql) && mysqli_query($con, $sql1) or die("เกิดข้อผิดพลาดเกิดขึ้น");
+if ($result) {
+    echo "<script type='text/javascript'>";
+    echo "alert('เพิ่มข้อมูลเรียบร้อยแล้ว');";
+    echo "window.location.href='../Deliver.php';";
+    echo "</script>";
+} else {
+    echo "<script type='text/javascript'>";
+    echo "alert('บางอย่างผิดพลาด! กรุณาลองอีกครั้ง!');";
+    echo "window.location.href='Insert_Deliver.php';";
+    echo "</script>";
+}
 exit();

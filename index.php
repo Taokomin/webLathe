@@ -28,13 +28,13 @@ if (!$_SESSION["UserID"]) {
                     <li>
                         <a>บริษัท คิว.ดี.อี. พรีซิชั่น พาร์ท จำกัด (Q.D.E Precision Part Co.ltd.)</a>
                     </li>
-                    <div>
+            </div>
+            <div>
                 <a style="color:white; display: flex; width: 200px;">
-                    <iconify-icon icon="gg:profile" width="32" height="32"></iconify-icon><?php 
-                    require('Function\getEmployeeName.php');
-                    echo getEmployeeName($_SESSION['User']); ?>
+                    <iconify-icon icon="gg:profile" width="32" height="32"></iconify-icon><?php require('Function\getEmployeeName.php');echo getEmployeeName($_SESSION['User']); ?>
                 </a>
             </div>
+            <div>
                 <a type="button" class="btn btn-danger btn-sm" href="logout.php" style="color:white; display: flex; width: 100px; height: 40px">ออกจากระบบ</a>
             </div>
         </nav>
