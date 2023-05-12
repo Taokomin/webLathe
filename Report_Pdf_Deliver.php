@@ -1,6 +1,8 @@
+<?php session_start(); ?>
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
 include 'C:\xampp\XAMXUN\htdocs\Lathe_application\config\condb.php';
+require('Function\getEmployeeName.php');
 if (!$con) {
   die("Connection failed: " . mysqli_connect_error());
 }
@@ -11,28 +13,51 @@ $start_date = date("d/m/Y", strtotime($d_s));
 $end_date = date("d/m/Y", strtotime($d_e));
 
 $sql = "SELECT * FROM deliver WHERE Deliver_day BETWEEN '$d_s' AND '$d_e' ORDER BY Deliver_id ASC";
-
+$sql = "SELECT *,d.Deliver_day, u.Unit_id AS Counting_unit_id,
+u3.Unit_name AS Counting_unit_name, u2.Unit_id AS Price_unit_id,
+ u4.Unit_name AS Price_unit_name , 
+ c.Customer_name, 
+ c.Customer_surname, 
+ c.Customer_surname,
+ e.Employee_name, 
+ e.Employee_surname
+FROM deliver AS d
+INNER JOIN deliver_detail AS dd ON d.Deliver_id = dd.Deliver_id
+INNER JOIN unit AS u ON dd.Counting_unit = u.Unit_id
+INNER JOIN unit AS u2 ON dd.Price_unit = u2.Unit_id
+INNER JOIN unit AS u3 ON dd.Counting_unit = u3.Unit_id
+INNER JOIN unit AS u4 ON dd.Price_unit = u4.Unit_id
+INNER JOIN customer AS c ON dd.Customer_id = c.Customer_id
+INNER JOIN employee AS e ON d.Employee_id = e.Employee_id 
+WHERE d.Deliver_day BETWEEN '$d_s 00:00:00' AND '$d_e 23:59:59'
+ORDER BY dd.Deliver_id ASC";
 $result = mysqli_query($con, $sql);
 $content = "";
+$total = 0;
 if (mysqli_num_rows($result) > 0) {
   $i = 1;
   while ($row = mysqli_fetch_assoc($result)) {
+    $no = $row['Deliver_id'];
+    $date = date('d/m/Y', strtotime($row['Deliver_day']));
+    $emp = $row['Employee_name'] ." ". $row['Employee_surname'];
+    $ctm = $row['Customer_name'] ." ". $row['Customer_surname'];
+    $cem = $row['Customer_email'];
+    $subtotal = $row['Deliver_quantity'] * $row['Deliver_price'];
+    $total += $subtotal;
     $tablebody .= '<tr style="border:1px solid #000;">
-    <td style="border-right:1px solid #000;padding:3px;text-align:center;"  >' . $i . '</td>
-    <td style="border-right:1px solid #000;padding:3px;text-align:center;"  >' . $row['Deliver_id'] . '</td>
-    <td style="border-right:1px solid #000;padding:3px;text-align:center;"  >' . $row['Deliver_day'] . '</td>
-    <td style="border-right:1px solid #000;padding:3px;text-align:center;"  >' . $row['PreOrder_id'] . '</td>
-    <td style="border-right:1px solid #000;padding:3px;text-align:center;"  >' . $row['PreOrder_day'] . '</td>
-<td style="border-right:1px solid #000;padding:3px;text-align:center;"  >' . $row['PreOrder_detail'] . '</td>
-    <td style="border-right:1px solid #000;padding:3px;text-align:center;"  >' . $row['Unit_id'] .  '</td>
-<td style="border-right:1px solid #000;padding:3px;text-align:center;"  >' . $row['Customer_id'] . '</td>
-<td style="border-right:1px solid #000;padding:3px;text-align:center;"  >' . $row['Deliver_address'] . '</td>
-<td style="border-right:1px solid #000;padding:3px;text-align:center;"  >' . $row['Employee_id'] . '</td>
-  </tr>';
+        <td style="border-right:1px solid #000;padding:3px;text-align:center;"  >' . $i . '</td>
+        <td style="border-right:1px solid #000;padding:3px;text-align:center;"  >' . $row['Deliver_detail'] . '</td>
+        <td style="border-right:1px solid #000;padding:3px;text-align:center;"  >' . $row['Deliver_quantity'] . '</td>
+        <td style="border-right:1px solid #000;padding:3px;text-align:center;"  >' . $row['Deliver_price'] . '</td>
+    <td style="border-right:1px solid #000;padding:3px;text-align:center;">' . $row['Deliver_quantity'] * $row['Deliver_price'] . '</td>
+      </tr>';
     $i++;
   }
 }
-
+$tablebody .= '<tr style="border:1px solid #000;">
+    <td colspan="4" style="border-right:1px solid #000;background-color:#A1E7FF;padding:3px;text-align:right;">ผลรวมสรุป:</td>
+    <td style="border-right:1px solid #000;padding:3px;text-align:center;">' . $total . '</td>
+</tr>';
 mysqli_close($con);
 $mpdf = new \Mpdf\Mpdf();
 
@@ -62,25 +87,19 @@ $tableh = '
     background-color: #f9f9f9;
 }
 </style>
+<h2 style="text-align:center;background-color:#A1E7FF;padding:10px;"> รายงานสรุปยอดวัสดุและอุปกรณ์ตามช่วงเวลา</h2>
+<h3 style="border-right:0px solid #000;padding:3px;text-align:center;"  >ตั้งแต่วันที่  '.$start_date.' ถึง '.$end_date.'</h3>
 
-<h2 style="border-right:0px solid #000;padding:3px;text-align:center;"  >ตั้งแต่วันที่  '.$start_date.' ถึง '.$end_date.'</h2>
-<h3 style="text-align:center"> รายงานการสั่งซื้อวัสดุและอุปกรณ์ตามช่วงเวลา</h3>
 
 
-<table id="bg-table" width="100%" style="border-collapse: collapse;font-size:12pt;margin-top:8px;">
-<tr style="border:1px solid #000;padding:4px;">
-<td  style="border-right:1px solid #000;padding:4px;text-align:center;"   width="10%">ลำดับ</td>
-<td  style="border-right:1px solid #000;padding:4px;text-align:center;"   width="10%">รหัสส่งมอบ</td>
-<td  style="border-right:1px solid #000;padding:4px;text-align:center;"  width="10%">วันที่ส่งมอบ</td>
-<td  width="10%" style="border-right:1px solid #000;padding:4px;text-align:center;">&nbsp; รหัสสั่งสินค้า </td>
-<td  style="border-right:1px solid #000;padding:4px;text-align:center;"  width="10%">วันที่สั่ง</td>
-<td  style="border-right:1px solid #000;padding:4px;text-align:center;" width="10%">สินค้าที่สั่งทำ</td>
-<td  style="border-right:1px solid #000;padding:4px;text-align:center;" width="10%">รหัสหน่วยนับ</td>
-<td  style="border-right:1px solid #000;padding:4px;text-align:center;" width="10%">รหัสลูกค้า</td>
-<td  style="border-right:1px solid #000;padding:4px;text-align:center;" width="10%">ที่อยู่ที่ส่งมอบ</td>
-<td  style="border-right:1px solid #000;padding:4px;text-align:center;" width="10%">ชื่อพนักงาน</td>
-</tr>
-    
+<table  id="bg-table" width="100%" style="border-collapse: collapse;font-size:12pt;margin-top:8px;">
+    <tr style="border:1px solid #000;padding:4px;">
+        <td  style="border-right:1px solid #000;background-color:#A1E7FF;padding:4px;text-align:center;"   width="10%">ลำดับ</td>
+        <td  width="10%" style="border-right:1px solid #000;background-color:#A1E7FF;padding:4px;text-align:center;">&nbsp;ชื่อสินค้า</td>
+        <td  style="border-right:1px solid #000;background-color:#A1E7FF;padding:4px;text-align:center;" width="10%">จำนวน</td>
+		<td  style="border-right:1px solid #000;background-color:#A1E7FF;padding:4px;text-align:center;" width="10%">ราคา</td>
+    <td  style="border-right:1px solid #000;background-color:#A1E7FF;padding:4px;text-align:center;" width="20%">ราคารวม</td>
+    </tr>
 </thead>
   <tbody>';
 
@@ -93,11 +112,17 @@ $tablebody2 .= '<tr style="border:0px solid #000;">
 
       </tr>';
 
-$tableh2 = '
-<br>
-<table id="bg-table2" width="100%" style="border-collapse: collapse;font-size:12pt;margin-top:8px;">
-</thead>
-  <tbody>';
+      $tableh2 = '
+      <br><br><br><br><br><br>
+      <table id="bg-table2" width="100%" style="border-collapse: collapse;font-size:12pt;margin-top:8px;">
+          <tr style="border:0px solid #000;padding:4px;">
+              <td  style="border-right:0px solid #000;padding:4px;"   width="10%" align="right">ลงชื่อ  :  '. getEmployeeName($_SESSION['User']) .'</td>
+          </tr>
+          <tr style="border:0px solid #000;padding:4px;">
+          <td  style="border-right:0px solid #000;padding:4px;"  width="10%" align="right">(.........................................)</td>
+          </tr>
+      </thead>
+        <tbody>';
 
 $tableend2 = "</tbody>
 </table>";

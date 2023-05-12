@@ -184,59 +184,65 @@
 
     <div class="container">
         <table id="Buy_Material_table" class="table table-bordered table-striped" style="width:100%">
-            <!--ส่วนหัว-->
+
             <thead>
                 <tr>
-                    <th>ลำดับ</th>
-                    <th>รหัสสั่งสินค้า </th>
-                    <th>วั่นที่สั่ง</th>
-                    <th>รายละเอียดการสั่งสินค้า</th>
-                    <th>จำนวน</th>
-                    <th>รหัสหน่วยนับ</th>
-                    <th>รหัสลูกค้า</th>
-                    <th>ชื่อพนักงาน</th>
+                <th style="text-align: center;">ลำดับ</th>
+                <th style="text-align: center;">รหัสสั่งสินค้า</th>
+                <th style="text-align: center;">วันที่สั่ง</th>
+                <th style="text-align: center;">รหัสรายการ</th>
+                <th style="text-align: center;">สินค้าที่สั่งทำ</th>
+                <th style="text-align: center;">จำนวน</th>
+                <th style="text-align: center;">หน่วยนับ</th>
+                <th style="text-align: center;">ราคา</th>
+                <th style="text-align: center;">หน่วยนับ</th>
+                <th style="text-align: center;">ชื่อลูกค้า</th>
+                <th style="text-align: center;">ชื่อพนักงาน</th>
+                </tr>
             </thead>
 
 
 
             <?php
-            require('C:\xampp\XAMXUN\htdocs\Lathe_application\config\condb.php');
+            require('C:\xampp\XAMXUN\htdocs\webLathe\config\condb.php');
             $num = 1;
 
-            @$d_s = $_POST['d_s']; // Start date variable
-            @$d_e = $_POST['d_e']; // End date variable
-
-            // Append times to start and end dates
+            @$d_s = $_POST['d_s']; 
+            @$d_e = $_POST['d_e']; 
             $d_s .= " 00:00:00";
             $d_e .= " 23:59:59";
 
-            // SQL query with WHERE clause to filter data by date range
-            $query = "SELECT po.*, u.Unit_name, c.Customer_name,c.Customer_surname
-                      FROM pre_order AS po
-                      INNER JOIN unit AS u ON po.Unit_id = u.Unit_id
-                      INNER JOIN customer AS c ON po.Customer_id = c.Customer_id
-                      WHERE po.PreOrder_day BETWEEN '$d_s' AND '$d_e'
-                      ORDER BY po.PreOrder_id ASC;
-                      ";
+            $query = "SELECT po.*,pod.PreOrder_detail_id,pod.PreOrder_detail, pod.PreOrder_quantity, u.Unit_id AS Counting_unit_id, u3.Unit_name AS Counting_unit_name,
+            pod.PreOrder_price, u2.Unit_id AS Price_unit_id, u4.Unit_name AS Price_unit_name,
+            pod.PreOrder_quantity, c.Customer_name, c.Customer_surname, e.Employee_name, e.Employee_surname
+            FROM pre_order AS po
+            INNER JOIN pre_order_detail AS pod ON po.PreOrder_id = pod.PreOrder_id
+            INNER JOIN unit AS u ON pod.Counting_unit = u.Unit_id
+            INNER JOIN unit AS u2 ON pod.Price_unit = u2.Unit_id
+            INNER JOIN unit AS u3 ON pod.Counting_unit = u3.Unit_id
+            INNER JOIN unit AS u4 ON pod.Price_unit = u4.Unit_id
+            INNER JOIN customer AS c ON po.Customer_id = c.Customer_id
+            INNER JOIN employee AS e ON po.Employee_id = e.Employee_id
+            WHERE po.PreOrder_day BETWEEN '$d_s' AND '$d_e'
+            ORDER BY po.PreOrder_id,pod.PreOrder_detail_id ASC;";
 
-            // Execute query and store result
             $result = mysqli_query($con, $query);
-
-            // Get number of rows in result
             $num2 = mysqli_num_rows($result);
-
-            // Loop through results and display in HTML table
+            $i = 1;
             while ($row = mysqli_fetch_array($result)) {
             ?>
                 <tr>
-                    <td><?php echo $num++; ?></td>
-                    <td><?php echo $row["PreOrder_id"]; ?></td>
-                    <td><?php echo date("m/d/Y", strtotime($row["PreOrder_day"])); ?></td>
-                    <td><?php echo $row["PreOrder_detail"]; ?></td>
-                    <td><?php echo $row["PreOrder_quantity"]; ?></td>
-                    <td><?php echo $row["Unit_name"]; ?></td>
-                    <td><?php echo $row["Customer_name"] . " " . $row["Customer_surname"]; ?></td>
-                    <td><?php echo $row["Employee_id"]; ?></td>
+                <td align="center"><?php echo $i++; ?></td>
+                            <td align="center"><?php echo $row["PreOrder_id"]; ?></td>
+                            <td align="center"><?php echo date("d/m/Y", strtotime($row["PreOrder_day"] . " UTC")); ?></td>
+                            <td align="center"><?php echo $row["PreOrder_detail_id"]; ?></td>
+                            <td align="center"><?php echo $row["PreOrder_detail"]; ?></td>
+                            <td align="center"><?php echo $row["PreOrder_quantity"]; ?></td>
+                            <td align="center"><?php echo $row["Counting_unit_name"]; ?></td>
+                            <td align="center"><?php echo $row["PreOrder_price"]; ?></td>
+                            <td align="center"><?php echo $row["Price_unit_name"]; ?></td>
+                            <td align="center"><?php echo $row["Customer_name"] . " " . $row["Customer_surname"]; ?></td>
+                            <td align="center"><?php echo $row["Employee_name"] . " " . $row["Employee_surname"]; ?></td>
                 </tr>
             <?php
             }
@@ -246,7 +252,9 @@
             ?>
 
         </table>
-        <center><a href="Report_Pre_Order.php?d_s=<?php echo $d_s; ?>&&d_e=<?php echo $d_e; ?>" class="btn btn-primary" style="background-color:#03018c">ออกรายงาน</a></center>
+        <br><br>
+        <center><a href="Report_Pdf_PreOrder.php?d_s=<?php echo $d_s; ?>&&d_e=<?php echo $d_e; ?>" class="btn btn-primary" style="background-color:#03018c">ออกรายงาน</a></center>
+
 
     </div>
 

@@ -187,63 +187,83 @@
             <!--ส่วนหัว-->
             <thead>
                 <tr>
-                    <th>ลำดับ</th>
-                    <th>รหัสสั่งซื้อวัสดุและอุปกรณ์</th>
-                    <th>วั่นที่สั่งซื้อ</th>
-                    <th>รายละเอียดการสั่งซื้อวัสดุและอุปกรณ์</th>
-                    <th>รหัสวัสดุและอุปกรณ์</th>
-                    <th>จำนวน</th>
-                    <th>รหัสหน่วยนับ</th>
-                    <th>รหัสประเภทวัสดุและอุปกรณ์</th>
-                    <th>รหัสพนักงาน</th>
-                    <th>รหัสคู่ค้า</th>
-                    <th>สถานะ</th>
+                    <th style="text-align: center;">ลำดับ</th>
+                    <th style="text-align: center;">รหัสสั่งซื้อ</th>
+                    <th style="text-align: center;">วันที่สั่งซื้อ</th>
+                    <th style="text-align: center;">รหัสรายการ</th>
+                    <th style="text-align: center;">ชื่อวัสดุ</th>
+                    <th style="text-align: center;">จำนวน</th>
+                    <th style="text-align: center;">หน่วยนับ</th>
+                    <th style="text-align: center;">ประเภทวัสดุและอุปกรณ์</th>
+                    <th style="text-align: center;">ราคา</th>
+                    <th style="text-align: center;">หน่วยนับ</th>
+                    <th style="text-align: center;">ชื่อพนักงาน</th>
+                    <th style="text-align: center;">ชื่อคู่ค้า</th>
+                    <th style="text-align: center;">สถานะ</th>
             </thead>
 
 
 
             <?php
-            require('C:\xampp\XAMXUN\htdocs\Lathe_application\config\condb.php');
+            require('C:\xampp\XAMXUN\htdocs\webLathe\config\condb.php');
             $num = 1;
 
-            @$d_s = $_POST['d_s']; // Start date variable
-            @$d_e = $_POST['d_e']; // End date variable
+            @$d_s = $_POST['d_s'];
+            @$d_e = $_POST['d_e'];
 
-            // Append times to start and end dates
+
             $d_s .= " 00:00:00";
             $d_e .= " 23:59:59";
 
-            // SQL query with WHERE clause to filter data by date range
-            $query = "SELECT bm.*, m.Material_name, u.Unit_name, mt.MaterialType_name, pn.Partner_name, pn.Partner_surname
-          FROM buy_material AS bm
-          INNER JOIN material AS m ON bm.Material_id = m.Material_id
-          INNER JOIN unit AS u ON bm.Unit_id = u.Unit_id
-          INNER JOIN material_type AS mt ON bm.MaterialType_id = mt.MaterialType_id
-          INNER JOIN partner AS pn ON bm.Partner_id = pn.Partner_id
-          WHERE bm.BuyMaterial_day BETWEEN '$d_s' AND '$d_e'
-          ORDER BY bm.BuyMaterial_id ASC";
+            $query = "SELECT bm.*,bmd.BuyMaterial_detail_id,bmd.BuyMaterial_detail ,
+                    bmd.BuyMaterial_quantity,bmd.BuyMaterial_price,
+                    m.Material_name, u.Unit_id AS Counting_unit_id,
+                    u3.Unit_name AS Counting_unit_name,
+                    u2.Unit_id AS Price_unit_id,
+                    u4.Unit_name AS Price_unit_name,
+                    mt.MaterialType_name,
+                    p.Partner_name, 
+                    p.Partner_surname, 
+                    e.Employee_name, 
+                    e.Employee_surname,
+                    s.status_name
+                    FROM buy_material AS bm
+                    INNER JOIN buy_material_detail AS bmd ON bm.BuyMaterial_id = bmd.BuyMaterial_id
+                    INNER JOIN Material AS m ON bmd.BuyMaterial_detail = m.Material_id 
+                    INNER JOIN unit AS u ON bmd.Counting_unit = u.Unit_id
+                    INNER JOIN unit AS u2 ON bmd.Price_unit = u2.Unit_id
+                    INNER JOIN unit AS u3 ON bmd.Counting_unit = u3.Unit_id
+                    INNER JOIN unit AS u4 ON bmd.Price_unit = u4.Unit_id
+                    INNER JOIN material_type AS mt ON bmd.MaterialType_id = mt.MaterialType_id
+                    INNER JOIN partner AS p ON bm.Partner_id = p.Partner_id
+                    INNER JOIN employee AS e ON bm.Employee_id = e.Employee_id
+                    INNER JOIN status AS s ON bm.BuyMaterial_status = s.status_id
+                    WHERE bm.BuyMaterial_day BETWEEN '$d_s' AND '$d_e'
+                    ORDER BY bm.BuyMaterial_id,bmd.BuyMaterial_detail_id ASC;
+                    ";
 
-            // Execute query and store result
+
             $result = mysqli_query($con, $query);
 
-            // Get number of rows in result
+            $i = 1;
             $num2 = mysqli_num_rows($result);
 
-            // Loop through results and display in HTML table
             while ($row = mysqli_fetch_array($result)) {
             ?>
                 <tr>
-                    <td><?php echo $num++; ?></td>
-                    <td><?php echo $row["BuyMaterial_id"]; ?></td>
-                    <td><?php echo date("m/d/Y", strtotime($row["BuyMaterial_day"])); ?></td>
-                    <td><?php echo $row["BuyMaterial_detail"]; ?></td>
-                    <td><?php echo $row["Material_name"]; ?></td>
-                    <td><?php echo $row["BuyMaterial_quantity"]; ?></td>
-                    <td><?php echo $row["Unit_name"]; ?></td>
-                    <td><?php echo $row["MaterialType_name"]; ?></td>
-                    <td><?php echo $row["Employee_id"]; ?></td>
-                    <td><?php echo $row["Partner_name"] . " " . $row["Partner_surname"]; ?></td>
-                    <td><?php echo $row["BuyMaterial_status"]; ?></td>
+                    <td align="center"><?php echo $i++; ?></td>
+                    <td align="center"><?php echo $row["BuyMaterial_id"]; ?></td>
+                    <td align="center"><?php echo date("d/m/Y", strtotime($row["BuyMaterial_day"] . " UTC")); ?></td>
+                    <td align="center"><?php echo $row["BuyMaterial_detail_id"]; ?></td>>
+                    <td align="center"><?php echo $row["Material_name"]; ?></td>
+                    <td align="center"><?php echo $row["BuyMaterial_quantity"]; ?></td>
+                    <td align="center"><?php echo $row["Counting_unit_name"]; ?></td>
+                    <td align="center"><?php echo $row["MaterialType_name"]; ?></td>
+                    <td align="center"><?php echo $row["BuyMaterial_price"]; ?></td>
+                    <td align="center"><?php echo $row["Price_unit_name"]; ?></td>
+                    <td align="center"><?php echo $row["Employee_name"] . " " . $row["Partner_surname"]; ?></td>
+                    <td align="center"><?php echo $row["Partner_name"] . " " . $row["Employee_surname"]; ?></td>
+                    <td align="center"><?php echo $row["status_name"]; ?></td>
                 </tr>
             <?php
             }
@@ -253,7 +273,7 @@
             ?>
 
         </table>
-        <center><a href="Report_Pdf_Buy_Material.php?d_s=<?php echo $d_s; ?>&&d_e=<?php echo $d_e; ?>" class="btn btn-primary" style="background-color:#03018c">ออกรายงาน</a></center>
+        <center><a href="Report_Pdf_BuyMaterial.php?d_s=<?php echo $d_s; ?>&&d_e=<?php echo $d_e; ?>" class="btn btn-primary" style="background-color:#03018c">ออกรายงาน</a></center>
 
     </div>
 

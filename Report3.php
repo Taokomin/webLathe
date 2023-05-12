@@ -67,85 +67,85 @@
                         <font size="5">
                             <center style="color: white"> ค้นหา รายงานสรุปยอดขายวัสดุและอุปกรณ์ ตามช่วงวันที่</center>
                         </font>
-                        </b></div>
-                    <div class="panel-body">
-                        <form id="form1" name="form1" class="form-inline" method="post" action="Report3.php">
-                            <center>
-                                <div class="form-group">
-                                    <label for="exampleInputName2">วันที่ :</label>
-                                    <input type="date" class="form-control" name="d_s" id="datepicker" value="<?php echo date('Y-m-d'); ?>" required>
-                                    <script type='text/javascript'>
-                                        var highlight_dates = ['1-5-2020', '11-5-2020', '18-5-2020', '28-5-2020'];
+                    </b></div>
+                <div class="panel-body">
+                    <form id="form1" name="form1" class="form-inline" method="post" action="Report3.php">
+                        <center>
+                            <div class="form-group">
+                                <label for="exampleInputName2">วันที่ :</label>
+                                <input type="date" class="form-control" name="d_s" id="datepicker" value="<?php echo date('Y-m-d'); ?>" required>
+                                <script type='text/javascript'>
+                                    var highlight_dates = ['1-5-2020', '11-5-2020', '18-5-2020', '28-5-2020'];
 
-                                        $(document).ready(function() {
+                                    $(document).ready(function() {
 
 
-                                            $('#Deliver_id').Deliver_id({
-                                                beforeShowDay: function(date) {
-                                                    var month = date.getMonth() + 1;
-                                                    var year = date.getFullYear();
-                                                    var day = date.getDate();
-                                                    var newdate = day + "-" + month + '-' + year;
-                                                    var tooltip_text = "New event on " + newdate;
-                                                    if ($.inArray(newdate, highlight_dates) != -1) {
-                                                        return [true, "highlight", tooltip_text];
-                                                    }
-                                                    return [true];
+                                        $('#Deliver_id').Deliver_id({
+                                            beforeShowDay: function(date) {
+                                                var month = date.getMonth() + 1;
+                                                var year = date.getFullYear();
+                                                var day = date.getDate();
+                                                var newdate = day + "-" + month + '-' + year;
+                                                var tooltip_text = "New event on " + newdate;
+                                                if ($.inArray(newdate, highlight_dates) != -1) {
+                                                    return [true, "highlight", tooltip_text];
                                                 }
-                                            });
+                                                return [true];
+                                            }
                                         });
-                                    </script>
-                                </div>
-                                <div class="form-group">
-                                    <label for="exampleInputEmail2">&nbsp;ถึงวันที่ :&nbsp;</label>
-                                    <input type="date" class="form-control" name="d_e" id="datepicker2" value="<?php echo date('Y-m-d'); ?>" required>
-                                    <script type='text/javascript'>
-                                        var highlight_dates = ['1-5-2020', '11-5-2020', '18-5-2020', '28-5-2020'];
+                                    });
+                                </script>
+                            </div>
+                            <div class="form-group">
+                                <label for="exampleInputEmail2">&nbsp;ถึงวันที่ :&nbsp;</label>
+                                <input type="date" class="form-control" name="d_e" id="datepicker2" value="<?php echo date('Y-m-d'); ?>" required>
+                                <script type='text/javascript'>
+                                    var highlight_dates = ['1-5-2020', '11-5-2020', '18-5-2020', '28-5-2020'];
 
-                                        $(document).ready(function() {
+                                    $(document).ready(function() {
 
 
-                                            $('#Deliver_id').Deliver_id({
-                                                beforeShowDay: function(date) {
-                                                    var month = date.getMonth() + 1;
-                                                    var year = date.getFullYear();
-                                                    var day = date.getDate();
-                                                    var newdate = day + "-" + month + '-' + year;
-                                                    var tooltip_text = "New event on " + newdate;
-                                                    if ($.inArray(newdate, highlight_dates) != -1) {
-                                                        return [true, "highlight", tooltip_text];
-                                                    }
-                                                    return [true];
+                                        $('#Deliver_id').Deliver_id({
+                                            beforeShowDay: function(date) {
+                                                var month = date.getMonth() + 1;
+                                                var year = date.getFullYear();
+                                                var day = date.getDate();
+                                                var newdate = day + "-" + month + '-' + year;
+                                                var tooltip_text = "New event on " + newdate;
+                                                if ($.inArray(newdate, highlight_dates) != -1) {
+                                                    return [true, "highlight", tooltip_text];
                                                 }
-                                            });
+                                                return [true];
+                                            }
                                         });
-                                    </script>
-                                </div>
-                                &nbsp;&nbsp;<button id="non-printable" type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-search"></span> ค้นหา</button>
-                                <a href="Report2.php" class="btn btn-info">รีเซ็ต</a>
-                                <a href="Report.php" class="btn btn-danger">ย้อนกลับ</a>
-                            </center>
-                            <style type="text/css">
+                                    });
+                                </script>
+                            </div>
+                            &nbsp;&nbsp;<button id="non-printable" type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-search"></span> ค้นหา</button>
+                            <a href="Report2.php" class="btn btn-info">รีเซ็ต</a>
+                            <a href="Report.php" class="btn btn-danger">ย้อนกลับ</a>
+                        </center>
+                        <style type="text/css">
+                            #printable {
+                                display: block;
+                            }
+
+                            @media print {
+                                #non-printable {
+                                    display: none;
+                                }
+
                                 #printable {
                                     display: block;
                                 }
-
-                                @media print {
-                                    #non-printable {
-                                        display: none;
-                                    }
-
-                                    #printable {
-                                        display: block;
-                                    }
-                                }
-                            </style>
-                        </form>
-                    </div>
+                            }
+                        </style>
+                    </form>
                 </div>
             </div>
-
         </div>
+
+    </div>
     </div>
 
 
@@ -187,55 +187,62 @@
             <!--ส่วนหัว-->
             <thead>
                 <tr>
-                    <th>ลำดับ</th>
-                    <th>รหัสส่งมอบ</th>
-                    <th>วันที่ส่งมอบ</th>
-                    <th>รหัสสั่งสินค้า</th>
-                    <th>วันที่สั่ง</th>
-                    <th>รายละเอียดการสั่งสินค้า</th>
-                    <th>จำนวน</th>
-                    <th>รหัสหน่วยนับ</th>
-                    <th>รหัสลูกค้า</th>
-                    <th>ที่อยู่ที่ส่งมอบ</th>
-                    <th>ชื่อพนักงาน</th>
+                    <th style="text-align: center;">ลำดับ</th>
+                    <th style="text-align: center;">รหัสส่งมอบ</th>
+                    <th style="text-align: center;">วันที่ส่งมอบ</th>
+                    <th style="text-align: center;">สินค้า</th>
+                    <th style="text-align: center;">จำนวน</th>
+                    <th style="text-align: center;">หน่วยนับ</th>
+                    <th style="text-align: center;">ราคา</th>
+                    <th style="text-align: center;">หน่วยนับ</th>
+                    <th style="text-align: center;">ชื่อลูกค้า</th>
+                    <th style="text-align: center;">ที่อยู่ที่ส่งมอบ</th>
+                    <th style="text-align: center;">ชื่อพนักงาน</th>
             </thead>
 
 
 
             <?php
-            require('C:\xampp\XAMXUN\htdocs\Lathe_application\config\condb.php');
+            require('C:\xampp\XAMXUN\htdocs\webLathe\config\condb.php');
             $num = 1;
 
-            @$d_s = $_POST['d_s']; // Start date variable
-            @$d_e = $_POST['d_e']; // End date variable
+            @$d_s = $_POST['d_s'];
+            @$d_e = $_POST['d_e'];
 
-            // Append times to start and end dates
+
             $d_s .= " 00:00:00";
             $d_e .= " 23:59:59";
 
-            // SQL query with WHERE clause to filter data by date range
-             $query = "SELECT * FROM deliver WHERE Deliver_day BETWEEN '$d_s' AND '$d_e' ORDER BY Deliver_id ASC";
-            // Execute query and store result
+            $query = "SELECT *, u.Unit_id AS Counting_unit_id, u3.Unit_name AS Counting_unit_name, u2.Unit_id AS Price_unit_id, u4.Unit_name AS Price_unit_name , c.Customer_name, c.Customer_surname, e.Employee_name, e.Employee_surname
+            FROM deliver AS d
+            INNER JOIN deliver_detail AS dd ON d.Deliver_id = dd.Deliver_id
+            INNER JOIN unit AS u ON dd.Counting_unit = u.Unit_id
+            INNER JOIN unit AS u2 ON dd.Price_unit = u2.Unit_id
+            INNER JOIN unit AS u3 ON dd.Counting_unit = u3.Unit_id
+            INNER JOIN unit AS u4 ON dd.Price_unit = u4.Unit_id
+            INNER JOIN customer AS c ON dd.Customer_id = c.Customer_id
+            INNER JOIN employee AS e ON d.Employee_id = e.Employee_id
+            WHERE d.Deliver_day BETWEEN '$d_s' AND '$d_e'
+            ORDER BY d.Deliver_id ,dd.Deliver_detail_id ASC;
+            ";
+
             $result = mysqli_query($con, $query);
-
-            // Get number of rows in result
             $num2 = mysqli_num_rows($result);
-
-            // Loop through results and display in HTML table
-            while ($row = mysqli_fetch_array($result)) {
+            $i = 1;
+            while ($row = mysqli_fetch_assoc($result)) {
             ?>
                 <tr>
-                    <td><?php echo $row["Auto_number"]; ?></td>
-                    <td><?php echo $row["Deliver_id"]; ?></td>
-                    <td><?php echo date("m/d/Y", strtotime($row["Deliver_day"])); ?></td>
-                    <td><?php echo $row["PreOrder_id"]; ?></td>
-                    <td><?php echo date("m/d/Y", strtotime($row["PreOrder_day"])); ?></td>
-                    <td><?php echo $row["PreOrder_detail"]; ?></td>
-                    <td><?php echo $row["PreOrder_quantity"]; ?></td>
-                    <td><?php echo $row["Unit_id"]; ?></td>
-                    <td><?php echo $row["Customer_id"]; ?></td>
-                    <td><?php echo $row["Deliver_address"]; ?></td>
-                    <td><?php echo $row["Employee_id"]; ?></td>
+                    <td align="center"><?php echo $i++; ?></td>
+                    <td align="center"><?php echo $row["Deliver_id"]; ?></td>
+                    <td align="center"><?php echo date("d/m/Y", strtotime($row["Deliver_day"] . " UTC")); ?></td>
+                    <td align="center"><?php echo $row["Deliver_detail"]; ?></td>
+                    <td align="center"><?php echo $row["Deliver_quantity"]; ?></td>
+                    <td align="center"><?php echo $row["Counting_unit_name"]; ?></td>
+                    <td align="center"><?php echo $row["Deliver_price"]; ?></td>
+                    <td align="center"><?php echo $row["Price_unit_name"]; ?></td>
+                    <td align="center"><?php echo $row["Customer_name"] . " " . $row["Customer_surname"]; ?></td>
+                    <td align="center"><?php echo $row["Deliver_address"]; ?></td>
+                    <td align="center"><?php echo $row["Employee_name"] . " " . $row["Employee_surname"]; ?></td>s
                 </tr>
             <?php
             }

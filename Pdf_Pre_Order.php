@@ -5,34 +5,44 @@ include 'C:\xampp\XAMXUN\htdocs\Lathe_application\config\condb.php';
 if (!$con) {
   die("Connection failed: " . mysqli_connect_error());
 }
-if (isset($_GET['Auto_number'])) {
-  $Auto_number = $_GET['Auto_number'];
-  $sql = "SELECT po.*, u.Unit_name, c.Customer_name, c.Customer_surname
-          FROM pre_order AS po
-          INNER JOIN unit AS u ON po.Unit_id = u.Unit_id
-          INNER JOIN customer AS c ON po.Customer_id = c.Customer_id
-          WHERE po.Auto_number = $Auto_number";
+if (isset($_GET['PreOrder_id'])) {
+  $PreOrder_id = $_GET['PreOrder_id'];
+  $sql = "SELECT po.*,pod.PreOrder_detail, pod.PreOrder_quantity, u.Unit_id AS Counting_unit_id, u3.Unit_name AS Counting_unit_name,
+    pod.PreOrder_price, u2.Unit_id AS Price_unit_id, u4.Unit_name AS Price_unit_name,
+    pod.PreOrder_quantity, c.Customer_name, c.Customer_surname,c.Customer_email, e.Employee_name, e.Employee_surname
+    FROM pre_order AS po
+    INNER JOIN pre_order_detail AS pod ON po.PreOrder_id = pod.PreOrder_id
+    INNER JOIN unit AS u ON pod.Counting_unit = u.Unit_id
+    INNER JOIN unit AS u2 ON pod.Price_unit = u2.Unit_id
+    INNER JOIN unit AS u3 ON pod.Counting_unit = u3.Unit_id
+    INNER JOIN unit AS u4 ON pod.Price_unit = u4.Unit_id
+    INNER JOIN customer AS c ON po.Customer_id = c.Customer_id
+    INNER JOIN employee AS e ON po.Employee_id = e.Employee_id
+    WHERE po.PreOrder_id = '$PreOrder_id'
+    ORDER BY po.PreOrder_id ASC;";
 } else {
-  $sql = "SELECT po.*, u.Unit_name, c.Customer_name, c.Customer_surname
-          FROM pre_order AS po
-          INNER JOIN unit AS u ON po.Unit_id = u.Unit_id
-          INNER JOIN customer AS c ON po.Customer_id = c.Customer_id
-          ORDER BY u.Unit_id, c.Customer_id ASC";
+  $sql = "SELECT * FROM pre_order ORDER BY PreOrder_id ASC";
 }
 $result = mysqli_query($con, $sql);
 $content = "";
+$total = 0;
 if (mysqli_num_rows($result) > 0) {
   $i = 1;
   while ($row = mysqli_fetch_assoc($result)) {
+    $no = $row['PreOrder_id'];
+    $date = date('d/m/Y', strtotime($row['PreOrder_day']));
+    $emp = $row['Employee_name'] ." ". $row['Employee_surname'];
+    $ctm = $row['Customer_name'] ." ". $row['Customer_surname'];
+    $cem = $row['Customer_email'];
+    $subtotal = $row['PreOrder_quantity'] * $row['PreOrder_price'];
+    $total += $subtotal;
     $tablebody .= '<tr style="border:1px solid #000;">
         <td style="border-right:1px solid #000;padding:3px;text-align:center;"  >' . $i . '</td>
-        <td style="border-right:1px solid #000;padding:3px;text-align:center;"  >' . $row['PreOrder_id'] . '</td>
-        <td style="border-right:1px solid #000;padding:3px;text-align:center;"  >' . $row['PreOrder_day'] . '</td>
         <td style="border-right:1px solid #000;padding:3px;text-align:center;"  >' . $row['PreOrder_detail'] . '</td>
         <td style="border-right:1px solid #000;padding:3px;text-align:center;"  >' . $row['PreOrder_quantity'] . '</td>
-		<td style="border-right:1px solid #000;padding:3px;text-align:center;"  >' . $row['Unit_name'] . '</td>
-        <td style="border-right:1px solid #000;padding:3px;text-align:center;"  >' . $row['Customer_name'] . ' ' . $row["Customer_surname"] .  '</td>
-		<td style="border-right:1px solid #000;padding:3px;text-align:center;"  >' . $row['Employee_id'] . '</td>
+    <td style="border-right:1px solid #000;padding:3px;text-align:center;"  >' . $row['PreOrder_price'] . '</td>
+    <td style="border-right:1px solid #000;padding:3px;text-align:center;">' . $row['PreOrder_quantity'] * $row['PreOrder_price'] . '</td>
+
       </tr>';
     $i++;
   }
@@ -130,15 +140,16 @@ $tablebody2 .= '<tr style="border:0px solid #000;">
 
 $tableh2 = '
 <br><br><br><br><br><br>
-<table id="bg-table2" width="100%" style="border-collapse: collapse;font-size:12pt;margin-top:8px;">
-    <tr style="border:0px solid #000;padding:4px;">
-        <td  style="border-right:0px solid #000;padding:4px;"   width="10%" align="right">ลงชื่อ.....................................</td>
-    </tr>
-    <tr style="border:0px solid #000;padding:4px;">
-    <td  style="border-right:0px solid #000;padding:4px;"  width="10%" align="right">(....................................)</td>
-    </tr>
+<table id="bg-table" width="100%" style="border-collapse: collapse;font-size:12pt;margin-top:8px;">
+<tr style="border:1px solid #000;padding:4px;">
+<td  style="border-right:1px solid #000;padding:4px;text-align:center;"   width="10%">ลำดับ</td>
+<td  style="border-right:1px solid #000;padding:4px;text-align:center;"  width="15%">สินค้าที่สั่งทำ</td>
+<td  style="border-right:1px solid #000;padding:4px;text-align:center;" width="15%">จำนวน</td>
+<td  style="border-right:1px solid #000;padding:4px;text-align:center;" width="15%">ราคา</td>
+<td  style="border-right:1px solid #000;padding:4px;text-align:center;" width="20%">ราคารวม</td>
+</tr>
 </thead>
-  <tbody>';
+<tbody>';
 
 $tableend2 = "</tbody>
 </table>";
