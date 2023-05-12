@@ -31,9 +31,9 @@ if (!$_SESSION["UserID"]) {
             </div>
             <div>
                 <a style="color:white; display: flex; width: 200px;">
-                    <iconify-icon icon="gg:profile" width="32" height="32"></iconify-icon><?php 
-                    require('Function\getEmployeeName.php');
-                    echo getEmployeeName($_SESSION['User']); ?>
+                    <iconify-icon icon="gg:profile" width="32" height="32"></iconify-icon><?php
+                                                                                            require('Function\getEmployeeName.php');
+                                                                                            echo getEmployeeName($_SESSION['User']); ?>
                 </a>
             </div>
             <div>
@@ -123,36 +123,40 @@ if (!$_SESSION["UserID"]) {
                         <th>ลำดับ</th>
                         <th>รหัสรับคืนวัสดุและอุปกรณ์</th>
                         <th>วันที่รับคืน</th>
-                        <th>รหัสเบิกวัสดุและอุปกรณ์</th>
-                        <th>วันที่เบิก</th>
-                        <th>รหัสวัสดุและอุปกรณ์</th>
                         <th>ชื่อวัสดุและอุปกรณ์</th>
                         <th>จำนวน</th>
                         <th>รหัสหน่วยนับ</th>
-                        <th>รหัสประเภทวัสดุและอุปกรณ์</th>
+                        <th>ประเภทวัสดุและอุปกรณ์</th>
                         <th>รหัสพนักงาน</th>
                         <th>การดำเนินการ</th>
                     </tr>
                 </thead>
                 <tbody>
-                <?php
+                    <?php
                     require('C:\xampp\XAMXUN\htdocs\webLathe\config\condb.php');
-                    $query = "SELECT * FROM takeback ORDER BY PickupMaterial_id asc";
+
+                    $query = "SELECT tm.*, tmd.Takeback_quantity, u.Unit_id AS Counting_unit_id, u.Unit_name AS Counting_unit_name, e.Employee_name, e.Employee_surname, mt.MaterialType_name, m.Material_name
+FROM takeback AS tm
+INNER JOIN takeback_detail AS tmd ON tm.Takeback_id = tmd.Takeback_id
+INNER JOIN unit AS u ON tmd.Counting_unit = u.Unit_id
+INNER JOIN material_type AS mt ON tmd.MaterialType_id = mt.MaterialType_id
+INNER JOIN employee AS e ON tm.Employee_id = e.Employee_id
+INNER JOIN material AS m ON tmd.Takeback_detail = m.Material_id
+ORDER BY tm.Takeback_id ASC";
+
                     $result = mysqli_query($con, $query);
+                    $i = 1;
                     while ($values = mysqli_fetch_assoc($result)) {
                     ?>
                         <tr>
-                            <td><?php echo $values["Auto_number"]; ?></td>
-                            <td><?php echo $values["Takeback_id"]; ?></td>
-                            <td><?php echo date("d/m/Y", strtotime($values["Takeback_day"]. " UTC")); ?></td>
-                            <td><?php echo $values["PickupMaterial_id"]; ?></td>
-                            <td><?php echo date("d/m/Y", strtotime($values["PickupMaterial_day"]. " UTC")); ?></td>
-                            <td><?php echo $values["Material_id"]; ?></td>
-                            <td><?php echo $values["Material_name"]; ?></td>
-                            <td><?php echo $values["Takeback_quantity"]; ?></td>
-                            <td><?php echo $values["Unit_id"]; ?></td>
-                            <td><?php echo $values["MaterialType_id"]; ?></td>
-                            <td><?php echo $values["Employee_id"]; ?></td>
+                            <td align="center"><?php echo $i++; ?></td>
+                            <td align="center"><?php echo $values["Takeback_id"]; ?></td>
+                            <td align="center"><?php echo date("d/m/Y", strtotime($values["Takeback_day"] . " UTC")); ?></td>
+                            <td align="center"><?php echo $values["Material_name"]; ?></td>
+                            <td align="center"><?php echo $values["Takeback_quantity"]; ?></td>
+                            <td align="center"><?php echo $values["Counting_unit_name"]; ?></td>
+                            <td align="center"><?php echo $values["MaterialType_name"]; ?></td>
+                            <td align="center"><?php echo $values["Employee_name"] . " " . $values["Employee_surname"]; ?></td>
                             <td>
                                 <a href="Edit_Takeback.php/Edit_Takeback.php?Takeback_id=<?php echo $values["Takeback_id"]; ?>" class="btn btn-primary">
                                     <iconify-icon style="width: 13px; height: 13px" icon="el:file-edit"></iconify-icon>
@@ -203,12 +207,13 @@ if (!$_SESSION["UserID"]) {
 
     </html>
     <style>
-            #Buy_Material_table {
-                font-size: 12px;
-                table-layout: fixed
-            }
-            td {
-                word-wrap: break-word;
-            }
-</style>
+        #Buy_Material_table {
+            font-size: 12px;
+            table-layout: fixed
+        }
+
+        td {
+            word-wrap: break-word;
+        }
+    </style>
 <?php } ?>

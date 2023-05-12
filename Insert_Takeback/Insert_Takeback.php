@@ -6,9 +6,9 @@ if (!$con) {
 
 $GLOBALS['maxIdLength'] = 3;
 $GLOBALS['Takeback_id'] = '0';
-$GLOBALS['Auto_number'] = '0';
+$GLOBALS['Takeback_detail_id'] = '0';
 
-// Get the latest Takeback_id from the database
+
 $sql1 = "SELECT Takeback_id FROM takeback ORDER BY Takeback_id DESC LIMIT 1";
 $query1 = $con->query($sql1);
 $result1 = $query1->fetch_assoc();
@@ -17,16 +17,16 @@ if ($result1 && $result1['Takeback_id']) {
 }
 
 
-// Get the latest Auto_number from the database
-$sql2 = "SELECT Auto_number FROM takeback ORDER BY Auto_number DESC LIMIT 1";
+
+$sql2 = "SELECT Takeback_detail_id FROM takeback_detail ORDER BY Takeback_detail_id DESC LIMIT 1";
 $query2 = $con->query($sql2);
 $result2 = $query2->fetch_assoc();
-if ($result2 && $result2['Auto_number']) {
-    $GLOBALS['Auto_number'] = $result2['Auto_number'];
+if ($result2 && $result2['Takeback_detail_id']) {
+    $GLOBALS['Takeback_detail_id'] = $result2['Takeback_detail_id'];
 }
 
 
-// Function to increase Takeback_id
+
 function increaseIdTm($Takeback_id)
 {
     $matchId = preg_replace('/[^0-9]/', '', $Takeback_id);
@@ -42,15 +42,23 @@ function increaseIdTm($Takeback_id)
 
     return 'TM' . $concatIdWithString;
 }
-
-// Function to increase Auto_number
-function increaseNumTm($Auto_number)
+function increaseIdTmd($Takeback_detail_id)
 {
-    $matchId = preg_replace('/[^0-9]/', '', $Auto_number);
-    $Int = (int)$matchId;
-    $newId = $Int + 1;
-    return $newId;
+    $matchId = preg_replace('/[^0-9]/', '', $Takeback_detail_id);
+    $convertStringToInt = (int)$matchId;
+
+    $concatIdWithString = (string)($convertStringToInt + 1);
+
+    $round = 0;
+    while ($round < $GLOBALS['maxIdLength'] - strlen($concatIdWithString)) {
+        $concatIdWithString = '0' . $concatIdWithString;
+        $round += 1;
+    }
+
+    return 'TMD' . $concatIdWithString;
 }
+
+
 ?>
 <?php
 isset($_POST['date']) ? $date = $_POST['date'] : $date = "";
@@ -81,15 +89,11 @@ if (!$_SESSION["UserID"]) {
             <h1 class="mt-5">เพิ่มข้อมูลรับคืนวัสดุและอุปกรณ์</h1>
             <hr>
             <form id="myForm" method="GET">
-                <div class="mb-3">
-                    <!-- <label for="Auto_number" class="form-label">ลำดับ</label> -->
-                    <input type="hidden" class="form-control" name="Auto_number" value="<?php echo (increaseNumTm($GLOBALS['Auto_number'])); ?>" readonly>
-                </div>
-                <div class="mb-3">
+                <div class="mb-3" style="display: inline-block;width : 166px;">
                     <label for="Takeback_id" class="form-label">รหัสเบิกวัสดุและอุปกรณ์</label>
                     <input type="text" class="form-control" name="Takeback_id" value="<?php echo (increaseIdTm($GLOBALS['Takeback_id'])); ?>" readonly>
                 </div>
-                <div class="mb-3">
+                <div class="mb-3" style="display: inline-block;width : 166px;">
                     <label for="Takeback_day" class="form-label">วันที่รับคืน</label>
                     <input type="date" class="form-control" name="Takeback_day" id="Takeback_day" value="<?php echo date('Y-m-d'); ?>" required>
                     <script type='text/javascript'>
@@ -113,25 +117,23 @@ if (!$_SESSION["UserID"]) {
                 </div>
                 <?php
                 require('C:\xampp\XAMXUN\htdocs\webLathe\config\condb.php');
-                $query1 = "SELECT pm.*, u.Unit_name
-                FROM pickup_material AS pm
-                INNER JOIN unit AS u ON pm.Unit_id = u.Unit_id
-                WHERE PickupMaterial_status = 'อนุมัติ'  ORDER BY PickupMaterial_id ASC";
+                $query1 = "SELECT PickupMaterial_detail_id FROM pickup_material_detail ORDER BY PickupMaterial_detail_id ASC";
                 $result1 = mysqli_query($con, $query1);
                 ?>
-                <div class="mb-3">
-                    <label for="searchInput" class="form-label">เลือกรหัสเบิกวัสดุและอุปกรณ์</label>
-                    <select class="form-select" aria-label="Default select example" name="PickupMaterial_id" required>
-                        <option value="<?php if (isset($_GET['PickupMaterial_id'])) {
-                                            echo htmlspecialchars($_GET['PickupMaterial_id']);
+                <div class="mb-3" style="width : 166px;">
+                    <label for="searchInput" class="form-label">เลือกรหัสคืน</label>
+                    <select class="form-select" aria-label="Default select example" name="PickupMaterial_detail_id" required>
+                        <option value="<?php if (isset($_GET['PickupMaterial_detail_id'])) {
+                                            echo htmlspecialchars($_GET['PickupMaterial_detail_id']);
                                         } ?>">-กรุณาเลือก-</option>
                         <?php foreach ($result1 as $results) { ?>
-                            <option value="<?php echo $results["PickupMaterial_id"]; ?>">
-                                <?php echo $results["PickupMaterial_id"] ; ?>
+                            <option value="<?php echo $results["PickupMaterial_detail_id"]; ?>">
+                                <?php echo $results["PickupMaterial_detail_id"]; ?>
                             </option>
                         <?php } ?>
                     </select>
                 </div>
+
                 <div class="mb-3">
                     <button type="submit" class="btn btn-primary" id="searchBtn" onclick="submitSearch()">แสดงข้อมูล</button>
                 </div>
@@ -151,87 +153,92 @@ if (!$_SESSION["UserID"]) {
                 <?php
                 require('C:\xampp\XAMXUN\htdocs\webLathe\config\condb.php');
 
-                // Check if a PickupMaterial_id has been selected
-                if (isset($_GET['PickupMaterial_id'])) {
+                if (isset($_GET['PickupMaterial_detail_id'])) {
+                    $PickupMaterial_detail_id = mysqli_real_escape_string($con, $_GET['PickupMaterial_detail_id']);
 
-                    $PickupMaterial_id = $_GET['PickupMaterial_id'];
+                    $query = "SELECT pm.*,pmd.PickupMaterial_quantity, m.Material_name, e.Employee_name, e.Employee_surname, 
+                    mt.MaterialType_name, s.status_name,mt.MaterialType_id,pmd.Counting_unit,pmd.PickupMaterial_detail,pmd.PickupMaterial_detail_id,m.Material_id,
+                    u.Unit_id AS Counting_unit_id, u.Unit_name AS Counting_unit_name
+                    FROM pickup_material AS pm
+                    INNER JOIN pickup_material_detail AS pmd ON pm.PickupMaterial_id = pmd.PickupMaterial_id
+                    INNER JOIN material AS m ON pmd.PickupMaterial_detail = m.Material_id
+                    INNER JOIN material_type AS mt ON pmd.MaterialType_id = mt.MaterialType_id
+                    INNER JOIN unit AS u ON pmd.Counting_unit = u.Unit_id
+                    INNER JOIN employee AS e ON pm.Employee_id = e.Employee_id
+                    INNER JOIN status AS s ON pm.PickupMaterial_status = s.status_id
+                    ORDER BY PickupMaterial_id ASC";
 
-                    // Query the database for the selected PickupMaterial_id
-                    $query = "SELECT * FROM pickup_material WHERE PickupMaterial_id = '$PickupMaterial_id' ORDER BY PickupMaterial_id asc";
 
+                    $result = mysqli_query($con, $query) or die("Error: " . mysqli_error($con));
 
-                    $result = mysqli_query($con, $query);
-
-                    // If there is a result, display the information in textboxes
                     if (mysqli_num_rows($result) > 0) {
-
                         $row = mysqli_fetch_assoc($result);
 
-                        // Create textboxes to display information
-                        echo '<div class="mb-3">';
-                        // echo '<label for="PickupMaterial_id" class="form-label">รหัสสั่งซื้อวัสดุและอุปกรณ์</label>';
-                        echo '<input type="hidden" class="form-control" name="PickupMaterial_id" value="' . $row['PickupMaterial_id'] . '" readonly>';
+                        $takebackDetailId = increaseIdTmd($GLOBALS['Takeback_detail_id']);
+
+                        echo '<div class="mb-3" style="display: inline-block;width : 120px;">';
+                        echo '<label  class="form-label">รหัสสั่งสินค้า</label>';
+                        echo '<input type="hidden" class="form-control" name="Takeback_detail_id" value="' . $takebackDetailId . '" readonly>';
+                        echo '<input type="hidden" class="form-control" name="PickupMaterial_detail_id"  value="' . $row['PickupMaterial_detail_id'] . '" readonly>';
+                        echo '<input type="text" class="form-control"  value="' . $row['PickupMaterial_id'] . '" readonly>';
                         echo '</div>';
 
-                        echo '<div class="mb-3">';
-                        // echo '<label for="PickupMaterial_day" class="form-label">วันที่เบิก</label>';
-                        echo '<input type="hidden" class="form-control" name="PickupMaterial_day" value="' . $row['PickupMaterial_day'] . '" readonly>';
+                        echo '&nbsp;&nbsp;<div class="mb-3" style="display: inline-block;width : 120px;">';
+                        echo '<label for="Takeback_detail" class="form-label">สินค้าที่สั่งทำ</label>';
+                        echo '<input type="text" class="form-control"  value="' . $row['Material_name'] . '" readonly>';
+                        echo '<input type="hidden" class="form-control" name="Takeback_detail" value="' . $row['Material_id'] . '" readonly>';
+                        echo '<input type="hidden" class="form-control" name="Material_id" value="' . $row['Material_id'] . '" readonly>';
                         echo '</div>';
 
-                        echo '<div class="mb-3">';
-                        echo '<label for="Material_id" class="form-label">รหัสวัสดุและอุปกรณ์</label>';
-                        echo '<input type="text" class="form-control" name="Material_id" value="' . $row['Material_id'] . '" readonly>';
-                        echo '</div>';
-
-                        echo '<div class="mb-3">';
-                        echo '<label for="Material_name" class="form-label">ชื่อวัสดุและอุปกรณ์</label>';
-                        echo '<input type="text" class="form-control" name="Material_name" value="' . $row['Material_name'] . '" readonly>';
-                        echo '</div>';
-
-                        echo '<div class="mb-3">';
-                        echo '<label for="PickupMaterial_quantity" class="form-label">จำนวนที่ยืม</label>';
+                        echo '&nbsp;&nbsp;<div class="mb-3" style="display: inline-block;width : 120px;">';
+                        echo '<label for="PickupMaterial_quantity" class="form-label">จำนวน</label>';
                         echo '<input type="text" class="form-control" name="PickupMaterial_quantity" value="' . $row['PickupMaterial_quantity'] . '" readonly>';
                         echo '</div>';
 
-                        // Create form input for PickupMaterial_quantity
-                        echo '<div class="mb-3">';
-                        echo '<label for="Takeback_quantity" class="form-label">กรอกจำนวนที่ต้องการคืน</label>';
-                        echo '<input type="tel" class="form-control" name="Takeback_quantity" required pattern="[0-9]+" onkeypress="return isNumberKey(event)">';
+                        echo '&nbsp;&nbsp;<div class="mb-3" style="display: inline-block;width : 120px;">';
+                        echo '<label for="Counting_unit" class="form-label">หน่วยนับ</label>';
+                        echo '<input type="text" class="form-control"  value="' . $row['Counting_unit_name'] . '" readonly>';
+                        echo '<input type="hidden" class="form-control" name="Counting_unit" value="' . $row['Counting_unit'] . '" readonly>';
                         echo '</div>';
 
-                        // Add script to restrict input to numbers only
-                        echo '<script>';
-                        echo 'function isNumberKey(evt) {';
-                        echo 'var charCode = (evt.which) ? evt.which : event.keyCode;';
-                        echo 'if (charCode > 31 && (charCode < 48 || charCode > 57)) {';
-                        echo 'return false;';
-                        echo '}';
-                        echo 'return true;';
-                        echo '}';
-                        echo '</script>';
-
-                        echo '<div class="mb-3">';
-                        echo '<label for="Unit_id" class="form-label">หน่วยนับ</label>';
-                        echo '<input type="text" class="form-control" name="Unit_id" value="' . $row['Unit_id'] . '" readonly>';
+                        echo '&nbsp;&nbsp;<div class="mb-3" style="display: inline-block;width : 120px;">';
+                        echo '<label for="Takeback_quantity" class="form-label">จำนวนคืน</label>';
+                        echo '<input type="text" class="form-control" name="Takeback_quantity" value=""  required>';
                         echo '</div>';
 
-                        echo '<div class="mb-3">';
-                        echo '<label for="PickupMaterial_quantity" class="form-label">รหัสประเภทวัสดุและอุปกรณ์</label>';
-                        echo '<input type="text" class="form-control" name="MaterialType_id" value="' . $row['MaterialType_id'] . '" readonly>';
+                        echo '&nbsp;&nbsp;<div class="mb-3" style="display: inline-block;width : 120px;">';
+                        echo '<label for="MaterialType_id" class="form-label">ประเภท</label>';
+                        echo '<input type="text" class="form-control"  value="' . $row['MaterialType_name'] . '" readonly>';
+                        echo '<input type="hidden" class="form-control" name="MaterialType_id" value="' . $row['MaterialType_id'] . '" readonly>';
                         echo '</div>';
                     } else {
-                        // If no result is found, display an error message
-                        echo '<p>ไม่พบข้อมูลที่เลือก</p>';
+                        echo '<p>ไม่พบข้อมูล Pre-Order ID ที่เลือก</p>';
                     }
                 }
                 ?>
-                <div class="mb-3">
+                <?php
+                function getEmployeeName($userId)
+                {
+                    require('C:\xampp\XAMXUN\htdocs\webLathe\config\condb.php');
+                    $db = $con;
+
+
+                    $query = "SELECT CONCAT(Employee_name, ' ', Employee_surname) AS full_name FROM employee WHERE Employee_id = ?";
+                    $stmt = $db->prepare($query);
+                    $stmt->bind_param('s', $userId);
+                    $stmt->execute();
+                    $result = $stmt->get_result();
+                    $row = $result->fetch_assoc();
+
+                    return $row['full_name'];
+                }
+
+                ?>
+
+                <div class="mb-3" style="width : 166px;">
                     <label for="Employee_id" class="form-label">ชื่อพนักงาน</label>
-                    <input type="email" class="form-control" name="Employee_id" value="<?php echo ($_SESSION['User']); ?> <?php ?>" readonly>
-                </div>
-                <div class="mb-3">
-                    <label for="PickupMaterial_status" class="form-label">สถานะ</label>
-                    <input type="text" class="form-control" name="PickupMaterial_status" value="รออนุมัติ" readonly>
+                    <input type="text" class="form-control" value="<?php echo getEmployeeName($_SESSION['User']); ?>" readonly>
+                    <input type="hidden" class="form-control" name="Employee_id" value="<?php echo ($_SESSION['User']); ?> <?php ?>" readonly>
                 </div>
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-success" onclick="submitData()">เพิ่มข้อมูล</button>
@@ -258,7 +265,7 @@ if (!$_SESSION["UserID"]) {
         }
 
         body {
-            height: 125vh;
+            height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -267,7 +274,7 @@ if (!$_SESSION["UserID"]) {
         }
 
         .container {
-            max-width: 700px;
+            max-width: 1000px;
             width: 100%;
             background-color: #fff;
             padding: 25px 30px;

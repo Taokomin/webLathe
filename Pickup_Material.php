@@ -123,7 +123,6 @@ if (!$_SESSION["UserID"]) {
                         <th>ลำดับ</th>
                         <th>รหัสเบิกวัสดุและอุปกรณ์</th>
                         <th>วันที่เบิก</th>
-                        <th>รหัสวัสดุและอุปกรณ์</th>
                         <th>ชื่อวัสดุและอุปกรณ์</th>
                         <th>จำนวน</th>
                         <th>รหัสหน่วยนับ</th>
@@ -136,22 +135,33 @@ if (!$_SESSION["UserID"]) {
                 <tbody>
                     <?php
                     require('C:\xampp\XAMXUN\htdocs\webLathe\config\condb.php');
-                    $query = "SELECT * FROM pickup_material ORDER BY PickupMaterial_id asc";
+                    $query = "SELECT pm.*,pmd.PickupMaterial_quantity, m.Material_name, e.Employee_name, e.Employee_surname, 
+                    mt.MaterialType_name, s.status_name,
+                    u.Unit_id AS Counting_unit_id, u.Unit_name AS Counting_unit_name
+                    FROM pickup_material AS pm
+                    INNER JOIN pickup_material_detail AS pmd ON pm.PickupMaterial_id = pmd.PickupMaterial_id
+                    INNER JOIN material AS m ON pmd.PickupMaterial_detail = m.Material_id
+                    INNER JOIN material_type AS mt ON pmd.MaterialType_id = mt.MaterialType_id
+                    INNER JOIN unit AS u ON pmd.Counting_unit = u.Unit_id
+                    INNER JOIN employee AS e ON pm.Employee_id = e.Employee_id
+                    INNER JOIN status AS s ON pm.PickupMaterial_status = s.status_id
+                    ORDER BY PickupMaterial_id ASC";
+
                     $result = mysqli_query($con, $query);
+                    $i = 1;
                     while ($values = mysqli_fetch_assoc($result)) {
                     ?>
                         <tr>
-                            <td><?php echo $values["Auto_number"]; ?></td>
-                            <td><?php echo $values["PickupMaterial_id"]; ?></td>
-                            <td><?php echo date("d/m/Y", strtotime($values["PickupMaterial_day"]. " UTC")); ?></td>
-                            <td><?php echo $values["Material_id"]; ?></td>
-                            <td><?php echo $values["Material_name"]; ?></td>
-                            <td><?php echo $values["PickupMaterial_quantity"]; ?></td>
-                            <td><?php echo $values["Unit_id"]; ?></td>
-                            <td><?php echo $values["MaterialType_id"]; ?></td>
-                            <td><?php echo $values["Employee_id"]; ?></td>
-                            <td><?php echo $values["PickupMaterial_status"]; ?></td>
-                            <td>
+                            <td align="center"><?php echo $i++; ?></td>
+                            <td align="center"><?php echo $values["PickupMaterial_id"]; ?></td>
+                            <td align="center"><?php echo date("d/m/Y", strtotime($values["PickupMaterial_day"] . " UTC")); ?></td>
+                            <td align="center"><?php echo $values["Material_name"]; ?></td>
+                            <td align="center"><?php echo $values["PickupMaterial_quantity"]; ?></td>
+                            <td align="center"><?php echo $values["Counting_unit_name"]; ?></td>
+                            <td align="center"><?php echo $values["MaterialType_name"]; ?></td>
+                            <td align="center"><?php echo $values["Employee_name"] . " " . $values["Employee_surname"]; ?></td>
+                            <td align="center"><?php echo $values["status_name"]; ?></td>
+                            <td align="center">
                                 <a href="Edit_Pickup_Material/Edit_Pickup_Material.php?PickupMaterial_id=<?php echo $values["PickupMaterial_id"]; ?>" class="btn btn-primary">
                                     <iconify-icon style="width: 13px; height: 13px" icon="el:file-edit"></iconify-icon>
                                 </a>
@@ -201,12 +211,13 @@ if (!$_SESSION["UserID"]) {
 
     </html>
     <style>
-            #Buy_Material_table {
-                font-size: 12px;
-                table-layout: fixed
-            }
-            td {
-                word-wrap: break-word;
-            }
-</style>
+        #Buy_Material_table {
+            font-size: 12px;
+            table-layout: fixed
+        }
+
+        td {
+            word-wrap: break-word;
+        }
+    </style>
 <?php } ?>

@@ -120,14 +120,14 @@ if (!$_SESSION["UserID"]) {
             <table id="employee_type_table" class="table table-bordered table-striped" style="width:100%">
                 <thead>
                     <tr>
-                        <th>ลำดับ</th>
-                        <th>รหัสคู่ค้า</th>
-                        <th>คำนำหน้าชื่อ</th>
-                        <th>ชื่อผู้ติดต่อ</th>
-                        <th>นามสกุลผู้ติดต่อ</th>
-                        <th>เบอร์โทรผู้ติดต่อ</th>
-                        <th>บริษัทคู่ค้า</th>
-                        <th>การดำเนินการ</th>
+                        <th style="text-align: center;">ลำดับ</th>
+                        <th style="text-align: center;">รหัสคู่ค้า</th>
+                        <th style="text-align: center;">คำนำหน้าชื่อ</th>
+                        <th style="text-align: center;">ชื่อผู้ติดต่อ</th>
+                        <th style="text-align: center;">นามสกุลผู้ติดต่อ</th>
+                        <th style="text-align: center;">เบอร์โทรผู้ติดต่อ</th>
+                        <th style="text-align: center;">บริษัทคู่ค้า</th>
+                        <th style="text-align: center;">การดำเนินการ</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -143,14 +143,14 @@ if (!$_SESSION["UserID"]) {
                     while ($values = mysqli_fetch_assoc($result)) {
                     ?>
                         <tr>
-                            <td><?php echo $values["Auto_number"]; ?></td>
-                            <td><?php echo $values["Partner_id"]; ?></td>
-                            <td><?php echo $values["Prefix_name"]; ?></td>
-                            <td><?php echo $values["Partner_name"]; ?></td>
-                            <td><?php echo $values["Partner_surname"]; ?></td>
-                            <td><?php echo $values["Partner_number"]; ?></td>
-                            <td><?php echo $values["Partner_company"]; ?></td>
-                            <td>
+                            <td style="text-align: center;"><?php echo $values["Auto_number"]; ?></td>
+                            <td style="text-align: center;"><?php echo $values["Partner_id"]; ?></td>
+                            <td style="text-align: center;"><?php echo $values["Prefix_name"]; ?></td>
+                            <td style="text-align: center;"><?php echo $values["Partner_name"]; ?></td>
+                            <td style="text-align: center;"><?php echo $values["Partner_surname"]; ?></td>
+                            <td style="text-align: center;"><?php echo $values["Partner_number"]; ?></td>
+                            <td style="text-align: center;"><?php echo $values["Partner_company"]; ?></td>
+                            <td style="text-align: center;">
                                 <a href="Edit_Partner/Edit_Partner.php?Partner_id=<?php echo $values["Partner_id"]; ?>" class="btn btn-primary">
                                     <iconify-icon icon="el:file-edit"></iconify-icon>
                                 </a>

@@ -118,10 +118,10 @@ if (!$_SESSION["UserID"]) {
             <table id="name_prefix_table" class="table table-bordered table-striped" style="width:100%">
                 <thead>
                     <tr>
-                        <th>ลำดับ</th>
-                        <th>รหัสคำนำหน้า</th>
-                        <th>คำนำหน้าชื่อ</th>
-                        <th>การดำเนินการ</th>
+                        <th style="text-align: center;">ลำดับ</th>
+                        <th style="text-align: center;">รหัสคำนำหน้า</th>
+                        <th style="text-align: center;">คำนำหน้าชื่อ</th>
+                        <th style="text-align: center;">การดำเนินการ</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -132,10 +132,10 @@ if (!$_SESSION["UserID"]) {
                     while ($values = mysqli_fetch_assoc($result)) {
                     ?>
                         <tr>
-                            <td><?php echo $values["Auto_number"]; ?></td>
-                            <td><?php echo $values["Prefix_id"]; ?></td>
-                            <td><?php echo $values["Prefix_name"]; ?></td>
-                            <td>
+                            <td style="text-align: center;"><?php echo $values["Auto_number"]; ?></td>
+                            <td style="text-align: center;"><?php echo $values["Prefix_id"]; ?></td>
+                            <td style="text-align: center;"><?php echo $values["Prefix_name"]; ?></td>
+                            <td style="text-align: center;">
                                 <a href="Edit_Prefix_Name/Edit_Prefix_Name.php?Prefix_id=<?php echo $values["Prefix_id"]; ?>" class="btn btn-primary">
                                     <iconify-icon icon="el:file-edit"></iconify-icon>
                                 </a>

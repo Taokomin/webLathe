@@ -1,8 +1,12 @@
 <?php
 require('C:\xampp\XAMXUN\htdocs\webLathe\config\condb.php');
 
-$PreOrder_id = $_GET['PreOrder_id'];
-$query1 = "SELECT * FROM pre_order_detail WHERE PreOrder_id = '$PreOrder_id'";
+$PreOrder_detail_id = $_GET['PreOrder_detail_id'];
+$query1 = "SELECT pod.*, po.PreOrder_day 
+           FROM pre_order_detail AS pod
+           INNER JOIN pre_order AS po ON pod.PreOrder_id = po.PreOrder_id
+           WHERE pod.PreOrder_detail_id = '$PreOrder_detail_id'";
+
 $result1 = mysqli_query($con, $query1);
 $PreOrder_detail = mysqli_fetch_assoc($result1);
 
@@ -42,6 +46,10 @@ if (!$_SESSION["UserID"]) {
             <form method="POST">
                 <div>
                     <label for="PreOrder_detail">รายการสินค้า</label>
+                    <input type="text" class="form-control" id="PreOrder_detail" name="PreOrder_detail" value="<?php echo $PreOrder_detail['PreOrder_day']; ?>" required>
+                </div>
+                <div>
+                    <label for="PreOrder_detail">รายการสินค้า</label>
                     <input type="text" class="form-control" id="PreOrder_detail" name="PreOrder_detail" value="<?php echo $PreOrder_detail['PreOrder_detail']; ?>" required>
                 </div>
                 <div>
@@ -61,11 +69,11 @@ if (!$_SESSION["UserID"]) {
                     </select>
                 </div>
                 <div>
-                    <label for="PreOrder_price">ราคาสินค้าต่อหน่วย</label>
+                    <label for="PreOrder_price">ราคา</label>
                     <input type="number" class="form-control" id="PreOrder_price" name="PreOrder_price" value="<?php echo $PreOrder_detail['PreOrder_price']; ?>" required>
                 </div>
                 <div>
-                    <label for="Price_unit">หน่วยนับราคา</label>
+                    <label for="Price_unit">หน่วยนับ</label>
                     <select class="form-control" id="Price_unit" name="Price_unit" required>
                         <option value="">-กรุณาเลือก-</option>
                         <?php mysqli_data_seek($result2, 0); // Reset result set pointer 

@@ -120,41 +120,42 @@ if (!$_SESSION["UserID"]) {
             <table id="customer_table" class="table table-bordered table-striped " style="width:100%">
                 <thead>
                     <tr>
-                        <th>ลำดับ</th>
-                        <th>รหัสพนักงาน</th>
-                        <th>คำนำหน้าชื่อ</th>
-                        <th>ชื่อพนักงาน</th>
-                        <th>นามสกุลพนักงาน</th>
-                        <th>เบอร์โทรพนักงาน</th>
-                        <th>ที่อยู่พนักงาน</th>
-                        <th>ประเภทพนักงาน</th>
-                        <th style="width: 2%;">สิทธิ์การใช้งาน</th>
-                        <th>การดำเนินการ</th>
+                        <th style="text-align: center;">ลำดับ</th>
+                        <th style="text-align: center;">รหัสพนักงาน</th>
+                        <th style="text-align: center;">คำนำหน้าชื่อ</th>
+                        <th style="text-align: center;">ชื่อพนักงาน</th>
+                        <th style="text-align: center;">นามสกุลพนักงาน</th>
+                        <th style="text-align: center;">เบอร์โทรพนักงาน</th>
+                        <th style="text-align: center;">ที่อยู่พนักงาน</th>
+                        <th style="text-align: center;">ประเภทพนักงาน</th>
+                        <th style="text-align: center;width: 2%;">สิทธิ์การใช้งาน</th>
+                        <th style="text-align: center;">การดำเนินการ</th>
                     </tr>
                 </thead>
                 <tbody>
                     <?php
                     require('C:\xampp\XAMXUN\htdocs\webLathe\config\condb.php');
                     $query = "
-                        SELECT e.*,n.Prefix_name,et.EmployeeType_name
+                        SELECT e.*,n.Prefix_name,et.EmployeeType_name,l.License_name
                         FROM employee as e 
                         INNER JOIN  prefix_name as n ON e.Prefix_id = n.Prefix_id
                         INNER JOIN  employee_type as et ON e.EmployeeType_id = et.EmployeeType_id
+                        INNER JOIN  license as l ON e.Employee_license = l.License_id   
                         ORDER BY n.Prefix_id,et.EmployeeType_id asc";
                     $result = mysqli_query($con, $query);
                     while ($values = mysqli_fetch_assoc($result)) {
                     ?>
                         <tr>
-                            <td><?php echo $values["Auto_number"]; ?></td>
-                            <td><?php echo $values["Employee_id"]; ?></td>
-                            <td><?php echo $values["Prefix_name"]; ?></td>
-                            <td><?php echo $values["Employee_name"]; ?></td>
-                            <td><?php echo $values["Employee_surname"]; ?></td>
-                            <td><?php echo $values["Employee_number"]; ?></td>
-                            <td><?php echo $values["Employee_address"]; ?></td>
-                            <td><?php echo $values["EmployeeType_name"]; ?></td>
-                            <td><?php echo $values["Employee_license"]; ?></td>
-                            <td>
+                            <td style="text-align: center;"><?php echo $values["Auto_number"]; ?></td>
+                            <td style="text-align: center;"><?php echo $values["Employee_id"]; ?></td>
+                            <td style="text-align: center;"><?php echo $values["Prefix_name"]; ?></td>
+                            <td style="text-align: center;"><?php echo $values["Employee_name"]; ?></td>
+                            <td style="text-align: center;"><?php echo $values["Employee_surname"]; ?></td>
+                            <td style="text-align: center;"><?php echo $values["Employee_number"]; ?></td>
+                            <td style="text-align: center;"><?php echo $values["Employee_address"]; ?></td>
+                            <td style="text-align: center;"><?php echo $values["EmployeeType_name"]; ?></td>
+                            <td style="text-align: center;"><?php echo $values["License_name"]; ?></td>
+                            <td style="text-align: center;">
                                 <a href="Edit_Employee/Edit_Employee.php?Employee_id=<?php echo $values["Employee_id"]; ?>" class="btn btn-primary">
                                     <iconify-icon icon="el:file-edit"></iconify-icon>
                                 </a>

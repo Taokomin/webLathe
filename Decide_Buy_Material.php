@@ -79,16 +79,18 @@ if (!$_SESSION["UserID"]) {
             <table id="Buy_Material_table" class="table table-bordered table-striped" style="width:100%">
                 <thead>
                     <tr>
-                        <th>ลำดับ</th>
-                        <th>รหัสสั่งซื้อวัสดุและอุปกรณ์</th>
-                        <th>วันที่สั่งซื้อ</th>
-                        <th>รหัสวัสดุและอุปกรณ์</th>
-                        <th>จำนวน</th>
-                        <th>รหัสหน่วยนับ</th>
-                        <th>รหัสประเภทวัสดุและอุปกรณ์</th>
-                        <th>รหัสพนักงาน</th>
-                        <th>รหัสคู่ค้า</th>
-                        <th>สถานะ</th>
+                    <th style="width: 3%;">ลำดับ</th>
+                        <th style="width: 3%;">รหัสสั่งซื้อ</th>
+                        <th style="width: 4%;">วันที่สั่งซื้อ</th>
+                        <th style="width: 3%;">ชื่อวัสดุ</th>
+                        <th style="width: 3%;">จำนวน</th>
+                        <th style="width: 4%;">หน่วยนับ</th>
+                        <th style="width: 4%;">ประเภทวัสดุและอุปกรณ์</th> 
+                        <th style="width: 3%;">ราคา</th>
+                        <th style="width: 4%;">หน่วยนับ</th>
+                        <th>ชื่อพนักงาน</th>
+                        <th>ชื่อคู่ค้า</th>
+                        <th style="width: 4%;">สถานะ</th>
                         <th>การดำเนินการ</th>
                     </tr>
                 </thead>
@@ -100,7 +102,7 @@ if (!$_SESSION["UserID"]) {
                     {
                         global $con;
                         $buyMaterialId = intval($buyMaterialId);
-                        $query = "UPDATE buy_material SET BuyMaterial_status = 'อนุมัติ' WHERE Auto_number = $buyMaterialId";
+                        $query = "UPDATE buy_material SET BuyMaterial_status = 'ST02' WHERE BuyMaterial_id = $buyMaterialId";
                         return mysqli_query($con, $query);
                     }
 
@@ -110,7 +112,7 @@ if (!$_SESSION["UserID"]) {
                     {
                         global $con;
                         $buyMaterialId = intval($buyMaterialId);
-                        $query = "UPDATE buy_material SET BuyMaterial_status = 'ไม่อนุมัติ' WHERE Auto_number = $buyMaterialId";
+                        $query = "UPDATE buy_material SET BuyMaterial_status = 'ST03' WHERE BuyMaterial_id = $buyMaterialId";
                         return mysqli_query($con, $query);
                     }
 
@@ -134,45 +136,68 @@ if (!$_SESSION["UserID"]) {
                     }
                     ?>
 
-                    <?php
+<?php
                     require('C:\xampp\XAMXUN\htdocs\webLathe\config\condb.php');
-                    $query = "SELECT bm.*, m.Material_name, u.Unit_name, mt.MaterialType_name, pn.Partner_name, pn.Partner_surname
+                    $query = "SELECT bm.*,bmd.BuyMaterial_detail ,
+                    bmd.BuyMaterial_quantity,bmd.BuyMaterial_price,
+                    m.Material_name, u.Unit_id AS Counting_unit_id,
+                    u3.Unit_name AS Counting_unit_name,
+                    u2.Unit_id AS Price_unit_id,
+                    u4.Unit_name AS Price_unit_name,
+                    mt.MaterialType_name,
+                    p.Partner_name, 
+                    p.Partner_surname, 
+                    e.Employee_name, 
+                    e.Employee_surname,
+                    s.status_name
                     FROM buy_material AS bm
-                    INNER JOIN material AS m ON bm.Material_id = m.Material_id
-                    INNER JOIN unit AS u ON bm.Unit_id = u.Unit_id
-                    INNER JOIN material_type AS mt ON bm.MaterialType_id = mt.MaterialType_id
-                    INNER JOIN partner AS pn ON bm.Partner_id = pn.Partner_id
-                    ORDER BY  m.Material_id, u.Unit_id, mt.MaterialType_id, pn.Partner_id ASC";
+                    INNER JOIN buy_material_detail AS bmd ON bm.BuyMaterial_id = bmd.BuyMaterial_id
+                    INNER JOIN Material AS m ON bmd.BuyMaterial_detail = m.Material_id 
+                    INNER JOIN unit AS u ON bmd.Counting_unit = u.Unit_id
+                    INNER JOIN unit AS u2 ON bmd.Price_unit = u2.Unit_id
+                    INNER JOIN unit AS u3 ON bmd.Counting_unit = u3.Unit_id
+                    INNER JOIN unit AS u4 ON bmd.Price_unit = u4.Unit_id
+                    INNER JOIN material_type AS mt ON bmd.MaterialType_id = mt.MaterialType_id
+                    INNER JOIN partner AS p ON bm.Partner_id = p.Partner_id
+                    INNER JOIN employee AS e ON bm.Employee_id = e.Employee_id
+                    INNER JOIN status AS s ON bm.BuyMaterial_status = s.status_id
+                    ORDER BY bm.BuyMaterial_id ASC;
+                    ";
+
+
                     $result = mysqli_query($con, $query);
+                    $i = 1;
                     while ($values = mysqli_fetch_assoc($result)) {
                     ?>
                         <tr>
-                            <td><?php echo $values["Auto_number"]; ?></td>
-                            <td><?php echo $values["BuyMaterial_id"]; ?></td>
-                            <td><?php echo date("d/m/Y", strtotime($values["BuyMaterial_day"] . " UTC")); ?></td>
-                            <td><?php echo $values["Material_name"]; ?></td>
-                            <td><?php echo $values["BuyMaterial_quantity"]; ?></td>
-                            <td><?php echo $values["Unit_name"]; ?></td>
-                            <td><?php echo $values["MaterialType_name"]; ?></td>
-                            <td><?php echo $values["Employee_id"]; ?></td>
-                            <td><?php echo $values["Partner_name"] . " " . $values["Partner_surname"]; ?></td>
-                            <td><?php echo $values["BuyMaterial_status"]; ?></td>
-                            <td>
+                            <td align="center"><?php echo $i++; ?></td>
+                            <td align="center"><?php echo $values["BuyMaterial_id"]; ?></td>
+                            <td align="center"><?php echo date("d/m/Y", strtotime($values["BuyMaterial_day"] . " UTC")); ?></td>
+                            <td align="center"><?php echo $values["Material_name"]; ?></td>
+                            <td align="center"><?php echo $values["BuyMaterial_quantity"]; ?></td>
+                            <td align="center"><?php echo $values["Counting_unit_name"]; ?></td>
+                            <td align="center"><?php echo $values["MaterialType_name"]; ?></td>
+                            <td align="center"><?php echo $values["BuyMaterial_price"]; ?></td>
+                            <td align="center"><?php echo $values["Price_unit_name"]; ?></td>
+                            <td align="center"><?php echo $values["Employee_name"] . " " . $values["Partner_surname"]; ?></td>
+                            <td align="center"><?php echo $values["Partner_name"] . " " . $values["Employee_surname"]; ?></td>
+                            <td align="center"><?php echo $values["status_name"]; ?></td>
+                            <td align="center">
                                 <?php
 
-                                if ($values["BuyMaterial_status"] == "รออนุมัติ") { ?>
+                                if ($values["BuyMaterial_status"] == "ST01") { ?>
                                     <form method="POST" action="">
-                                        <input type="hidden" name="buyMaterialId" value="<?php echo $values["Auto_number"]; ?>">
+                                        <input type="hidden" name="buyMaterialId" value="<?php echo $values["BuyMaterial_id"]; ?>">
                                         <button type="submit" name="approve" class="btn btn-success">อนุมัติ</button>
                                     </form>
                                     <form method="POST" action="">
-                                        <input type="hidden" name="buyMaterialId" value="<?php echo $values["Auto_number"]; ?>">
+                                        <input type="hidden" name="buyMaterialId" value="<?php echo $values["BuyMaterial_id"]; ?>">
                                         <button type="submit" name="disapprove" class="btn btn-warning">ไม่อนุมัติ</button>
                                     </form>
                                 <?php
                                 } else { ?>
                                     <form method="POST" action="">
-                                        <input type="hidden" name="buyMaterialId" value="<?php echo $values["Auto_number"]; ?>">
+                                        <input type="hidden" name="buyMaterialId" value="<?php echo $values["BuyMaterial_id"]; ?>">
                                         <button type="submit" name="disapprove" class="btn btn-warning">ไม่อนุมัติ</button>
                                     </form>
                                 <?php } ?>

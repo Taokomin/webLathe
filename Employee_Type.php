@@ -120,10 +120,10 @@ if (!$_SESSION["UserID"]) {
             <table id="employee_type_table" class="table table-bordered table-striped" style="width:100%">
                 <thead>
                     <tr>
-                        <th>ลำดับ</th>
-                        <th>รหัสประเภทพนักงาน</th>
-                        <th>ชื่อประเภทพนักงาน</th>
-                        <th>การดำเนินการ</th>
+                        <th style="text-align: center;">ลำดับ</th>
+                        <th style="text-align: center;">รหัสประเภทพนักงาน</th>
+                        <th style="text-align: center;">ชื่อประเภทพนักงาน</th>
+                        <th style="text-align: center;">การดำเนินการ</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -134,10 +134,10 @@ if (!$_SESSION["UserID"]) {
                     while ($values = mysqli_fetch_assoc($result)) {
                     ?>
                         <tr>
-                            <td><?php echo $values["Auto_number"]; ?></td>
-                            <td><?php echo $values["EmployeeType_id"]; ?></td>
-                            <td><?php echo $values["EmployeeType_name"]; ?></td>
-                            <td>
+                            <td style="text-align: center;"><?php echo $values["Auto_number"]; ?></td>
+                            <td style="text-align: center;"><?php echo $values["EmployeeType_id"]; ?></td>
+                            <td style="text-align: center;"><?php echo $values["EmployeeType_name"]; ?></td>
+                            <td style="text-align: center;">
                                 <a href="Edit_Employee_Type/Edit_Employee_Type.php?EmployeeType_id=<?php echo $values["EmployeeType_id"]; ?>" class="btn btn-primary">
                                     <iconify-icon icon="el:file-edit"></iconify-icon>
                                 </a>

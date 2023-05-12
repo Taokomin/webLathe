@@ -169,23 +169,6 @@ if (!$_SESSION["UserID"]) {
                                 <?php } ?>
                             </select>
                         </div>
-                        <?php
-                        require('C:\xampp\XAMXUN\htdocs\webLathe\config\condb.php');
-                        $sql1 = $con;
-                        $query1 = "SELECT * FROM material_type ORDER BY MaterialType_id asc";
-                        $result1 = mysqli_query($sql1, $query1);
-                        ?>
-                        <div class="mb-3" style="display: inline-block;width : 166px;">
-                            <label for="product1_Price_unit" class="form-label">ประเภทวัสดุอุปกรณ์</label>
-                            <select class="form-select" aria-label="Default select example" name="product_Price_unit[]" required>
-                                <option value="">-กรุณาเลือก-</option>
-                                <?php foreach ($result1 as $results) { ?>
-                                    <option value="<?php echo $results["MaterialType_id"]; ?>">
-                                        <?php echo $results["MaterialType_name"]; ?>
-                                    </option>
-                                <?php } ?>
-                            </select>
-                        </div>
                     </div>
                 </div>
                 <button type="button" onclick="addProduct()" class="btn btn-primary">เพิ่มรายการสั่งซื้อ</button>

@@ -120,15 +120,15 @@ if (!$_SESSION["UserID"]) {
             <table id="employee_type_table" class="table table-bordered table-striped" style="width:100%">
                 <thead>
                     <tr>
-                        <th>ลำดับ</th>
-                        <th>รหัสวัสดุและอุปกรณ์</th>
-                        <th>ชื่อวัสดุและอุปกรณ์</th>
-                        <th>จำนวน</th>
-                        <th>หน่วยนับ</th>
-                        <th>ประเภทวัสดุและอุปกรณ์</th>
-                        <th>ราคา</th>
-                        <th>หน่วยนับ</th>
-                        <th>การดำเนินการ</th>
+                        <th style="text-align: center;">ลำดับ</th>
+                        <th style="text-align: center;">รหัสวัสดุและอุปกรณ์</th>
+                        <th style="text-align: center;">ชื่อวัสดุและอุปกรณ์</th>
+                        <th style="text-align: center;">จำนวน</th>
+                        <th style="text-align: center;">หน่วยนับ</th>
+                        <th style="text-align: center;">ประเภทวัสดุและอุปกรณ์</th>
+                        <th style="text-align: center;">ราคา</th>
+                        <th style="text-align: center;">หน่วยนับ</th>
+                        <th style="text-align: center;">การดำเนินการ</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -146,15 +146,15 @@ if (!$_SESSION["UserID"]) {
                     while ($values = mysqli_fetch_assoc($result)) {
                     ?>
                         <tr>
-                            <td><?php echo $values["Auto_number"]; ?></td>
-                            <td><?php echo $values["Material_id"]; ?></td>
-                            <td><?php echo $values["Material_name"]; ?></td>
-                            <td><?php echo $values["Material_quantity"]; ?></td>
-                            <td><?php echo $values["Counting_unit_name"]; ?></td>
-                            <td><?php echo $values["MaterialType_name"]; ?></td>
-                            <td><?php echo $values["Material_price"]; ?></td>
-                            <td><?php echo $values["Price_unit_name"]; ?></td>
-                            <td>
+                            <td style="text-align: center;"><?php echo $values["Auto_number"]; ?></td>
+                            <td style="text-align: center;"><?php echo $values["Material_id"]; ?></td>
+                            <td style="text-align: center;"><?php echo $values["Material_name"]; ?></td>
+                            <td style="text-align: center;"><?php echo $values["Material_quantity"]; ?></td>
+                            <td style="text-align: center;"><?php echo $values["Counting_unit_name"]; ?></td>
+                            <td style="text-align: center;"><?php echo $values["MaterialType_name"]; ?></td>
+                            <td style="text-align: center;"><?php echo $values["Material_price"]; ?></td>
+                            <td style="text-align: center;"><?php echo $values["Price_unit_name"]; ?></td>
+                            <td style="text-align: center;">
                                 <a href="Edit_Material/Edit_Material.php?Material_id=<?php echo $values["Material_id"]; ?>" class="btn btn-primary">
                                     <iconify-icon icon="el:file-edit"></iconify-icon>
                                 </a>

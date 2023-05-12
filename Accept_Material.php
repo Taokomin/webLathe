@@ -149,7 +149,7 @@ if (!$_SESSION["UserID"]) {
           INNER JOIN unit AS u2 ON amd.Price_unit = u2.Unit_id
           INNER JOIN partner AS p ON am.Partner_id = p.Partner_id
           INNER JOIN employee AS e ON am.Employee_id = e.Employee_id
-          ORDER BY am.AcceptMaterial_day DESC";
+          ORDER BY am.AcceptMaterial_id ASC";
 
                     $result = mysqli_query($con, $query);
                     $i = 1;

@@ -1,52 +1,77 @@
+<?php session_start(); ?>
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
 include 'C:\xampp\XAMXUN\htdocs\Lathe_application\config\condb.php';
-
+require('Function\getEmployeeName.php');
 
 if (!$con) {
     die("Connection failed: " . mysqli_connect_error());
 }
-if (isset($_GET['Auto_number'])) {
-    $Auto_number = $_GET['Auto_number'];
-    $sql = "SELECT bm.*, m.Material_name, u.Unit_name, mt.MaterialType_name, pn.Partner_name, pn.Partner_surname
+if (isset($_GET['BuyMaterial_id'])) {
+    $BuyMaterial_id = $_GET['BuyMaterial_id'];
+    $sql = "SELECT bm.*,bmd.BuyMaterial_detail ,
+    bmd.BuyMaterial_quantity,bmd.BuyMaterial_price,
+    m.Material_name, u.Unit_id AS Counting_unit_id,
+    u3.Unit_name AS Counting_unit_name,
+    u2.Unit_id AS Price_unit_id,
+    u4.Unit_name AS Price_unit_name,
+    mt.MaterialType_name,
+    p.Partner_name, 
+    p.Partner_surname, 
+    p.Partner_email,
+    e.Employee_name, 
+    e.Employee_surname,
+    s.status_name
     FROM buy_material AS bm
-    INNER JOIN material AS m ON bm.Material_id = m.Material_id
-    INNER JOIN unit AS u ON bm.Unit_id = u.Unit_id
-    INNER JOIN material_type AS mt ON bm.MaterialType_id = mt.MaterialType_id
-    INNER JOIN partner AS pn ON bm.Partner_id = pn.Partner_id
-    WHERE bm.Auto_number = $Auto_number
-    ORDER BY m.Material_id, u.Unit_id, mt.MaterialType_id, pn.Partner_id, bm.BuyMaterial_id ASC
+    INNER JOIN buy_material_detail AS bmd ON bm.BuyMaterial_id = bmd.BuyMaterial_id
+    INNER JOIN Material AS m ON bmd.BuyMaterial_detail = m.Material_id 
+    INNER JOIN unit AS u ON bmd.Counting_unit = u.Unit_id
+    INNER JOIN unit AS u2 ON bmd.Price_unit = u2.Unit_id
+    INNER JOIN unit AS u3 ON bmd.Counting_unit = u3.Unit_id
+    INNER JOIN unit AS u4 ON bmd.Price_unit = u4.Unit_id
+    INNER JOIN material_type AS mt ON bmd.MaterialType_id = mt.MaterialType_id
+    INNER JOIN partner AS p ON bm.Partner_id = p.Partner_id
+    INNER JOIN employee AS e ON bm.Employee_id = e.Employee_id
+    INNER JOIN status AS s ON bm.BuyMaterial_status = s.status_id
+    WHERE bm.BuyMaterial_id = '$BuyMaterial_id'
+    ORDER BY bm.BuyMaterial_id ASC;
     ";
   
 } else {
     $sql = "SELECT * FROM pre_order ORDER BY PreOrder_id ASC";
 }
 $result = mysqli_query($con, $sql);
-$content = "";
+$total = 0;
 if (mysqli_num_rows($result) > 0) {
-    $i = 1;
-    while ($row = mysqli_fetch_assoc($result)) {
+  $i = 1;
+  while ($row = mysqli_fetch_assoc($result)) {
+    $no = $row['BuyMaterial_id'];
+    $date = date('d/m/Y', strtotime($row['BuyMaterial_day']));
+    $emp = $row['Employee_name'] ." ". $row['Employee_surname'];
+    $ctm = $row['Partner_name'] ." ". $row['Partner_surname'];
+    $cem = $row['Partner_email'];
+    $subtotal = $row['BuyMaterial_quantity'] * $row['BuyMaterial_price'];
+    $total += $subtotal;
       $tablebody .= '<tr style="border:1px solid #000;">
           <td style="border-right:1px solid #000;padding:3px;text-align:center;"  >' . $i . '</td>
-          <td style="border-right:1px solid #000;padding:3px;text-align:center;"  >' . $row['BuyMaterial_id'] . '</td>
-          <td style="border-right:1px solid #000;padding:3px;text-align:center;"  >' . $row['BuyMaterial_day'] . '</td>
-          <td style="border-right:1px solid #000;padding:3px;text-align:center;"  >' . $row['Material_id'] . '</td>
-              <td style="border-right:1px solid #000;padding:3px;text-align:center;"  >' . $row['BuyMaterial_quantity'] . '</td>
-          <td style="border-right:1px solid #000;padding:3px;text-align:center;"  >' . $row['Unit_name'] . '</td>
-          <td style="border-right:1px solid #000;padding:3px;text-align:center;"  >' . $row['MaterialType_name'] . '</td>
-          <td style="border-right:1px solid #000;padding:3px;text-align:center;"  >' . $row['Employee_id'] . '</td>
-          <td style="border-right:1px solid #000;padding:3px;text-align:center;"  >' . $row['Partner_name'] . " " . $row["Partner_surname"] . '</td>
+          <td style="border-right:1px solid #000;padding:3px;text-align:center;"  >' . $row['Material_name'] . '</td>
+          <td style="border-right:1px solid #000;padding:3px;text-align:center;"  >' . $row['BuyMaterial_quantity'] . '</td>  
+          <td style="border-right:1px solid #000;padding:3px;text-align:center;"  >' . $row['BuyMaterial_price'] . '</td>    
+          <td style="border-right:1px solid #000;padding:3px;text-align:center;">' . $row['BuyMaterial_quantity'] * $row['BuyMaterial_price'] . '</td>
         </tr>';
       $i++;
     }
   }
+  $tablebody .= '<tr style="border:1px solid #000;">
+    <td colspan="4" style="border-right:1px solid #000;padding:3px;text-align:right;">ผลรวมสรุป:</td>
+    <td style="border-right:1px solid #000;padding:3px;text-align:center;">' . $total . '</td>
+</tr>';
 mysqli_close($con);
 
 $mpdf = new \Mpdf\Mpdf();
 
 $tableh = '
 <style>
-body {
   .clearfix:after {
     content: "";
     display: table;
@@ -54,8 +79,8 @@ body {
   }
   
   a {
-    color: #5D6975;
-    text-decoration: underline;
+    color: #0087C3;
+    text-decoration: none;
   }
   
   body {
@@ -63,72 +88,131 @@ body {
     width: 21cm;  
     height: 29.7cm; 
     margin: 0 auto; 
-    color: #001028;
+    color: #555555;
     background: #FFFFFF; 
     font-family: sarabun;
-    font-size: 12px; 
+    font-size: 18px; 
   }
   
   header {
     padding: 10px 0;
-    margin-bottom: 30px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #AAAAAA;
   }
   
-  #notbglogo {
-    display: block;
-    margin-left:auto;
-    margin-right:auto;
-    width: 100px;
-    height: 100px;
+  #logo, #company{
+    display: inline-block;
+    vertical-align: middle;
   }
-  
-  h1 {
-    border-top: 1px solid  #5D6975;
-    border-bottom: 1px solid  #5D6975;
-    color: #5D6975;
-    font-size: 2.4em;
-    line-height: 1.4em;
-    font-weight: normal;
-    text-align: center;
-    margin: 0 0 20px 0;
-    background: url(dimension.png);
+
+  #details, #client{
+    display: inline-block;
+    vertical-align: middle;
   }
-  #company {
+
+  #logo {
     float: left;
-    text-align: left;
+    width: 301px;
+  }
+  
+  #logo img {
+    max-width: 100%;
+  height: auto;
+  }
+  
+  #company {
+    text-align: right;
+  width: calc(100% - 301px);
+  }
+
+  #company h1{
+    margin-top: 0;
+  margin-bottom: 5px;
+  }
+
+  #details {
+    margin-bottom: 50px;
+  }
+  
+  #client {
+    padding-left: 6px;
+    border-left: 6px solid #0087C3;
+    float: left;
+    width: 301px;
+  }
+  
+  #client .to {
+    color: #777777;
+  }
+  
+  h2.name {
+    font-size: 1.4em;
+    font-weight: normal;
+    margin: 0;
+  }
+  
+  #invoice {
+    text-align: right;
+  width: calc(100% - 301px);
+  }
+  
+  #invoice h1 {
+    color: #0087C3;
+    font-size: 2.4em;
+    line-height: 1em;
+    font-weight: normal;
+    margin: 0  0 10px 0;
+  }
+  
+  #invoice .date {
+    font-size: 1.1em;
+    color: #777777;
+  }
+margin-bottom: 50px;
+  }
+  
+  #notices{
+    padding-left: 6px;
+    border-left: 6px solid #0087C3;  
   }
   
   #notices .notice {
-    color: #5D6975;
     font-size: 1.2em;
-  }
+  } 
 }
 </style>
-<div id="notbglogo" >
-      <img src="picture\notbglogo.png">
-      </div>
 <header class="clearfix">
-      
-      <h1>ใบสั่งซื้อวัสดุและอุปกรณ์</h1>
-      <div id="company" class="clearfix">
-        <div>บริษัท คิว ดี อี พรีซิชั่น พาร์ท จำกัด</div>
-        <div>หมู่ 13 ตำบลคลองสอง อำเภอคลองหลวง </div>
-        <div>จังหวัดปทุมธานี 12120</div>
-        <div>(602) 519-0450</div>
-        <div><a href="mailto:company@example.com">company@example.com</a></div>
+      <div id="logo">
+        <img src="picture\sizelogo.png">
+      </div>
+      <div id="company">
+        <h1 class="name">บริษัท คิว.ดี.อี. พรีซิชั่น พาร์ท จำกัด</h1>
+        <div>22/82 หมู่ 13 ซอยไอยรา 10  ตำบลคลองสอง อำเภอคลองหลวง จังหวัดปทุมธานี 12120</div>
+        <div>096-269-9959, 02-100-4616</div>
+        <div><a href="mailto:qde_engineer@yahoo.com">qde_engineer@yahoo.com</a></div>
       </div>
     </header>
+    <main>
+      <div id="details" class="clearfix">
+        <div id="client">
+          <div class="to">ชื่อคู้ค้า : </div>
+          <h2 class="name">'.$ctm.'</h2>
+          <div class="email"><a href="mailto:'.$cem.'">'.$cem.'</a></div>
+        </div>
+        <div id="invoice">
+          <h1>ใบสั่งซื้อสินค้า :'.$no .'</h1>
+          <div class="date">วันที่สั่งซื้อ: '.$date.' </div>
+
+
+        </div>
+      </div>
     <table id="bg-table" width="100%" style="border-collapse: collapse;font-size:12pt;margin-top:8px;">
     <tr style="border:1px solid #000;padding:4px;">
         <td  style="border-right:1px solid #000;padding:4px;text-align:center;"   width="10%">ลำดับ</td>
-        <td  style="border-right:1px solid #000;padding:4px;text-align:center;"  width="30%">รหัสสั่งซื้อวัสดุและอุปกรณ์</td>
-        <td  style="border-right:1px solid #000;padding:4px;text-align:center;" width="20%">วันที่สั่งซื้อ</td>
-        <td  style="border-right:1px solid #000;padding:4px;text-align:center;"  width="20%">รหัสวัสดุและอุปกรณ์</td>
-        <td  style="border-right:1px solid #000;padding:4px;text-align:center;" width="15%">จำนวน</td>
-        <td  style="border-right:1px solid #000;padding:4px;text-align:center;" width="20%">รหัสหน่วยนับ</td>
-        <td  style="border-right:1px solid #000;padding:4px;text-align:center;"  width="20%">รหัสประเภทวัสดุและอุปกรณ์</td>
-        <td  style="border-right:1px solid #000;padding:4px;text-align:center;" width="15%">รหัสพนักงาน</td>
-        <td  style="border-right:1px solid #000;padding:4px;text-align:center;" width="20%">รหัสคู่ค้า</td>
+        <td  style="border-right:1px solid #000;padding:4px;text-align:center;"  width="30%">ชื่อวัสดุและอุปกรณ์</td>
+        <td  style="border-right:1px solid #000;padding:4px;text-align:center;" width="20%">จำนวน</td>
+        <td  style="border-right:1px solid #000;padding:4px;text-align:center;" width="20%">ราคา</td>
+        <td  style="border-right:1px solid #000;padding:4px;text-align:center;"  width="20%">ราคารวม</td>
     </tr>
 </thead>
   <tbody>';
@@ -145,10 +229,10 @@ $tableh2 = '
 <br><br><br><br><br><br>
 <table id="bg-table2" width="100%" style="border-collapse: collapse;font-size:12pt;margin-top:8px;">
     <tr style="border:0px solid #000;padding:4px;">
-        <td  style="border-right:0px solid #000;padding:4px;"   width="10%" align="right">ลงชื่อ.....................................</td>
+    <td  style="border-right:0px solid #000;padding:4px;"   width="10%" align="right">ลงชื่อ  :  '. getEmployeeName($_SESSION['User']) .'</td>
     </tr>
     <tr style="border:0px solid #000;padding:4px;">
-    <td  style="border-right:0px solid #000;padding:4px;"  width="10%" align="right">(....................................)</td>
+    <td  style="border-right:0px solid #000;padding:4px;"  width="10%" align="right">(.........................................)</td>
     </tr>
 </thead>
   <tbody>';

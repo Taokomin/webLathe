@@ -85,9 +85,8 @@ if (!$_SESSION["UserID"]) {
                     <tr>
                         <th>ลำดับ</th>
                         <th>ชื่อล็อคอิน</th>
-                        <th>รหัสผ่าน</th>
-                        <th>ชื่อ</th>
-                        <th>นามสกุล</th>
+                        <!-- <th>รหัสผ่าน</th> -->
+                        <th>ชื่อ-นามสกุล</th>
                         <th>สิทธิการใช้งาน</th>
                         <th>การดำเนินการ</th>
                     </tr>
@@ -108,8 +107,8 @@ if (!$_SESSION["UserID"]) {
                         <tr>
                             <td><?php echo $values["ID"]; ?></td>
                             <td><?php echo $values["Username"]; ?></td>
-                            <td><?php echo md5($values["Password"]); ?></td>
-                            <td><?php echo $values["Employee_name"].$values["Employee_surname"]; ?></td>
+                            <!-- <td><?php echo md5($values["Password"]); ?></td> -->
+                            <td><?php echo $values["Employee_name"]." ".$values["Employee_surname"]; ?></td>
                             <td><?php echo $values["License_name"]; ?></td>
                             <td>
                                 <a href="Edit_User_Name/Edit_User_Name.php?ID=<?php echo $values["ID"]; ?>" class="btn btn-primary">

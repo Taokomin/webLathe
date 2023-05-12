@@ -123,6 +123,7 @@ if (!$_SESSION["UserID"]) {
                         <th style="width: 3%;">ลำดับ</th>
                         <th style="width: 3%;">รหัสสั่งซื้อ</th>
                         <th style="width: 4%;">วันที่สั่งซื้อ</th>
+                        <th style="width: 3%;">รหัสรายการ</th>
                         <th style="width: 3%;">ชื่อวัสดุ</th>
                         <th style="width: 3%;">จำนวน</th>
                         <th style="width: 4%;">หน่วยนับ</th>
@@ -138,7 +139,7 @@ if (!$_SESSION["UserID"]) {
                 <tbody>
                     <?php
                     require('C:\xampp\XAMXUN\htdocs\webLathe\config\condb.php');
-                    $query = "SELECT bm.*,bmd.BuyMaterial_detail ,
+                    $query = "SELECT bm.*,bmd.BuyMaterial_detail_id,bmd.BuyMaterial_detail ,
                     bmd.BuyMaterial_quantity,bmd.BuyMaterial_price,
                     m.Material_name, u.Unit_id AS Counting_unit_id,
                     u3.Unit_name AS Counting_unit_name,
@@ -161,7 +162,7 @@ if (!$_SESSION["UserID"]) {
                     INNER JOIN partner AS p ON bm.Partner_id = p.Partner_id
                     INNER JOIN employee AS e ON bm.Employee_id = e.Employee_id
                     INNER JOIN status AS s ON bm.BuyMaterial_status = s.status_id
-                    ORDER BY bm.BuyMaterial_id ASC;
+                    ORDER BY bm.BuyMaterial_id,bmd.BuyMaterial_detail_id ASC;
                     ";
 
 
@@ -173,6 +174,7 @@ if (!$_SESSION["UserID"]) {
                             <td align="center"><?php echo $i++; ?></td>
                             <td align="center"><?php echo $values["BuyMaterial_id"]; ?></td>
                             <td align="center"><?php echo date("d/m/Y", strtotime($values["BuyMaterial_day"] . " UTC")); ?></td>
+                            <td align="center"><?php echo $values["BuyMaterial_detail_id"]; ?></td>>
                             <td align="center"><?php echo $values["Material_name"]; ?></td>
                             <td align="center"><?php echo $values["BuyMaterial_quantity"]; ?></td>
                             <td align="center"><?php echo $values["Counting_unit_name"]; ?></td>

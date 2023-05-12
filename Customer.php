@@ -120,14 +120,14 @@ if (!$_SESSION["UserID"]) {
             <table id="customer_table" class="table table-bordered table-striped" style="width:100%">
                 <thead>
                     <tr>
-                        <th>ลำดับ</th>
-                        <th>รหัสลูกค้า</th>
-                        <th>คำนำหน้าชื่อ</th>
-                        <th>ชื่อลูกค้า</th>
-                        <th>นามสกุลลูกค้า</th>
-                        <th>เบอร์โทรลูกค้า</th>
-                        <th>อีเมลลูกค้า</th>
-                        <th>การดำเนินการ</th>
+                        <th style="text-align: center;">ลำดับ</th>
+                        <th style="text-align: center;">รหัสลูกค้า</th>
+                        <th style="text-align: center;">คำนำหน้าชื่อ</th>
+                        <th style="text-align: center;">ชื่อลูกค้า</th>
+                        <th style="text-align: center;">นามสกุลลูกค้า</th>
+                        <th style="text-align: center;">เบอร์โทรลูกค้า</th>
+                        <th style="text-align: center;">อีเมลลูกค้า</th>
+                        <th style="text-align: center;">การดำเนินการ</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -142,14 +142,14 @@ if (!$_SESSION["UserID"]) {
                     while ($values = mysqli_fetch_assoc($result)) {
                     ?>
                         <tr>
-                            <td><?php echo $values["Auto_number"]; ?></td>
-                            <td><?php echo $values["Customer_id"]; ?></td>
-                            <td><?php echo $values["Prefix_name"]; ?></td>
-                            <td><?php echo $values["Customer_name"]; ?></td>
-                            <td><?php echo $values["Customer_surname"]; ?></td>
-                            <td><?php echo $values["Customer_number"]; ?></td>
-                            <td><?php echo $values["Customer_email"]; ?></td>
-                            <td>
+                            <td style="text-align: center;"><?php echo $values["Auto_number"]; ?></td>
+                            <td style="text-align: center;"><?php echo $values["Customer_id"]; ?></td>
+                            <td style="text-align: center;"><?php echo $values["Prefix_name"]; ?></td>
+                            <td style="text-align: center;"><?php echo $values["Customer_name"]; ?></td>
+                            <td style="text-align: center;"><?php echo $values["Customer_surname"]; ?></td>
+                            <td style="text-align: center;"><?php echo $values["Customer_number"]; ?></td>
+                            <td style="text-align: center;"><?php echo $values["Customer_email"]; ?></td>
+                            <td style="text-align: center;">
                                 <a href="Edit_Customer/Edit_Customer.php?Customer_id=<?php echo $values["Customer_id"]; ?>" class="btn btn-primary">
                                     <iconify-icon icon="el:file-edit"></iconify-icon>
                                 </a>

@@ -1,46 +1,65 @@
+<?php session_start(); ?>
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
 include 'C:\xampp\XAMXUN\htdocs\Lathe_application\config\condb.php';
+require('Function\getEmployeeName.php');
 
 
 if (!$con) {
-    die("Connection failed: " . mysqli_connect_error());
+  die("Connection failed: " . mysqli_connect_error());
 }
-if (isset($_GET['Auto_number'])) {
-    $Auto_number = $_GET['Auto_number'];
-    $sql = "SELECT po.*, u.Unit_name, c.Customer_name, c.Customer_surname
-  FROM pre_order AS po
-  INNER JOIN unit AS u ON po.Unit_id = u.Unit_id
-  INNER JOIN customer AS c ON po.Customer_id = c.Customer_id
-  WHERE po.Auto_number = $Auto_number";
+if (isset($_GET['PreOrder_id'])) {
+  $PreOrder_id = $_GET['PreOrder_id'];
+  $sql = "SELECT po.*,pod.PreOrder_detail, pod.PreOrder_quantity, u.Unit_id AS Counting_unit_id, u3.Unit_name AS Counting_unit_name,
+    pod.PreOrder_price, u2.Unit_id AS Price_unit_id, u4.Unit_name AS Price_unit_name,
+    pod.PreOrder_quantity, c.Customer_name, c.Customer_surname,c.Customer_email, e.Employee_name, e.Employee_surname
+    FROM pre_order AS po
+    INNER JOIN pre_order_detail AS pod ON po.PreOrder_id = pod.PreOrder_id
+    INNER JOIN unit AS u ON pod.Counting_unit = u.Unit_id
+    INNER JOIN unit AS u2 ON pod.Price_unit = u2.Unit_id
+    INNER JOIN unit AS u3 ON pod.Counting_unit = u3.Unit_id
+    INNER JOIN unit AS u4 ON pod.Price_unit = u4.Unit_id
+    INNER JOIN customer AS c ON po.Customer_id = c.Customer_id
+    INNER JOIN employee AS e ON po.Employee_id = e.Employee_id
+    WHERE po.PreOrder_id = '$PreOrder_id'
+    ORDER BY po.PreOrder_id ASC;";
 } else {
-    $sql = "SELECT * FROM pre_order ORDER BY PreOrder_id ASC";
+  $sql = "SELECT * FROM pre_order ORDER BY PreOrder_id ASC";
 }
 $result = mysqli_query($con, $sql);
 $content = "";
+$total = 0;
 if (mysqli_num_rows($result) > 0) {
-    $i = 1;
-    while ($row = mysqli_fetch_assoc($result)) {
-        $tablebody .= '<tr style="border:1px solid #000;">
+  $i = 1;
+  while ($row = mysqli_fetch_assoc($result)) {
+    $no = $row['PreOrder_id'];
+    $date = date('d/m/Y', strtotime($row['PreOrder_day']));
+    $emp = $row['Employee_name'] ." ". $row['Employee_surname'];
+    $ctm = $row['Customer_name'] ." ". $row['Customer_surname'];
+    $cem = $row['Customer_email'];
+    $subtotal = $row['PreOrder_quantity'] * $row['PreOrder_price'];
+    $total += $subtotal;
+    $tablebody .= '<tr style="border:1px solid #000;">
         <td style="border-right:1px solid #000;padding:3px;text-align:center;"  >' . $i . '</td>
-        <td style="border-right:1px solid #000;padding:3px;text-align:center;"  >' . $row['PreOrder_id'] . '</td>
-        <td style="border-right:1px solid #000;padding:3px;text-align:center;"  >' . $row['PreOrder_day'] . '</td>
         <td style="border-right:1px solid #000;padding:3px;text-align:center;"  >' . $row['PreOrder_detail'] . '</td>
         <td style="border-right:1px solid #000;padding:3px;text-align:center;"  >' . $row['PreOrder_quantity'] . '</td>
-		<td style="border-right:1px solid #000;padding:3px;text-align:center;"  >' . $row['Unit_name'] . '</td>
-        <td style="border-right:1px solid #000;padding:3px;text-align:center;"  >' . $row['Customer_name'] . ' ' . $row["Customer_surname"] .  '</td>
-		<td style="border-right:1px solid #000;padding:3px;text-align:center;"  >' . $row['Employee_id'] . '</td>
+    <td style="border-right:1px solid #000;padding:3px;text-align:center;"  >' . $row['PreOrder_price'] . '</td>
+    <td style="border-right:1px solid #000;padding:3px;text-align:center;">' . $row['PreOrder_quantity'] * $row['PreOrder_price'] . '</td>
+
       </tr>';
-        $i++;
-    }
+    $i++;
+  }
 }
+$tablebody .= '<tr style="border:1px solid #000;">
+    <td colspan="4" style="border-right:1px solid #000;padding:3px;text-align:right;">ผลรวมสรุป:</td>
+    <td style="border-right:1px solid #000;padding:3px;text-align:center;">' . $total . '</td>
+</tr>';
 mysqli_close($con);
 
 $mpdf = new \Mpdf\Mpdf();
 
 $tableh = '
 <style>
-body {
   .clearfix:after {
     content: "";
     display: table;
@@ -48,8 +67,8 @@ body {
   }
   
   a {
-    color: #5D6975;
-    text-decoration: underline;
+    color: #0087C3;
+    text-decoration: none;
   }
   
   body {
@@ -57,71 +76,131 @@ body {
     width: 21cm;  
     height: 29.7cm; 
     margin: 0 auto; 
-    color: #001028;
+    color: #555555;
     background: #FFFFFF; 
     font-family: sarabun;
-    font-size: 12px; 
+    font-size: 18px; 
   }
   
   header {
     padding: 10px 0;
-    margin-bottom: 30px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #AAAAAA;
   }
   
-  #notbglogo {
-    display: block;
-    margin-left:auto;
-    margin-right:auto;
-    width: 100px;
-    height: 100px;
+  #logo, #company{
+    display: inline-block;
+    vertical-align: middle;
   }
-  
-  h1 {
-    border-top: 1px solid  #5D6975;
-    border-bottom: 1px solid  #5D6975;
-    color: #5D6975;
-    font-size: 2.4em;
-    line-height: 1.4em;
-    font-weight: normal;
-    text-align: center;
-    margin: 0 0 20px 0;
-    background: url(dimension.png);
+
+  #details, #client{
+    display: inline-block;
+    vertical-align: middle;
   }
-  #company {
+
+  #logo {
     float: left;
-    text-align: left;
+    width: 301px;
+  }
+  
+  #logo img {
+    max-width: 100%;
+  height: auto;
+  }
+  
+  #company {
+    text-align: right;
+  width: calc(100% - 301px);
+  }
+
+  #company h1{
+    margin-top: 0;
+  margin-bottom: 5px;
+  }
+
+  #details {
+    margin-bottom: 50px;
+  }
+  
+  #client {
+    padding-left: 6px;
+    border-left: 6px solid #0087C3;
+    float: left;
+    width: 301px;
+  }
+  
+  #client .to {
+    color: #777777;
+  }
+  
+  h2.name {
+    font-size: 1.4em;
+    font-weight: normal;
+    margin: 0;
+  }
+  
+  #invoice {
+    text-align: right;
+  width: calc(100% - 301px);
+  }
+  
+  #invoice h1 {
+    color: #0087C3;
+    font-size: 2.4em;
+    line-height: 1em;
+    font-weight: normal;
+    margin: 0  0 10px 0;
+  }
+  
+  #invoice .date {
+    font-size: 1.1em;
+    color: #777777;
+  }
+margin-bottom: 50px;
+  }
+  
+  #notices{
+    padding-left: 6px;
+    border-left: 6px solid #0087C3;  
   }
   
   #notices .notice {
-    color: #5D6975;
     font-size: 1.2em;
-  }
+  } 
 }
 </style>
-<div id="notbglogo" style="text-align: center;" >
-      <img src="picture\notbglogo.png">
-      </div>
 <header class="clearfix">
-      
-      <h1>ใบส่งมอบสินค้า</h1>
-      <div id="company" class="clearfix">
-        <div>บริษัท คิว ดี อี พรีซิชั่น พาร์ท จำกัด</div>
-        <div>หมู่ 13 ตำบลคลองสอง อำเภอคลองหลวง </div>
-        <div>จังหวัดปทุมธานี 12120</div>
-        <div>(602) 519-0450</div>
-        <div><a href="mailto:company@example.com">company@example.com</a></div>
+      <div id="logo">
+        <img src="picture\sizelogo.png">
+      </div>
+      <div id="company">
+        <h1 class="name">บริษัท คิว.ดี.อี. พรีซิชั่น พาร์ท จำกัด</h1>
+        <div>22/82 หมู่ 13 ซอยไอยรา 10  ตำบลคลองสอง อำเภอคลองหลวง จังหวัดปทุมธานี 12120</div>
+        <div>096-269-9959, 02-100-4616</div>
+        <div><a href="mailto:qde_engineer@yahoo.com">qde_engineer@yahoo.com</a></div>
       </div>
     </header>
+    <main>
+      <div id="details" class="clearfix">
+        <div id="client">
+          <div class="to">ชื่อผู้สั่งสินค้า : </div>
+          <h2 class="name">'.$ctm.'</h2>
+          <div class="email"><a href="mailto:'.$cem.'">'.$cem.'</a></div>
+        </div>
+        <div id="invoice">
+          <h1>ใบสั่งซื้อสินค้า :'.$no .'</h1>
+          <div class="date">วันที่สั่งซื้อ: '.$date.' </div>
+
+
+        </div>
+      </div>
   <table id="bg-table" width="100%" style="border-collapse: collapse;font-size:12pt;margin-top:8px;">
   <tr style="border:1px solid #000;padding:4px;">
   <td  style="border-right:1px solid #000;padding:4px;text-align:center;"   width="10%">ลำดับ</td>
-  <td  style="border-right:1px solid #000;padding:4px;text-align:center;"  width="15%">รหัสสั่งสินค้าจากลูกค้า</td>
-  <td  width="15%" style="border-right:1px solid #000;padding:4px;text-align:center;">&nbsp; วันที่สั่ง </td>
   <td  style="border-right:1px solid #000;padding:4px;text-align:center;"  width="15%">สินค้าที่สั่งทำ</td>
   <td  style="border-right:1px solid #000;padding:4px;text-align:center;" width="15%">จำนวน</td>
-  <td  style="border-right:1px solid #000;padding:4px;text-align:center;" width="20%">หน่วยนับ</td>
-  <td  style="border-right:1px solid #000;padding:4px;text-align:center;" width="30%">ชื่อลูกค้า</td>
-  <td  style="border-right:1px solid #000;padding:4px;text-align:center;" width="20%">ชื่อพนักงาน</td>
+  <td  style="border-right:1px solid #000;padding:4px;text-align:center;" width="15%">ราคา</td>
+  <td  style="border-right:1px solid #000;padding:4px;text-align:center;" width="20%">ราคารวม</td>
   </tr>
 </thead>
   <tbody>';
@@ -138,10 +217,10 @@ $tableh2 = '
 <br><br><br><br><br><br>
 <table id="bg-table2" width="100%" style="border-collapse: collapse;font-size:12pt;margin-top:8px;">
     <tr style="border:0px solid #000;padding:4px;">
-        <td  style="border-right:0px solid #000;padding:4px;"   width="10%" align="right">ลงชื่อ.....................................</td>
+        <td  style="border-right:0px solid #000;padding:4px;"   width="10%" align="right">ลงชื่อ  :  '. getEmployeeName($_SESSION['User']) .'</td>
     </tr>
     <tr style="border:0px solid #000;padding:4px;">
-    <td  style="border-right:0px solid #000;padding:4px;"  width="10%" align="right">(....................................)</td>
+    <td  style="border-right:0px solid #000;padding:4px;"  width="10%" align="right">(.........................................)</td>
     </tr>
 </thead>
   <tbody>';
@@ -154,8 +233,6 @@ $mpdf->WriteHTML($tableh);
 $mpdf->WriteHTML($tablebody);
 // $mpdf->WriteHTML($tablebody2);
 $mpdf->WriteHTML($tableend);
-
-
 $mpdf->WriteHTML($tableh2);
 // $mpdf->WriteHTML($tablebody2);
 $mpdf->WriteHTML($tableend2);
