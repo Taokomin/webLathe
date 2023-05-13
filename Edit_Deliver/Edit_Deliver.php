@@ -1,7 +1,7 @@
 <?php
 require('C:\xampp\XAMXUN\htdocs\webLathe\config\condb.php');
 $Deliver_id = $_GET["Deliver_id"];
-$sql="SELECT d.*,dd.Deliver_detail,dd.Deliver_quantity, u.Unit_id AS Counting_unit_id, u3.Unit_name AS Counting_unit_name, u2.Unit_id AS Price_unit_id, u4.Unit_name AS Price_unit_name , c.Customer_name, c.Customer_surname, e.Employee_name, e.Employee_surname
+$sql="SELECT d.*,dd.Deliver_price,dd.Deliver_detail,dd.Deliver_quantity, u.Unit_id AS Counting_unit_id, u3.Unit_name AS Counting_unit_name, u2.Unit_id AS Price_unit_id, u4.Unit_name AS Price_unit_name , c.Customer_name, c.Customer_surname, e.Employee_name, e.Employee_surname
 FROM deliver AS d
 INNER JOIN deliver_detail AS dd ON d.Deliver_id = dd.Deliver_id
 INNER JOIN unit AS u ON dd.Counting_unit = u.Unit_id
@@ -17,6 +17,13 @@ ORDER BY d.Deliver_id,dd.Deliver_detail_id ASC;
 $result = mysqli_query($con, $sql);
 $values = mysqli_fetch_assoc($result);
 ?>
+<?php session_start(); ?>
+<?php
+
+if (!$_SESSION["UserID"]) {
+
+    Header("Location: index.php");
+} else { ?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -34,7 +41,7 @@ $values = mysqli_fetch_assoc($result);
         <hr>
         <form action="ProcDve.php" method="POST">
                 <input type="hidden" class="form-control" name="Deliver_id" value="<?php echo $values["Deliver_id"]; ?>" readonly>
-            <div class="mb-3" style="display: inline-block;width : 166px;">
+            <div class="mb-3" style="width : 166px;">
                 <label for="Deliver_day" class="form-label">วันที่สั่ง</label>
                 <input type="date" class="form-control" name="Deliver_day" id="Deliver_day" value="<?php echo $values["Deliver_day"]; ?>" required>
                 <script type='text/javascript'>
@@ -69,6 +76,16 @@ $values = mysqli_fetch_assoc($result);
             <div class="mb-3" style="display: inline-block;width : 166px;">
                 <label for="Counting_unit" class="form-label">หน่วยนับ</label>
                 <input type="text" class="form-control" name="Counting_unit" value="<?php echo $values["Counting_unit_name"]; ?>" readonly>
+            </div>
+
+            <div class="mb-3" style="display: inline-block;width : 166px;">
+                <label for="Deliver_price" class="form-label">ราคา</label>
+                <input type="text" class="form-control" name="Deliver_price" value="<?php echo $values["Deliver_price"]; ?>" readonly>
+            </div>
+
+            <div class="mb-3" style="display: inline-block;width : 166px;">
+                <label for="Price_unit" class="form-label">หน่วยนับ</label>
+                <input type="text" class="form-control" name="Price_unit" value="<?php echo $values["Price_unit_name"]; ?>" readonly>
             </div>
 
             <div class="mb-3" style="display: inline-block;width : 166px;">
@@ -143,3 +160,4 @@ $values = mysqli_fetch_assoc($result);
         background: linear-gradient(135deg, #03018C, #212AA5, #4259C3);
     }
 </style>
+<?php } ?>

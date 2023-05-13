@@ -1,7 +1,18 @@
 <?php
 require('C:\xampp\XAMXUN\htdocs\webLathe\config\condb.php');
 $AcceptMaterial_id = $_GET["AcceptMaterial_id"];
-$sql = "SELECT * FROM accept_material WHERE AcceptMaterial_id='$AcceptMaterial_id'";
+$sql = "SELECT am.*,amd.AcceptMaterial_detail_id,amd.AcceptMaterial_detail,amd.AcceptMaterial_quantity,amd.AcceptMaterial_price,m.Material_name, p.Partner_name, p.Partner_surname, e.Employee_name, e.Employee_surname, 
+u.Unit_id AS Counting_unit_id, u.Unit_name AS Counting_unit_name,
+u2.Unit_id AS Price_unit_id, u2.Unit_name AS Price_unit_name
+FROM accept_material AS am
+INNER JOIN accept_material_detail AS amd ON am.AcceptMaterial_id = amd.AcceptMaterial_id
+INNER JOIN material AS m ON amd.AcceptMaterial_detail = m.Material_id 
+INNER JOIN unit AS u ON amd.Counting_unit = u.Unit_id
+INNER JOIN unit AS u2 ON amd.Price_unit = u2.Unit_id
+INNER JOIN partner AS p ON am.Partner_id = p.Partner_id
+INNER JOIN employee AS e ON am.Employee_id = e.Employee_id
+WHERE am.AcceptMaterial_id = '$AcceptMaterial_id'
+ORDER BY am.AcceptMaterial_id ASC";
 $result = mysqli_query($con, $sql);
 $values = mysqli_fetch_assoc($result);
 ?>
@@ -33,17 +44,10 @@ if (!$_SESSION["UserID"]) {
         <div class="container">
             <h1 class="mt-5">แก้ไขข้อมูลรับเข้าวัสดุและอุปกรณ์</h1>
             <hr>
-            <form action="ProcAme.php" method="post">
-                <div class="mb-3">
-                    <!-- <label for="Auto_number" class="form-label">ลำดับ</label> -->
-                    <input type="hidden" class="form-control" name="Auto_number" value="<?php echo $values["Auto_number"]; ?>" readonly>
-                </div>
-                <div class="mb-3">
-                    <label for="AcceptMaterial_id" class="form-label">รหัสรับเข้าวัสดุและอุปกรณ์</label>
-                    <input type="text" class="form-control" name="AcceptMaterial_id" value="<?php echo $values["AcceptMaterial_id"]; ?>" readonly>
-                </div>
-                <div class="mb-3">
-                    <label for="AcceptMaterial_day" class="form-label">วันที่รับเข้า</label>
+            <form action="ProcAme.php" method="POST">
+                <input type="hidden" class="form-control" name="AcceptMaterial_id" value="<?php echo $values["AcceptMaterial_id"]; ?>" readonly>
+                <div class="mb-3" style="width : 166px;">
+                    <label for="AcceptMaterial_day" class="form-label">วันที่สั่ง</label>
                     <input type="date" class="form-control" name="AcceptMaterial_day" id="AcceptMaterial_day" value="<?php echo $values["AcceptMaterial_day"]; ?>" required>
                     <script type='text/javascript'>
                         var highlight_dates = ['1-5-2020', '11-5-2020', '18-5-2020', '28-5-2020', '1-7-2023', '15-7-2023'];
@@ -64,44 +68,41 @@ if (!$_SESSION["UserID"]) {
                         });
                     </script>
                 </div>
-                <div class="mb-3">
-                    <label for="BuyMaterial_id" class="form-label">รหัสสั่งซื้อวัสดุและอุปกรณ์</label>
-                    <input type="text" class="form-control" name="BuyMaterial_id" value="<?php echo $values["BuyMaterial_id"]; ?>" readonly>
+                <div class="mb-3" style="display: inline-block;width : 166px;">
+                    <label for="AcceptMaterial_detail" class="form-label">ชื่อวัสดุและอุปกรณ์</label>
+                    <input type="text" class="form-control" name="AcceptMaterial_detail" value="<?php echo $values["Material_name"]; ?>" readonly>
                 </div>
 
-                <div class="mb-3">
-                    <label for="BuyMaterial_day" class="form-label">วันที่สั่งซื้อ</label>
-                    <input type="text" class="form-control" name="BuyMaterial_day" value="<?php echo $values["BuyMaterial_day"]; ?>" readonly>
+                <div class="mb-3" style="display: inline-block;width : 166px;">
+                    <label for="AcceptMaterial_quantity" class="form-label">จำนวน</label>
+                    <input type="text" class="form-control" name="AcceptMaterial_quantity" value="<?php echo $values["AcceptMaterial_quantity"]; ?>" readonly>
                 </div>
 
-                <div class="mb-3">
-                    <label for="Material_id" class="form-label">รหัสวัสดุและอุปกรณ์</label>
-                    <input type="text" class="form-control" name="Material_id" value="<?php echo $values["Material_id"]; ?>" readonly>
+                <div class="mb-3" style="display: inline-block;width : 166px;">
+                    <label for="Counting_unit" class="form-label">หน่วยนับ</label>
+                    <input type="text" class="form-control" name="Counting_unit" value="<?php echo $values["Counting_unit_name"]; ?>" readonly>
                 </div>
 
-                <div class="mb-3">
-                    <label for="BuyMaterial_quantity" class="form-label">จำนวน</label>
-                    <input type="text" class="form-control" name="BuyMaterial_quantity" value="<?php echo $values["BuyMaterial_quantity"]; ?>" readonly>
+                <div class="mb-3" style="display: inline-block;width : 166px;">
+                    <label for="AcceptMaterial_price" class="form-label">ราคา</label>
+                    <input type="text" class="form-control" name="AcceptMaterial_price" value="<?php echo $values["AcceptMaterial_price"]; ?>" readonly>
                 </div>
 
-                <div class="mb-3">
-                    <label for="Unit_id" class="form-label">หน่วยนับ</label>
-                    <input type="text" class="form-control" name="Unit_id" value="<?php echo $values["Unit_id"]; ?>" readonly>
+                <div class="mb-3" style="display: inline-block;width : 166px;">
+                    <label for="Price_unit" class="form-label">หน่วยนับ</label>
+                    <input type="text" class="form-control" name="Price_unit" value="<?php echo $values["Price_unit_name"]; ?>" readonly>
                 </div>
 
-                <div class="mb-3">
-                    <label for="MaterialType_id" class="form-label">ประเภทวัสดุและอุปกรณ์</label>
-                    <input type="text" class="form-control" name="MaterialType_id" value="<?php echo $values["MaterialType_id"]; ?>" readonly>
-                        </div>
+                <div class="mb-3" style="display: inline-block;width : 166px;">
+                    <label for="Partner_id" class="form-label">ชื่อคู้ค้า</label>
+                    <input type="text" class="form-control" name="Partner_id" value="<?php echo $values["Partner_name"] . " " . $values["Partner_surname"]; ?>" readonly>
+                </div>
 
-                        <div class="mb-3">
-                        <label for="Partner_id" class="form-label">ชื่อคู่ค้า</label>
-                        <input type="text" class="form-control" name="Partner_id" value="<?php echo $values["Partner_id"]; ?>" readonly>
-                        </div>
-                <div class="mb-3">
+                <div class="mb-3" style="display: inline-block;width : 166px;">
                     <label for="Employee_id" class="form-label">ชื่อพนักงาน</label>
-                    <input type="text" class="form-control" name="Employee_id" value="<?php echo ($_SESSION['User']); ?> <?php ?>" readonly>
+                    <input type="text" class="form-control" name="Employee_id" value="<?php echo $values["Employee_name"] . " " . $values["Employee_surname"]; ?>" readonly>
                 </div>
+                
 
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-success" onclick="submitData()">แก้ไขข้อมูล </button>
@@ -128,6 +129,7 @@ if (!$_SESSION["UserID"]) {
     }
 
     body {
+        height: 100vh;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -136,7 +138,7 @@ if (!$_SESSION["UserID"]) {
     }
 
     .container {
-        max-width: 700px;
+        max-width: 920px;
         width: 100%;
         background-color: #fff;
         padding: 25px 30px;

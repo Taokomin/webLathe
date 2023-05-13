@@ -1,7 +1,17 @@
 <?php
 require('C:\xampp\XAMXUN\htdocs\webLathe\config\condb.php');
 $PickupMaterial_id = $_GET["PickupMaterial_id"];
-$sql = "SELECT * FROM pickup_material WHERE PickupMaterial_id='$PickupMaterial_id'";
+$sql = "SELECT pm.*,pmd.PickupMaterial_quantity, e.Employee_name, e.Employee_surname, 
+m.Material_name, s.status_name,
+u.Unit_id AS Counting_unit_id, u.Unit_name AS Counting_unit_name
+FROM pickup_material AS pm
+INNER JOIN pickup_material_detail AS pmd ON pm.PickupMaterial_id = pmd.PickupMaterial_id
+INNER JOIN material AS m ON pmd.PickupMaterial_detail = m.Material_id
+INNER JOIN unit AS u ON pmd.Counting_unit = u.Unit_id
+INNER JOIN employee AS e ON pm.Employee_id = e.Employee_id
+INNER JOIN status AS s ON pm.PickupMaterial_status = s.status_id
+WHERE pm.PickupMaterial_id='$PickupMaterial_id'
+ORDER BY PickupMaterial_id ASC";
 $result = mysqli_query($con, $sql);
 $values = mysqli_fetch_assoc($result);
 ?>
@@ -34,15 +44,7 @@ if (!$_SESSION["UserID"]) {
             <h1 class="mt-5">แก้ไขข้อมูลเบิกวัสดุและอุปกรณ์</h1>
             <hr>
             <form action="ProcPme.php" method="post">
-                <div class="mb-3">
-                    <!-- <label for="Auto_number" class="form-label">ลำดับ</label> -->
-                    <input type="hidden" class="form-control" name="Auto_number" value="<?php echo $values['Auto_number']; ?>" readonly>
-                </div>
-                <div class="mb-3">
-                    <label for="PickupMaterial_id" class="form-label">รหัสเบิกวัสดุและอุปกรณ์</label>
-                    <input type="text" class="form-control" name="PickupMaterial_id" value="<?php echo $values['PickupMaterial_id']; ?>" readonly>
-                </div>
-                <div class="mb-3">
+                <div class="mb-3" style="display: inline-block;width : 166px;">
                     <label for="PickupMaterial_day" class="form-label">วันที่สั่ง</label>
                     <input type="date" class="form-control" name="PickupMaterial_day" id="PickupMaterial_day" value="<?php echo $values['PickupMaterial_day']; ?>" required>
                     <script type='text/javascript'>
@@ -65,37 +67,28 @@ if (!$_SESSION["UserID"]) {
                     </script>
                 </div>
 
-                <div class="mb-3">
-                    <label for="Material_id" class="form-label">รหัสสั่งซื้อวัสดุและอุปกรณ์</label>
-                    <input type="text" class="form-control" name="Material_id" value="<?php echo $values['Material_id']; ?>" readonly>
+                <div class="mb-3" style="display: inline-block;width : 166px;">
+                    <label for="PickupMaterial_detail" class="form-label">รหัสสั่งซื้อวัสดุและอุปกรณ์</label>
+                    <input type="text" class="form-control" name="PickupMaterial_detail" value="<?php echo $values['Material_name']; ?>" readonly>
                 </div>
 
-                <div class="mb-3">
-                    <label for="Material_id" class="form-label">ชื่อวัสดุและอุปกรณ์</label>
-                    <input type="text" class="form-control" name="Material_id" value="<?php echo $values['Material_id']; ?>" readonly>
-                </div>
-
-                <div class="mb-3">
-                    <label for="PickupMaterial_quantity" class="form-label">กรอกจำนวนที่ต้องการเบิก</label>
+                <div class="mb-3" style="display: inline-block;width : 166px;">
+                    <label for="PickupMaterial_quantity" class="form-label">จำนวนการเบิก</label>
                     <input type="tel" class="form-control" name="PickupMaterial_quantity" value="<?php echo $values['PickupMaterial_quantity']; ?>" readonly pattern="[0-9]+" onkeypress="return isNumberKey(event)">
                 </div>
-                
-                <div class="mb-3">
-                    <label for="Unit_id" class="form-label">หน่วยนับ</label>
-                    <input type="text" class="form-control" name="Unit_id" value="<?php echo $values['Unit_id']; ?>" readonly>
+
+                <div class="mb-3" style="display: inline-block;width : 166px;">
+                    <label for="Counting_unit" class="form-label">หน่วยนับ</label>
+                    <input type="text" class="form-control" name="Counting_unit" value="<?php echo $values['Counting_unit_name']; ?>" readonly>
                 </div>
 
-                <div class="mb-3">
-                    <label for="MaterialType_id" class="form-label">ประเภทวัสดุและอุปกรณ์</label>
-                    <input type="text" class="form-control" name="MaterialType_id" value="<?php echo $values['MaterialType_id']; ?>" readonly>
-                </div>
-                <div class="mb-3">
+                <div class="mb-3" style="display: inline-block;width : 166px;">
                     <label for="Employee_id" class="form-label">ชื่อพนักงาน</label>
-                    <input type="email" class="form-control" name="Employee_id" value="<?php echo ($_SESSION['User']); ?> <?php ?>" readonly>
+                    <input type="text" class="form-control" name="Employee_id" value="<?php echo $values['Employee_name']. " " .$values['Employee_surname']; ?>" readonly>
                 </div>
-                <div class="mb-3">
+                <div class="mb-3" style="display: inline-block;width : 166px;">
                     <label for="PickupMaterial_status" class="form-label">สถานะ</label>
-                    <input type="text" class="form-control" name="PickupMaterial_status" value="<?php echo $values['PickupMaterial_status']; ?>" readonly>
+                    <input type="email" class="form-control" name="PickupMaterial_status" value="<?php echo $values['status_name']; ?>" readonly>
                 </div>
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-success">แก้ไขข้อมูล </button>
@@ -112,47 +105,48 @@ if (!$_SESSION["UserID"]) {
 
     </html>
     <style>
-        @import url("https://fonts.googleapis.com/css2?family=Noto+Serif+Thai:wght@200;400&display=swap");
+    @import url("https://fonts.googleapis.com/css2?family=Noto+Serif+Thai:wght@200;400&display=swap");
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: "Noto Serif Thai", serif;
-        }
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Noto Serif Thai", serif;
+    }
 
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 10px;
-            background: linear-gradient(135deg, #03018C, #212AA5, #4259C3);
-        }
+    body {
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 10px;
+        background: linear-gradient(135deg, #03018C, #212AA5, #4259C3);
+    }
 
-        .container {
-            max-width: 700px;
-            width: 100%;
-            background-color: #fff;
-            padding: 25px 30px;
-            border-radius: 5px;
-            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.15);
-        }
+    .container {
+        max-width: 920px;
+        width: 100%;
+        background-color: #fff;
+        padding: 25px 30px;
+        border-radius: 5px;
+        box-shadow: 0 5px 10px rgba(0, 0, 0, 0.15);
+    }
 
-        .container .title {
-            font-size: 25px;
-            font-weight: 500;
-            position: relative;
-        }
+    .container .title {
+        font-size: 25px;
+        font-weight: 500;
+        position: relative;
+    }
 
-        .container .title::before {
-            content: "";
-            position: absolute;
-            left: 0;
-            bottom: 0;
-            height: 3px;
-            width: 30px;
-            border-radius: 5px;
-            background: linear-gradient(135deg, #03018C, #212AA5, #4259C3);
-        }
-    </style>
+    .container .title::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        height: 3px;
+        width: 30px;
+        border-radius: 5px;
+        background: linear-gradient(135deg, #03018C, #212AA5, #4259C3);
+    }
+</style>
 <?php } ?>
