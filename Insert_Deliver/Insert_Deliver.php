@@ -183,7 +183,7 @@ if (!$_SESSION["UserID"]) {
                         $row = mysqli_fetch_assoc($result);
 
                         $deliverDetailId = increaseIdDvd($GLOBALS['Deliver_detail_id']);
-                        
+
                         echo '<div class="mb-3" style="display: inline-block;width : 120px;">';
                         echo '<label  class="form-label">รหัสสั่งสินค้า</label>';
                         echo '<input type="hidden" class="form-control" name="Deliver_detail_id" value="' . $deliverDetailId . '" readonly>';

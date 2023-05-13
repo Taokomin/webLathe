@@ -139,15 +139,16 @@ if (!$_SESSION["UserID"]) {
                     <?php
                     require('C:\xampp\XAMXUN\htdocs\webLathe\config\condb.php');
                     $query = "SELECT *, u.Unit_id AS Counting_unit_id, u3.Unit_name AS Counting_unit_name, u2.Unit_id AS Price_unit_id, u4.Unit_name AS Price_unit_name , c.Customer_name, c.Customer_surname, e.Employee_name, e.Employee_surname
-          FROM deliver AS d
-          INNER JOIN deliver_detail AS dd ON d.Deliver_id = dd.Deliver_id
-          INNER JOIN unit AS u ON dd.Counting_unit = u.Unit_id
-          INNER JOIN unit AS u2 ON dd.Price_unit = u2.Unit_id
-          INNER JOIN unit AS u3 ON dd.Counting_unit = u3.Unit_id
-          INNER JOIN unit AS u4 ON dd.Price_unit = u4.Unit_id
-          INNER JOIN customer AS c ON dd.Customer_id = c.Customer_id
-          INNER JOIN employee AS e ON d.Employee_id = e.Employee_id
-          ";
+                    FROM deliver AS d
+                    INNER JOIN deliver_detail AS dd ON d.Deliver_id = dd.Deliver_id
+                    INNER JOIN unit AS u ON dd.Counting_unit = u.Unit_id
+                    INNER JOIN unit AS u2 ON dd.Price_unit = u2.Unit_id
+                    INNER JOIN unit AS u3 ON dd.Counting_unit = u3.Unit_id
+                    INNER JOIN unit AS u4 ON dd.Price_unit = u4.Unit_id
+                    INNER JOIN customer AS c ON dd.Customer_id = c.Customer_id
+                    INNER JOIN employee AS e ON d.Employee_id = e.Employee_id
+                    ORDER BY d.Deliver_id,dd.Deliver_detail_id ASC;
+                    ";
 
 
 
@@ -157,7 +158,8 @@ if (!$_SESSION["UserID"]) {
                     ?>
                         <tr>
                             <td align="center"><?php echo $i++; ?></td>
-                            <td align="center"><?php echo $values["Deliver_id"]; ?></td>
+                            <?php $values["Deliver_id"]; ?>
+                            <td align="center"><?php echo $values["Deliver_detail_id"]; ?></td>
                             <td align="center"><?php echo date("d/m/Y", strtotime($values["Deliver_day"] . " UTC")); ?></td>
                             <td align="center"><?php echo $values["Deliver_detail"]; ?></td>
                             <td align="center"><?php echo $values["Deliver_quantity"]; ?></td>
@@ -170,7 +172,7 @@ if (!$_SESSION["UserID"]) {
                             <td align="center">
                                 <a href="Pdf_Deliver_id.php?Deliver_id=<?php echo $values['Deliver_id']; ?>" class="btn btn-warning"><iconify-icon icon="bxs:file-pdf" style="width: 14px; height: 14px"></iconify-icon></a>
                                 <a href="Edit_Deliver/Edit_Deliver.php?Deliver_id=<?php echo $values["Deliver_id"]; ?>" class="btn btn-primary"><iconify-icon style="width: 14px; height: 14px" icon="el:file-edit"></iconify-icon></a>
-                                <a onclick="return confirm('คุณแน่ใจหรือว่าต้องการลบรายการนี้?')" href="Delete_Deliver/Delete_Deliver.php?Deliver_id=<?php echo $values["Deliver_id"]; ?>" class='btn btn-danger'><iconify-icon style="width: 14px; height: 14px" icon="ant-design:delete-outlined"></iconify-icon></a>
+                                <a onclick="return confirm('คุณแน่ใจหรือว่าต้องการลบรายการนี้?')" href="Delete_Deliver/Delete_Deliver.php?Deliver_detail_id=<?php echo $values["Deliver_detail_id"]; ?>" class='btn btn-danger'><iconify-icon style="width: 14px; height: 14px" icon="ant-design:delete-outlined"></iconify-icon></a>
                             </td>
                         </tr>
                     <?php

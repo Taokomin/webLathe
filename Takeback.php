@@ -126,7 +126,6 @@ if (!$_SESSION["UserID"]) {
                         <th>ชื่อวัสดุและอุปกรณ์</th>
                         <th>จำนวน</th>
                         <th>รหัสหน่วยนับ</th>
-                        <th>ประเภทวัสดุและอุปกรณ์</th>
                         <th>รหัสพนักงาน</th>
                         <th>การดำเนินการ</th>
                     </tr>
@@ -135,14 +134,19 @@ if (!$_SESSION["UserID"]) {
                     <?php
                     require('C:\xampp\XAMXUN\htdocs\webLathe\config\condb.php');
 
-                    $query = "SELECT tm.*, tmd.Takeback_quantity, u.Unit_id AS Counting_unit_id, u.Unit_name AS Counting_unit_name, e.Employee_name, e.Employee_surname, mt.MaterialType_name, m.Material_name
-FROM takeback AS tm
-INNER JOIN takeback_detail AS tmd ON tm.Takeback_id = tmd.Takeback_id
-INNER JOIN unit AS u ON tmd.Counting_unit = u.Unit_id
-INNER JOIN material_type AS mt ON tmd.MaterialType_id = mt.MaterialType_id
-INNER JOIN employee AS e ON tm.Employee_id = e.Employee_id
-INNER JOIN material AS m ON tmd.Takeback_detail = m.Material_id
-ORDER BY tm.Takeback_id ASC";
+                    $query = "SELECT tm.*, 
+                    tmd.Takeback_quantity,
+                    u.Unit_id AS Counting_unit_id,
+                    u.Unit_name AS Counting_unit_name,
+                    e.Employee_name, 
+                    e.Employee_surname,
+                    m.Material_name
+                    FROM takeback AS tm
+                    INNER JOIN takeback_detail AS tmd ON tm.Takeback_id = tmd.Takeback_id
+                    INNER JOIN unit AS u ON tmd.Counting_unit = u.Unit_id
+                    INNER JOIN employee AS e ON tm.Employee_id = e.Employee_id
+                    INNER JOIN material AS m ON tmd.Takeback_detail = m.Material_id
+                    ORDER BY tm.Takeback_id ASC";
 
                     $result = mysqli_query($con, $query);
                     $i = 1;
@@ -155,7 +159,6 @@ ORDER BY tm.Takeback_id ASC";
                             <td align="center"><?php echo $values["Material_name"]; ?></td>
                             <td align="center"><?php echo $values["Takeback_quantity"]; ?></td>
                             <td align="center"><?php echo $values["Counting_unit_name"]; ?></td>
-                            <td align="center"><?php echo $values["MaterialType_name"]; ?></td>
                             <td align="center"><?php echo $values["Employee_name"] . " " . $values["Employee_surname"]; ?></td>
                             <td>
                                 <a href="Edit_Takeback.php/Edit_Takeback.php?Takeback_id=<?php echo $values["Takeback_id"]; ?>" class="btn btn-primary">

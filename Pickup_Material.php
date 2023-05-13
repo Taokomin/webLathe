@@ -126,7 +126,6 @@ if (!$_SESSION["UserID"]) {
                         <th>ชื่อวัสดุและอุปกรณ์</th>
                         <th>จำนวน</th>
                         <th>รหัสหน่วยนับ</th>
-                        <th>รหัสประเภทวัสดุและอุปกรณ์</th>
                         <th>รหัสพนักงาน</th>
                         <th>สถานะ</th>
                         <th>การดำเนินการ</th>
@@ -135,13 +134,12 @@ if (!$_SESSION["UserID"]) {
                 <tbody>
                     <?php
                     require('C:\xampp\XAMXUN\htdocs\webLathe\config\condb.php');
-                    $query = "SELECT pm.*,pmd.PickupMaterial_quantity, m.Material_name, e.Employee_name, e.Employee_surname, 
-                    mt.MaterialType_name, s.status_name,
+                    $query = "SELECT pm.*,pmd.PickupMaterial_quantity, e.Employee_name, e.Employee_surname, 
+                    m.Material_name, s.status_name,
                     u.Unit_id AS Counting_unit_id, u.Unit_name AS Counting_unit_name
                     FROM pickup_material AS pm
                     INNER JOIN pickup_material_detail AS pmd ON pm.PickupMaterial_id = pmd.PickupMaterial_id
                     INNER JOIN material AS m ON pmd.PickupMaterial_detail = m.Material_id
-                    INNER JOIN material_type AS mt ON pmd.MaterialType_id = mt.MaterialType_id
                     INNER JOIN unit AS u ON pmd.Counting_unit = u.Unit_id
                     INNER JOIN employee AS e ON pm.Employee_id = e.Employee_id
                     INNER JOIN status AS s ON pm.PickupMaterial_status = s.status_id
@@ -158,7 +156,6 @@ if (!$_SESSION["UserID"]) {
                             <td align="center"><?php echo $values["Material_name"]; ?></td>
                             <td align="center"><?php echo $values["PickupMaterial_quantity"]; ?></td>
                             <td align="center"><?php echo $values["Counting_unit_name"]; ?></td>
-                            <td align="center"><?php echo $values["MaterialType_name"]; ?></td>
                             <td align="center"><?php echo $values["Employee_name"] . " " . $values["Employee_surname"]; ?></td>
                             <td align="center"><?php echo $values["status_name"]; ?></td>
                             <td align="center">

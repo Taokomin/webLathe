@@ -40,6 +40,7 @@ if (mysqli_num_rows($result) > 0) {
     $date = date('d/m/Y', strtotime($row['Deliver_day']));
     $emp = $row['Employee_name'] ." ". $row['Employee_surname'];
     $ctm = $row['Customer_name'] ." ". $row['Customer_surname'];
+    $ads = $row['Deliver_address'];
     $cem = $row['Customer_email'];
     $subtotal = $row['Deliver_quantity'] * $row['Deliver_price'];
     $total += $subtotal;
@@ -188,6 +189,7 @@ margin-bottom: 50px;
         <div id="client">
           <div class="to">ชื่อผู้สั่งสินค้า : </div>
           <h2 class="name">'.$ctm.'</h2>
+          <div class="address"><a>'.$ads.'</a></div>
           <div class="email"><a href="mailto:'.$cem.'">'.$cem.'</a></div>
         </div>
         <div id="invoice">

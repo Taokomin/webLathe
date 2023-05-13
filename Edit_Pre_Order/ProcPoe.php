@@ -10,10 +10,10 @@ $PreOrder_price = $_POST['PreOrder_price'];
 $Price_unit = $_POST['Price_unit'];
 
 
-$sql = "UPDATE Pre_Order SET  PreOrder_day = '$PreOrder_day'
+$sql = "UPDATE pre_order SET  PreOrder_day = '$PreOrder_day'
 WHERE PreOrder_id = '$PreOrder_id'";
 
-$sql1 = "UPDATE Pre_Order SET  PreOrder_day = '$PreOrder_day',
+$sql1 = "UPDATE pre_order_detail SET
 PreOrder_detail = '$PreOrder_detail',
 PreOrder_quantity = '$PreOrder_quantity',
 Counting_unit = '$Counting_unit',

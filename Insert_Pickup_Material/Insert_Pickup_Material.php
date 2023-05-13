@@ -115,7 +115,7 @@ if (!$_SESSION["UserID"]) {
                             document.getElementById("Material_id").value = "";
                             document.getElementById("Material_quantity").value = "";
                             document.getElementById("Counting_unit").value = "";
-                            document.getElementById("MaterialType_id").value = "";
+                            document.getElementById("Counting_unit_name").value = "";
                             return;
                         } else {
                             var xmlhttp = new XMLHttpRequest();
@@ -125,42 +125,13 @@ if (!$_SESSION["UserID"]) {
                                     document.getElementById("Material_id").value = material.Material_id;
                                     document.getElementById("Material_quantity").value = material.Material_quantity;
                                     document.getElementById("Counting_unit").value = material.Counting_unit;
-                                    document.getElementById("MaterialType_id").value = material.MaterialType_id;
+                                    document.getElementById("Counting_unit_name").value = material.Counting_unit_name;
                                 }
                             };
                             xmlhttp.open("GET", "getMaterialInfo.php?Material_id=" + str, true);
                             xmlhttp.send();
                         }
                     }
-
-                    // function addProduct() {
-
-                    //     // Clone the first product element
-                    //     const productElement = document.querySelector('.product');
-                    //     const newProductElement = productElement.cloneNode(true);
-
-
-                    //     // Clear the selected material and quantity inputs
-                    //     const materialSelect = newProductElement.querySelector('.material-dropdown');
-                    //     const quantityInput = newProductElement.querySelector('[name="product_PickupMaterial_quantity[]"]');
-                    //     materialSelect.value = '';
-                    //     quantityInput.value = '';
-                    //     // Clear inputs text 
-                    //     const materialNameInput = newProductElement.querySelector('#Material_name');
-                    //     const materialQuantityInput = newProductElement.querySelector('#Material_quantity');
-                    //     const countingUnitInput = newProductElement.querySelector('#Counting_unit');
-                    //     const materialTypeInput = newProductElement.querySelector('#MaterialType_id');
-                    //     materialNameInput.value = '';
-                    //     materialQuantityInput.value = '';
-                    //     countingUnitInput.value = '';
-                    //     materialTypeInput.value = '';
-
-                    //     // Add the new product element to the end of the products div
-                    //     const productsDiv = document.querySelector('#products');
-                    //     productsDiv.appendChild(newProductElement);
-
-
-                    // }
                 </script>
                 <div id="products">
                     <div class="product">
@@ -200,16 +171,12 @@ if (!$_SESSION["UserID"]) {
                         </div>
                         <div class="mb-3" style="display: inline-block;width : 166px;">
                             <label for="Counting_unit" class="form-label">หน่วยนับ</label>
-                            <input type="text" class="form-control" id="Counting_unit" name="Counting_unit" readonly>
+                            <input type="text" class="form-control" id="Counting_unit_name" readonly>
+                            <input type="hidden" class="form-control" id="Counting_unit" name="Counting_unit" readonly>
                         </div>
-                        <div class="mb-3" style="display: inline-block;width : 120px;">
-                            <label for="PickupMaterial_quantity" class="form-label">ต้องการเบิก</label>
-                            <input type="tel" class="form-control" id="Material_quantity" name="PickupMaterial_quantity" required pattern="[0-9]+" onkeypress="return isNumberKey(event)">
-                        </div>
-
                         <div class="mb-3" style="display: inline-block;width : 166px;">
-                            <label for="MaterialType_id" class="form-label">ประเภท</label>
-                            <input type="text" class="form-control" id="MaterialType_id" name="MaterialType_id" readonly>
+                            <label for="PickupMaterial_quantity" class="form-label">จำนวนที่ต้องการเบิก</label>
+                            <input type="tel" class="form-control" id="Material_quantity" name="PickupMaterial_quantity" required pattern="[0-9]+" onkeypress="return isNumberKey(event)">
                         </div>
                     </div>
                 </div>

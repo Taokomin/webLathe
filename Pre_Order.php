@@ -119,18 +119,17 @@ if (!$_SESSION["UserID"]) {
             <table id="customer_table" class="table table-bordered table-striped" style="width:100%">
                 <thead>
                     <tr>
-                            <th style="text-align: center;">ลำดับ</th>
-                            <th style="text-align: center;">รหัสสั่งสินค้า</th>
-                            <th style="text-align: center;">วันที่สั่ง</th>
-                            <th style="text-align: center;">รหัสรายการ</th>
-                            <th style="text-align: center;">สินค้าที่สั่งทำ</th>
-                            <th style="text-align: center;">จำนวน</th>
-                            <th style="text-align: center;">หน่วยนับ</th>
-                            <th style="text-align: center;">ราคา</th>
-                            <th style="text-align: center;">หน่วยนับ</th>
-                            <th style="text-align: center;">ชื่อลูกค้า</th>
-                            <th style="text-align: center;">ชื่อพนักงาน</th>
-                            <th style="text-align: center;">การดำเนินการ</th>
+                        <th style="text-align: center;">ลำดับ</th>
+                        <th style="text-align: center;">รหัสสั่งสินค้า</th>
+                        <th style="text-align: center;">วันที่สั่ง</th>
+                        <th style="text-align: center;">สินค้าที่สั่งทำ</th>
+                        <th style="text-align: center;">จำนวน</th>
+                        <th style="text-align: center;">หน่วยนับ</th>
+                        <th style="text-align: center;">ราคา</th>
+                        <th style="text-align: center;">หน่วยนับ</th>
+                        <th style="text-align: center;">ชื่อลูกค้า</th>
+                        <th style="text-align: center;">ชื่อพนักงาน</th>
+                        <th style="text-align: center;">การดำเนินการ</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -156,9 +155,9 @@ if (!$_SESSION["UserID"]) {
                     ?>
                         <tr>
                             <td align="center"><?php echo $i++; ?></td>
-                            <td align="center"><?php echo $values["PreOrder_id"]; ?></td>
-                            <td align="center"><?php echo date("d/m/Y", strtotime($values["PreOrder_day"] . " UTC")); ?></td>
+                            <?php $values["PreOrder_id"]; ?>
                             <td align="center"><?php echo $values["PreOrder_detail_id"]; ?></td>
+                            <td align="center"><?php echo date("d/m/Y", strtotime($values["PreOrder_day"] . " UTC")); ?></td>
                             <td align="center"><?php echo $values["PreOrder_detail"]; ?></td>
                             <td align="center"><?php echo $values["PreOrder_quantity"]; ?></td>
                             <td align="center"><?php echo $values["Counting_unit_name"]; ?></td>

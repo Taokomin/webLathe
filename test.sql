@@ -361,3 +361,14 @@ CREATE TABLE `takeback_detail` (
   Takeback_id varchar(4) NOT NULL,
   FOREIGN KEY (Takeback_id) REFERENCES takeback(Takeback_id)
 );
+
+CREATE TRIGGER remove_deliver_id
+AFTER DELETE ON deliver_detail
+FOR EACH ROW
+BEGIN
+    DECLARE count_rows INT;
+    SELECT COUNT(*) INTO count_rows FROM deliver_detail WHERE Deliver_id = OLD.Deliver_id;
+    IF count_rows = 0 THEN
+        DELETE FROM deliver WHERE Deliver_id = OLD.Deliver_id;
+    END IF;
+END;

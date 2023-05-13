@@ -123,7 +123,6 @@ if (!$_SESSION["UserID"]) {
                         <th style="width: 3%;">ลำดับ</th>
                         <th style="width: 3%;">รหัสสั่งซื้อ</th>
                         <th style="width: 4%;">วันที่สั่งซื้อ</th>
-                        <th style="width: 3%;">รหัสรายการ</th>
                         <th style="width: 3%;">ชื่อวัสดุ</th>
                         <th style="width: 3%;">จำนวน</th>
                         <th style="width: 4%;">หน่วยนับ</th>
@@ -172,9 +171,9 @@ if (!$_SESSION["UserID"]) {
                     ?>
                         <tr>
                             <td align="center"><?php echo $i++; ?></td>
-                            <td align="center"><?php echo $values["BuyMaterial_id"]; ?></td>
-                            <td align="center"><?php echo date("d/m/Y", strtotime($values["BuyMaterial_day"] . " UTC")); ?></td>
+                            <?php $values["BuyMaterial_id"]; ?>
                             <td align="center"><?php echo $values["BuyMaterial_detail_id"]; ?></td>>
+                            <td align="center"><?php echo date("d/m/Y", strtotime($values["BuyMaterial_day"] . " UTC")); ?></td>
                             <td align="center"><?php echo $values["Material_name"]; ?></td>
                             <td align="center"><?php echo $values["BuyMaterial_quantity"]; ?></td>
                             <td align="center"><?php echo $values["Counting_unit_name"]; ?></td>

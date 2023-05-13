@@ -43,20 +43,38 @@ if (!$_SESSION["UserID"]) {
         <div class="container">
             <h1 class="mt-5">แก้ไขข้อมูลสั่งสินค้าจากลูกค้า</h1>
             <hr>
-            <form method="POST">
-                <div>
-                    <label for="PreOrder_detail">รายการสินค้า</label>
-                    <input type="text" class="form-control" id="PreOrder_detail" name="PreOrder_detail" value="<?php echo $PreOrder_detail['PreOrder_day']; ?>" required>
+            <form action="ProcPoe.php" method="POST">
+                <div class="mb-3" style="display: inline-block;width : 166px;">
+                    <label for="PreOrder_day" class="form-label">วันที่สั่ง</label>
+                    <input type="date" class="form-control" name="PreOrder_day" id="PreOrder_day" value="<?php echo date('Y-m-d', strtotime($PreOrder_detail['PreOrder_day'])); ?>" required>
+                    <script type='text/javascript'>
+                        var highlight_dates = ['1-5-2020', '11-5-2020', '18-5-2020', '28-5-2020', '1-7-2023', '15-7-2023'];
+                        $(document).ready(function() {
+                            $('#PreOrder_day').PreOrder_day({
+                                beforeShowDay: function(date) {
+                                    var month = date.getMonth() + 1;
+                                    var year = date.getFullYear();
+                                    var day = date.getDate();
+                                    var newdate = day + "-" + month + '-' + year;
+                                    var tooltip_text = "New event on " + newdate;
+                                    if ($.inArray(newdate, highlight_dates) != -1) {
+                                        return [true, "highlight", tooltip_text];
+                                    }
+                                    return [true];
+                                }
+                            });
+                        });
+                    </script>
                 </div>
-                <div>
+                <div class="mb-3" style="display: inline-block;width : 166px;">
                     <label for="PreOrder_detail">รายการสินค้า</label>
                     <input type="text" class="form-control" id="PreOrder_detail" name="PreOrder_detail" value="<?php echo $PreOrder_detail['PreOrder_detail']; ?>" required>
                 </div>
-                <div>
+                <div class="mb-3" style="display: inline-block;width : 166px;">
                     <label for="PreOrder_quantity">จำนวนสินค้า</label>
                     <input type="number" class="form-control" id="PreOrder_quantity" name="PreOrder_quantity" value="<?php echo $PreOrder_detail['PreOrder_quantity']; ?>" required>
                 </div>
-                <div>
+                <div class="mb-3" style="display: inline-block;width : 166px;">
                     <label for="Counting_unit">หน่วยนับ</label>
                     <select class="form-control" id="Counting_unit" name="Counting_unit" required>
                         <option value="">-กรุณาเลือก-</option>
@@ -68,11 +86,11 @@ if (!$_SESSION["UserID"]) {
                         <?php } ?>
                     </select>
                 </div>
-                <div>
+                <div class="mb-3" style="display: inline-block;width : 166px;">
                     <label for="PreOrder_price">ราคา</label>
                     <input type="number" class="form-control" id="PreOrder_price" name="PreOrder_price" value="<?php echo $PreOrder_detail['PreOrder_price']; ?>" required>
                 </div>
-                <div>
+                <div class="mb-3" style="display: inline-block;width : 166px;">
                     <label for="Price_unit">หน่วยนับ</label>
                     <select class="form-control" id="Price_unit" name="Price_unit" required>
                         <option value="">-กรุณาเลือก-</option>
@@ -85,7 +103,7 @@ if (!$_SESSION["UserID"]) {
                             </option>
                         <?php } ?>
                     </select>
-                </div>
+                </div class="mb-3" style="display: inline-block;width : 166px;">
                 <input type="hidden" name="PreOrder_id" value="<?php echo $values["PreOrder_id"]; ?>">
                 <input type="hidden" name="PreOrder_detail_id" value="<?php echo $values["PreOrder_detail_id"]; ?>">
 
@@ -122,7 +140,7 @@ if (!$_SESSION["UserID"]) {
         }
 
         .container {
-            max-width: 600px;
+            max-width: 1100px;
             width: 100%;
             background-color: #fff;
             padding: 25px 30px;

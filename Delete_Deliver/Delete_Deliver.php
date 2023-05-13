@@ -1,9 +1,9 @@
 <?php
 require('C:\xampp\XAMXUN\htdocs\webLathe\config\condb.php');
 
-if (isset($_GET['Deliver_id'])) {
-    $Deliver_id = $_GET['Deliver_id'];
-    $query = "DELETE FROM deliver WHERE Deliver_id ='" . $Deliver_id . "'";
+if (isset($_GET['Deliver_detail_id'])) {
+    $Deliver_detail_id = $_GET['Deliver_detail_id'];
+    $query = "DELETE FROM deliver_detail WHERE Deliver_detail_id ='" . $Deliver_detail_id . "'";
     $res = mysqli_query($con, $query);
     if ($res) {
         echo "<script>alert('ลบข้อมูลเรียบร้อยแล้ว'); window.location = '../Deliver.php'</script>";

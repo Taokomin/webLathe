@@ -9,7 +9,6 @@ $Takeback_detail_id = $_GET['Takeback_detail_id'];
 $Takeback_detail = $_GET['Takeback_detail'];
 $Takeback_quantity = $_GET['Takeback_quantity'];
 $Counting_unit = $_GET['Counting_unit'];
-$MaterialType_id = $_GET['MaterialType_id'];
 $Material_id = $_GET['Material_id'];
 $PickupMaterial_quantity = $_GET['PickupMaterial_quantity'];
 $PickupMaterial_detail_id = $_GET['PickupMaterial_detail_id'];
@@ -45,8 +44,8 @@ if ($Takeback_quantity > $PickupMaterial_quantity) {
 $sql1 = "INSERT INTO takeback (Takeback_id, Takeback_day, Employee_id) 
          VALUES ('$Takeback_id', '$Takeback_day', '$Employee_id')";
 
-$sql2 = "INSERT INTO takeback_detail (Takeback_detail_id, Takeback_detail, Takeback_quantity, Counting_unit, MaterialType_id,Takeback_id) 
-         VALUES ('$Takeback_detail_id', '$Takeback_detail', '$Takeback_quantity', '$Counting_unit', '$MaterialType_id', '$Takeback_id')";
+$sql2 = "INSERT INTO takeback_detail (Takeback_detail_id, Takeback_detail, Takeback_quantity, Counting_unit, Takeback_id) 
+         VALUES ('$Takeback_detail_id', '$Takeback_detail', '$Takeback_quantity', '$Counting_unit',  '$Takeback_id')";
 
 $sql3 = "UPDATE material SET Material_quantity = '$remaining_Material_quantity' WHERE Material_id = '$Material_id'";
 

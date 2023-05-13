@@ -81,6 +81,7 @@
             <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css" integrity="sha384-r4NyP46KrjDleawBgD5tp8Y7UzmLA05oM1iAEQ17CSuDqnUK2+k9luXQOfXJCJ4I" crossorigin="anonymous">
             <link rel="icon" href="..\picture\Title-logo.png" type="image/icon type">
         </head>
+
         <body>
             <div class="container">
                 <h1 class="mt-5">เพิ่มข้อมูลสั่งสินค้าจากลูกค้า</h1>
@@ -158,7 +159,7 @@
                                 <select class="form-select" aria-label="Default select example" name="product_Price_unit[]" required>
                                     <option value="">-กรุณาเลือก-</option>
                                     <?php foreach ($result1 as $results) { ?>
-                                        <option value="<?php echo $results["Unit_id"]; ?>">
+                                        <option value="<?php echo $results["Unit_id"]; ?>" <?php if ($results["Unit_id"] === 'UN05') : ?>selected<?php endif; ?>>
                                             <?php echo $results["Unit_name"]; ?>
                                         </option>
                                     <?php } ?>
@@ -183,7 +184,7 @@
                                 input.value = "";
                             });
 
-                            // Find all select elements and set their selected index to 0
+                            // Find all selected elements and set their selected index to 0
                             const selectElements = newProduct.querySelectorAll("select");
                             selectElements.forEach((select) => {
                                 select.selectedIndex = 0;
@@ -194,6 +195,10 @@
                             const lastProductCode = lastProduct.querySelector('[name="product_PreOrder_detail_id[]"]').value;
                             const newProductCode = 'POD' + (parseInt(lastProductCode.substr(3)) + 1).toString().padStart(2, '0');
                             newProduct.querySelector('[name="product_PreOrder_detail_id[]"]').value = newProductCode;
+
+                            // Set the counting unit input value to "UN05"
+                            const newProductUnitInput = newProduct.querySelector('[name="product_Price_unit[]"]');
+                            newProductUnitInput.value = "UN05";
 
                             // Append the new product to the products container
                             productsContainer.appendChild(newProduct);
