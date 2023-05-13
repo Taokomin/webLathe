@@ -15,7 +15,6 @@ if (isset($_GET['BuyMaterial_id'])) {
     u3.Unit_name AS Counting_unit_name,
     u2.Unit_id AS Price_unit_id,
     u4.Unit_name AS Price_unit_name,
-    mt.MaterialType_name,
     p.Partner_name, 
     p.Partner_surname, 
     p.Partner_email,
@@ -29,7 +28,6 @@ if (isset($_GET['BuyMaterial_id'])) {
     INNER JOIN unit AS u2 ON bmd.Price_unit = u2.Unit_id
     INNER JOIN unit AS u3 ON bmd.Counting_unit = u3.Unit_id
     INNER JOIN unit AS u4 ON bmd.Price_unit = u4.Unit_id
-    INNER JOIN material_type AS mt ON bmd.MaterialType_id = mt.MaterialType_id
     INNER JOIN partner AS p ON bm.Partner_id = p.Partner_id
     INNER JOIN employee AS e ON bm.Employee_id = e.Employee_id
     INNER JOIN status AS s ON bm.BuyMaterial_status = s.status_id

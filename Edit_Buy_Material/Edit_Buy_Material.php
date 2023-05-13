@@ -1,7 +1,30 @@
 <?php
 require('C:\xampp\XAMXUN\htdocs\webLathe\config\condb.php');
 $BuyMaterial_id = $_GET["BuyMaterial_id"];
-$sql = "SELECT * FROM buy_material WHERE BuyMaterial_id='$BuyMaterial_id'";
+$sql = "SELECT bm.*,bmd.Counting_unit,bmd.BuyMaterial_detail_id,bmd.BuyMaterial_detail ,
+bmd.BuyMaterial_quantity,bmd.BuyMaterial_price,
+m.Material_name, u.Unit_id AS Counting_unit_id,
+u3.Unit_name AS Counting_unit_name,
+u2.Unit_id AS Price_unit_id,
+u4.Unit_name AS Price_unit_name,
+p.Partner_name, 
+p.Partner_surname, 
+e.Employee_name, 
+e.Employee_surname,
+s.status_name
+FROM buy_material AS bm
+INNER JOIN buy_material_detail AS bmd ON bm.BuyMaterial_id = bmd.BuyMaterial_id
+INNER JOIN Material AS m ON bmd.BuyMaterial_detail = m.Material_id 
+INNER JOIN unit AS u ON bmd.Counting_unit = u.Unit_id
+INNER JOIN unit AS u2 ON bmd.Price_unit = u2.Unit_id
+INNER JOIN unit AS u3 ON bmd.Counting_unit = u3.Unit_id
+INNER JOIN unit AS u4 ON bmd.Price_unit = u4.Unit_id
+INNER JOIN partner AS p ON bm.Partner_id = p.Partner_id
+INNER JOIN employee AS e ON bm.Employee_id = e.Employee_id
+INNER JOIN status AS s ON bm.BuyMaterial_status = s.status_id
+WHERE bm.BuyMaterial_id='$BuyMaterial_id'
+ORDER BY bm.BuyMaterial_id,bmd.BuyMaterial_detail_id ASC;
+";
 $result = mysqli_query($con, $sql);
 $values = mysqli_fetch_assoc($result);
 ?>
@@ -28,16 +51,9 @@ if (!$_SESSION["UserID"]) {
             <h1 class="mt-5">แก้ไขข้อมูลสั่งซื้อวัสดุและอุปกรณ์</h1>
             <hr>
             <form action="ProcBme.php" method="POST">
-                <div class="mb-3">
-                    <!-- <label for="Auto_number" class="form-label">ลำดับ</label> -->
-                    <input type="hidden" class="form-control" name="Auto_number" value="<?php echo $values["Auto_number"]; ?>" readonly>
-                </div>
-                <div class="mb-3">
-                    <label for="BuyMaterial_id" class="form-label">รหัสสั่งซื้อวัสดุและอุปกรณ์</label>
-                    <input type="text" class="form-control" name="BuyMaterial_id" value="<?php echo $values["BuyMaterial_id"]; ?>" readonly>
-                </div>
-                <div class="mb-3">
-                    <label for="BuyMaterial_day" class="form-label">วั่นที่สั่งซื้อ</label>
+                <input type="hidden" class="form-control" name="BuyMaterial_id" value="<?php echo $values["BuyMaterial_id"]; ?>" readonly>
+                <div class="mb-3" style="display: inline-block;width : 166px;">
+                    <label for="BuyMaterial_day" class="form-label">วันที่สั่งซื้อ</label>
                     <input type="date" class="form-control" name="BuyMaterial_day" id="BuyMaterial_day" value="<?php echo $values["BuyMaterial_day"]; ?>" required>
                     <script type='text/javascript'>
                         var highlight_dates = ['1-5-2020', '11-5-2020', '18-5-2020', '28-5-2020', '1-7-2023', '15-7-2023'];
@@ -68,9 +84,9 @@ if (!$_SESSION["UserID"]) {
                     $default_Material_id = $values['Material_id'];
                 }
                 ?>
-                <div class="mb-3">
-                    <label for="Material_id" class="form-label">เลือกวัสดุและอุปกรณ์</label>
-                    <select class="form-select" aria-label="Default select example" name="Material_id" required>
+                <div class="mb-3" style="display: inline-block;width : 166px;">
+                    <label for="BuyMaterial_detail" class="form-label">เลือกวัสดุและอุปกรณ์</label>
+                    <select class="form-select" aria-label="Default select example" name="BuyMaterial_detail" required>
                         <option value="">-กรุณาเลือก-</option>
                         <?php foreach ($result as $results) { ?>
                             <?php $selected = ($results["Material_id"] == $default_Material_id) ? "selected" : ""; ?>
@@ -80,7 +96,7 @@ if (!$_SESSION["UserID"]) {
                         <?php } ?>
                     </select>
                 </div>
-                <div class="mb-3">
+                <div class="mb-3" style="display: inline-block;width : 166px;">
                     <label for="BuyMaterial_quantity" class="form-label">จำนวน</label>
                     <input type="text" class="form-control" name="BuyMaterial_quantity" value="<?php echo $values["BuyMaterial_quantity"]; ?>" required onkeypress="return isNumberKey(event)">
                 </div>
@@ -94,20 +110,20 @@ if (!$_SESSION["UserID"]) {
                     }
                 </script>
                 <?php
-                require('C:\xampp\XAMXUN\htdocs\Lathe_application\config\condb.php');
-                $sql1 = $con;
-                $query1 = "SELECT * FROM unit ORDER BY Unit_id asc";
-                $result1 = mysqli_query($sql1, $query1);
-                $default_Unit_id = "";
-                if (isset($values['Unit_id'])) {
-                    $default_Unit_id = $values['Unit_id'];
+                require('C:\xampp\XAMXUN\htdocs\webLathe\config\condb.php');
+                $sql3 = $con;
+                $query3 = "SELECT * FROM unit ORDER BY Unit_id asc";
+                $result3 = mysqli_query($sql3, $query3);
+                $default_Counting_unit = "";
+                if (isset($values['Counting_unit'])) {
+                    $default_Counting_unit = $values['Counting_unit'];
                 }
                 ?>
-                <div class="mb-3">
-                    <label for="Unit_id" class="form-label">เลือกหน่วยนับ </label>
-                    <select class="form-select" aria-label="Default select example" name="Unit_id" required>
+                <div class="mb-3" style="display: inline-block;width : 166px;">
+                    <label for="Counting_unit" class="form-label">เลือกหน่วยนับ</label>
+                    <select class="form-select" aria-label="Default select example" name="Counting_unit" required>
                         <option value="">-กรุณาเลือก-</option>
-                        <?php foreach ($result1 as $results) { ?>
+                        <?php foreach ($result3 as $results) { ?>
                             <?php $selected = ($results["Unit_id"] == $default_Unit_id) ? "selected" : ""; ?>
                             <option value="<?php echo $results["Unit_id"]; ?>" <?php echo $selected; ?>>
                                 <?php echo $results["Unit_name"]; ?>
@@ -115,34 +131,14 @@ if (!$_SESSION["UserID"]) {
                         <?php } ?>
                     </select>
                 </div>
-                <?php
-                require('C:\xampp\XAMXUN\htdocs\Lathe_application\config\condb.php');
-                $sql2 = $con;
-                $query2 = "SELECT * FROM material_type ORDER BY MaterialType_id asc";
-                $result2 = mysqli_query($sql2, $query2);
-                $default_MaterialType_id = "";
-                if (isset($values['MaterialType_id'])) {
-                    $default_MaterialType_id = $values['MaterialType_id'];
-                }
-                ?>
-                <div class="mb-3">
-                    <label for="MaterialType_id" class="form-label">เลือกประเภทวัสดุและอุปกรณ์</label>
-                    <select class="form-select" aria-label="Default select example" name="MaterialType_id" required>
-                        <option value="">-กรุณาเลือก-</option>
-                        <?php foreach ($result2 as $results) { ?>
-                            <?php $selected = ($results["MaterialType_id"] == $default_MaterialType_id) ? "selected" : ""; ?>
-                            <option value="<?php echo $results["MaterialType_id"]; ?>"<?php echo $selected; ?>>
-                                <?php echo $results["MaterialType_name"]; ?>
-                            </option>
-                        <?php } ?>
-                    </select>
-                </div>
-                <div class="mb-3">
+
+                <div class="mb-3" style="display: inline-block;width : 166px;">
                     <label for="Employee_id" class="form-label">ชื่อพนักงาน</label>
-                    <input type="text" class="form-control" name="Employee_id" value="<?php echo $values["Employee_id"]; ?>" readonly>
+                    <input type="text" class="form-control" name="Employee_id" value="<?php echo $values["Employee_name"] . " " . $values["Employee_surname"]; ?>" readonly>
                 </div>
+
                 <?php
-                require('C:\xampp\XAMXUN\htdocs\Lathe_application\config\condb.php');
+                require('C:\xampp\XAMXUN\htdocs\webLathe\config\condb.php');
                 $sql3 = $con;
                 $query3 = "SELECT * FROM partner ORDER BY Partner_id asc";
                 $result3 = mysqli_query($sql3, $query3);
@@ -151,21 +147,21 @@ if (!$_SESSION["UserID"]) {
                     $default_Partner_id = $values['Partner_id'];
                 }
                 ?>
-                <div class="mb-3">
-                    <label for="Partner_id" class="form-label">เลือกชื่อคู่ค้า</label>
+                <div class="mb-3" style="display: inline-block;width : 166px;">
+                    <label for="Partner_id" class="form-label">ชื่อคู่ค้า</label>
                     <select class="form-select" aria-label="Default select example" name="Partner_id" required>
                         <option value="">-กรุณาเลือก-</option>
                         <?php foreach ($result3 as $results) { ?>
                             <?php $selected = ($results["Partner_id"] == $default_Partner_id) ? "selected" : ""; ?>
                             <option value="<?php echo $results["Partner_id"]; ?>" <?php echo $selected; ?>>
-                                <?php echo $results["Partner_name"]. " " . $results["Partner_surname"];?>
+                                <?php echo $results["Partner_name"] . " " . $results["Partner_surname"]; ?>
                             </option>
                         <?php } ?>
                     </select>
                 </div>
-                <div class="mb-3">
+                <div class="mb-3" style="display: inline-block;width : 166px;">
                     <label for="BuyMaterial_status" class="form-label">สถานะ</label>
-                    <input type="text" class="form-control" name="BuyMaterial_status" value="<?php echo $values["BuyMaterial_status"]; ?>" readonly>
+                    <input type="text" class="form-control" name="BuyMaterial_status" value="<?php echo $values["status_name"]; ?>" readonly>
                 </div>
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-success">แก้ไขข้อมูล </button>
@@ -192,6 +188,7 @@ if (!$_SESSION["UserID"]) {
     }
 
     body {
+        height: 100vh;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -200,7 +197,7 @@ if (!$_SESSION["UserID"]) {
     }
 
     .container {
-        max-width: 700px;
+        max-width: 920px;
         width: 100%;
         background-color: #fff;
         padding: 25px 30px;

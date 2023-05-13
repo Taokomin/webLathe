@@ -153,22 +153,22 @@ if (!$_SESSION["UserID"]) {
                             <input type="text" class="form-control" name="product_BuyMaterial_price[]" required onkeypress="return isNumberKey(event)">
                         </div>
                         <?php
-                        require('C:\xampp\XAMXUN\htdocs\webLathe\config\condb.php');
-                        $sql1 = $con;
-                        $query1 = "SELECT * FROM unit ORDER BY Unit_id asc";
-                        $result1 = mysqli_query($sql1, $query1);
-                        ?>
-                        <div class="mb-3" style="display: inline-block;width : 166px;">
-                            <label for="product1_Price_unit" class="form-label">เลือกหน่วยนับ</label>
-                            <select class="form-select" aria-label="Default select example" name="product_Price_unit[]" required>
-                                <option value="">-กรุณาเลือก-</option>
-                                <?php foreach ($result1 as $results) { ?>
-                                    <option value="<?php echo $results["Unit_id"]; ?>">
-                                        <?php echo $results["Unit_name"]; ?>
-                                    </option>
-                                <?php } ?>
-                            </select>
-                        </div>
+                            require('C:\xampp\XAMXUN\htdocs\webLathe\config\condb.php');
+                            $sql1 = $con;
+                            $query1 = "SELECT * FROM unit ORDER BY Unit_id asc";
+                            $result1 = mysqli_query($sql1, $query1);
+                            ?>
+                            <div class="mb-3" style="display: inline-block;width : 166px;">
+                                <label for="product1_Price_unit" class="form-label">เลือกหน่วยนับ</label>
+                                <select class="form-select" aria-label="Default select example" name="product_Price_unit[]" required>
+                                    <option value="">-กรุณาเลือก-</option>
+                                    <?php foreach ($result1 as $results) { ?>
+                                        <option value="<?php echo $results["Unit_id"]; ?>" <?php if ($results["Unit_id"] === 'UN05') : ?>selected<?php endif; ?>>
+                                            <?php echo $results["Unit_name"]; ?>
+                                        </option>
+                                    <?php } ?>
+                                </select>
+                            </div>
                     </div>
                 </div>
                 <button type="button" onclick="addProduct()" class="btn btn-primary">เพิ่มรายการสั่งซื้อ</button>
@@ -198,6 +198,10 @@ if (!$_SESSION["UserID"]) {
                         const lastProductCode = lastProduct.querySelector('[name="product_BuyMaterial_detail_id[]"]').value;
                         const newProductCode = 'BMD' + (parseInt(lastProductCode.substr(3)) + 1).toString().padStart(2, '0');
                         newProduct.querySelector('[name="product_BuyMaterial_detail_id[]"]').value = newProductCode;
+
+                        // Set the counting unit input value to "UN05"
+                        const newProductUnitInput = newProduct.querySelector('[name="product_Price_unit[]"]');
+                            newProductUnitInput.value = "UN05";
 
                         // Append the new product to the products container
                         productsContainer.appendChild(newProduct);

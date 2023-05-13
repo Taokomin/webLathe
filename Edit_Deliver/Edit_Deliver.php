@@ -1,7 +1,19 @@
 <?php
 require('C:\xampp\XAMXUN\htdocs\webLathe\config\condb.php');
 $Deliver_id = $_GET["Deliver_id"];
-$sql = "SELECT * FROM deliver WHERE Deliver_id='$Deliver_id'";
+$sql="SELECT d.*,dd.Deliver_detail,dd.Deliver_quantity, u.Unit_id AS Counting_unit_id, u3.Unit_name AS Counting_unit_name, u2.Unit_id AS Price_unit_id, u4.Unit_name AS Price_unit_name , c.Customer_name, c.Customer_surname, e.Employee_name, e.Employee_surname
+FROM deliver AS d
+INNER JOIN deliver_detail AS dd ON d.Deliver_id = dd.Deliver_id
+INNER JOIN unit AS u ON dd.Counting_unit = u.Unit_id
+INNER JOIN unit AS u2 ON dd.Price_unit = u2.Unit_id
+INNER JOIN unit AS u3 ON dd.Counting_unit = u3.Unit_id
+INNER JOIN unit AS u4 ON dd.Price_unit = u4.Unit_id
+INNER JOIN customer AS c ON dd.Customer_id = c.Customer_id
+INNER JOIN employee AS e ON d.Employee_id = e.Employee_id
+WHERE d.Deliver_id = '$Deliver_id'
+ORDER BY d.Deliver_id,dd.Deliver_detail_id ASC;
+";
+
 $result = mysqli_query($con, $sql);
 $values = mysqli_fetch_assoc($result);
 ?>
@@ -21,16 +33,9 @@ $values = mysqli_fetch_assoc($result);
         <h1 class="mt-5">แก้ไขข้อมูลรหัสส่งมอบ</h1>
         <hr>
         <form action="ProcDve.php" method="POST">
-            <div class="mb-3">
-                <!-- <label for="Auto_number" class="form-label">ลำดับ</label> -->
-                <input type="hidden" class="form-control" name="Auto_number" value="<?php echo $values["Auto_number"]; ?>" readonly>
-            </div>
-            <div class="mb-3">
-                <label for="Deliver_id" class="form-label">รหัสส่งมอบ</label>
-                <input type="text" class="form-control" name="Deliver_id" value="<?php echo $values["Deliver_id"]; ?>" readonly>
-            </div>
-            <div class="mb-3">
-                <label for="Deliver_day" class="form-label">วั่นที่สั่ง</label>
+                <input type="hidden" class="form-control" name="Deliver_id" value="<?php echo $values["Deliver_id"]; ?>" readonly>
+            <div class="mb-3" style="display: inline-block;width : 166px;">
+                <label for="Deliver_day" class="form-label">วันที่สั่ง</label>
                 <input type="date" class="form-control" name="Deliver_day" id="Deliver_day" value="<?php echo $values["Deliver_day"]; ?>" required>
                 <script type='text/javascript'>
                     var highlight_dates = ['1-5-2020', '11-5-2020', '18-5-2020', '28-5-2020', '1-7-2023', '15-7-2023'];
@@ -51,43 +56,33 @@ $values = mysqli_fetch_assoc($result);
                     });
                 </script>
             </div>
-            <div class="mb-3">
-                <label for="Deliver_id" class="form-label">รหัสสั่งซื้อสินค้าจากลูกค้า</label>
-                <input type="text" class="form-control" name="Deliver_id" value="<?php echo $values["Deliver_id"]; ?>" readonly>
+            <div class="mb-3" style="display: inline-block;width : 166px;">
+                <label for="Deliver_detail" class="form-label">สินค้าที่สั่งทำ</label>
+                <input type="text" class="form-control" name="Deliver_detail" value="<?php echo $values["Deliver_detail"]; ?>" readonly>
             </div>
 
-            <div class="mb-3">
-                <label for="PreOrder_day" class="form-label">วันที่สั่ง</label>
-                <input type="text" class="form-control" name="PreOrder_day" value="<?php echo $values["PreOrder_day"]; ?>" readonly>
+            <div class="mb-3" style="display: inline-block;width : 166px;">
+                <label for="Deliver_quantity" class="form-label">จำนวน</label>
+                <input type="text" class="form-control" name="Deliver_quantity" value="<?php echo $values["Deliver_quantity"]; ?>" readonly>
             </div>
 
-            <div class="mb-3">
-                <label for="PreOrder_detail" class="form-label">สินค้าที่สั่งทำ</label>
-                <input type="text" class="form-control" name="PreOrder_detail" value="<?php echo $values["PreOrder_detail"]; ?>" readonly>
+            <div class="mb-3" style="display: inline-block;width : 166px;">
+                <label for="Counting_unit" class="form-label">หน่วยนับ</label>
+                <input type="text" class="form-control" name="Counting_unit" value="<?php echo $values["Counting_unit_name"]; ?>" readonly>
             </div>
 
-            <div class="mb-3">
-                <label for="PreOrder_quantity" class="form-label">จำนวน</label>
-                <input type="text" class="form-control" name="PreOrder_quantity" value="<?php echo $values["PreOrder_quantity"]; ?>" readonly>
-            </div>
-
-            <div class="mb-3">
-                <label for="Unit_id" class="form-label">หน่วยนับ</label>
-                <input type="text" class="form-control" name="Unit_id" value="<?php echo $values["Unit_id"]; ?>" readonly>
-            </div>
-
-            <div class="mb-3">
+            <div class="mb-3" style="display: inline-block;width : 166px;">
                 <label for="Customer_id" class="form-label">ลูกค้า</label>
-                <input type="text" class="form-control" name="Customer_id" value="<?php echo $values["Customer_id"]; ?>" readonly>
+                <input type="text" class="form-control" name="Customer_id" value="<?php echo $values["Customer_name"] . " " . $values["Customer_surname"];?>" readonly>
             </div>
 
-            <div class="mb-3">
+            <div class="mb-3" style="width : 846px;">
                 <label for="Deliver_address" class="form-label">ที่อยู่ที่ส่งมอบ</label>
                 <input type="text" class="form-control" name="Deliver_address" value="<?php echo $values["Deliver_address"]; ?>" required>
             </div>
-            <div class="mb-3">
+            <div class="mb-3" style="display: inline-block;width : 166px;">
                 <label for="Employee_id" class="form-label">ชื่อพนักงาน</label>
-                <input type="text" class="form-control" name="Employee_id" value="<?php echo $values["Employee_id"]; ?>" readonly>
+                <input type="text" class="form-control" name="Employee_id" value="<?php echo $values["Employee_name"] . " " . $values["Employee_surname"]; ?>" readonly>
             </div>
             <div class="modal-footer">
                 <button type="submit" class="btn btn-success">แก้ไขข้อมูล </button>
@@ -114,6 +109,7 @@ $values = mysqli_fetch_assoc($result);
     }
 
     body {
+        height: 100vh;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -122,7 +118,7 @@ $values = mysqli_fetch_assoc($result);
     }
 
     .container {
-        max-width: 700px;
+        max-width: 920px;
         width: 100%;
         background-color: #fff;
         padding: 25px 30px;

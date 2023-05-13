@@ -126,7 +126,6 @@ if (!$_SESSION["UserID"]) {
                         <th style="width: 3%;">ชื่อวัสดุ</th>
                         <th style="width: 3%;">จำนวน</th>
                         <th style="width: 4%;">หน่วยนับ</th>
-                        <th style="width: 4%;">ประเภทวัสดุและอุปกรณ์</th> 
                         <th style="width: 3%;">ราคา</th>
                         <th style="width: 4%;">หน่วยนับ</th>
                         <th>ชื่อพนักงาน</th>
@@ -144,7 +143,6 @@ if (!$_SESSION["UserID"]) {
                     u3.Unit_name AS Counting_unit_name,
                     u2.Unit_id AS Price_unit_id,
                     u4.Unit_name AS Price_unit_name,
-                    mt.MaterialType_name,
                     p.Partner_name, 
                     p.Partner_surname, 
                     e.Employee_name, 
@@ -157,7 +155,6 @@ if (!$_SESSION["UserID"]) {
                     INNER JOIN unit AS u2 ON bmd.Price_unit = u2.Unit_id
                     INNER JOIN unit AS u3 ON bmd.Counting_unit = u3.Unit_id
                     INNER JOIN unit AS u4 ON bmd.Price_unit = u4.Unit_id
-                    INNER JOIN material_type AS mt ON bmd.MaterialType_id = mt.MaterialType_id
                     INNER JOIN partner AS p ON bm.Partner_id = p.Partner_id
                     INNER JOIN employee AS e ON bm.Employee_id = e.Employee_id
                     INNER JOIN status AS s ON bm.BuyMaterial_status = s.status_id
@@ -177,11 +174,10 @@ if (!$_SESSION["UserID"]) {
                             <td align="center"><?php echo $values["Material_name"]; ?></td>
                             <td align="center"><?php echo $values["BuyMaterial_quantity"]; ?></td>
                             <td align="center"><?php echo $values["Counting_unit_name"]; ?></td>
-                            <td align="center"><?php echo $values["MaterialType_name"]; ?></td>
                             <td align="center"><?php echo $values["BuyMaterial_price"]; ?></td>
                             <td align="center"><?php echo $values["Price_unit_name"]; ?></td>
-                            <td align="center"><?php echo $values["Employee_name"] . " " . $values["Partner_surname"]; ?></td>
-                            <td align="center"><?php echo $values["Partner_name"] . " " . $values["Employee_surname"]; ?></td>
+                            <td align="center"><?php echo $values["Employee_name"] . " " . $values["Employee_surname"]; ?></td>
+                            <td align="center"><?php echo $values["Partner_name"] . " " . $values["Partner_surname"]; ?></td>
                             <td align="center"><?php echo $values["status_name"]; ?></td>
                             <td align="center">
                                 <a href="Pdf_Buy_Material_id.php?BuyMaterial_id=<?php echo $values['BuyMaterial_id']; ?>" class="btn btn-warning"><iconify-icon icon="bxs:file-pdf" style="width: 14px; height: 14px"></iconify-icon></a>

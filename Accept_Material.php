@@ -128,7 +128,6 @@ if (!$_SESSION["UserID"]) {
                         <th style="width: 2%;">หน่วยนับ</th>
                         <th style="width: 2%;">ราคา</th>
                         <th style="width: 2%;">หน่วยนับ</th>
-                        <th>ประเภทวัสดุและอุปกรณ์</th>
                         <th>ชื่อคู่ค้า</th>
                         <th>ชื่อพนักงาน</th>
                         <th>การดำเนินการ</th>
@@ -137,14 +136,12 @@ if (!$_SESSION["UserID"]) {
                 <tbody>
                     <?php
                     require('C:\xampp\XAMXUN\htdocs\webLathe\config\condb.php');
-                    $query = "SELECT am.*,amd.AcceptMaterial_detail,amd.AcceptMaterial_quantity,amd.AcceptMaterial_price,m.Material_name, p.Partner_name, p.Partner_surname, e.Employee_name, e.Employee_surname, 
-          mt.MaterialType_name,
+                    $query = "SELECT am.*,amd.AcceptMaterial_detail_id,amd.AcceptMaterial_detail,amd.AcceptMaterial_quantity,amd.AcceptMaterial_price,m.Material_name, p.Partner_name, p.Partner_surname, e.Employee_name, e.Employee_surname, 
           u.Unit_id AS Counting_unit_id, u.Unit_name AS Counting_unit_name,
           u2.Unit_id AS Price_unit_id, u2.Unit_name AS Price_unit_name
           FROM accept_material AS am
           INNER JOIN accept_material_detail AS amd ON am.AcceptMaterial_id = amd.AcceptMaterial_id
           INNER JOIN material AS m ON amd.AcceptMaterial_detail = m.Material_id 
-          INNER JOIN material_type AS mt ON amd.MaterialType_id = mt.MaterialType_id
           INNER JOIN unit AS u ON amd.Counting_unit = u.Unit_id
           INNER JOIN unit AS u2 ON amd.Price_unit = u2.Unit_id
           INNER JOIN partner AS p ON am.Partner_id = p.Partner_id
@@ -157,14 +154,14 @@ if (!$_SESSION["UserID"]) {
                     ?>
                         <tr>
                             <td align="center"><?php echo $i++; ?></td>
-                            <td align="center"><?php echo $values["AcceptMaterial_id"]; ?></td>
+                            <?php $values["AcceptMaterial_id"]; ?>
+                            <td align="center"><?php echo $values["AcceptMaterial_detail_id"]; ?></td>
                             <td align="center"><?php echo date("d/m/Y", strtotime($values["AcceptMaterial_day"] . " UTC")); ?></td>
                             <td align="center"><?php echo $values["Material_name"]; ?></td>
                             <td align="center"><?php echo $values["AcceptMaterial_quantity"]; ?></td>
                             <td align="center"><?php echo $values["Counting_unit_name"]; ?></td>
                             <td align="center"><?php echo $values["AcceptMaterial_price"]; ?></td>
                             <td align="center"><?php echo $values["Price_unit_name"]; ?></td>
-                            <td align="center"><?php echo $values["MaterialType_name"]; ?></td>
                             <td align="center"><?php echo $values["Employee_name"] . " " . $values["Employee_surname"]; ?></td>
                             <td align="center"><?php echo $values["Partner_name"] . " " . $values["Partner_surname"]; ?></td>
                             <td>
