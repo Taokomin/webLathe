@@ -44,7 +44,7 @@ if (!$_SESSION["UserID"]) {
             <h1 class="mt-5">แก้ไขข้อมูลเบิกวัสดุและอุปกรณ์</h1>
             <hr>
             <form action="ProcPme.php" method="post">
-                <div class="mb-3" style="display: inline-block;width : 166px;">
+                <div class="mb-3" style="width : 166px;">
                     <label for="PickupMaterial_day" class="form-label">วันที่สั่ง</label>
                     <input type="date" class="form-control" name="PickupMaterial_day" id="PickupMaterial_day" value="<?php echo $values['PickupMaterial_day']; ?>" required>
                     <script type='text/javascript'>
@@ -68,7 +68,7 @@ if (!$_SESSION["UserID"]) {
                 </div>
 
                 <div class="mb-3" style="display: inline-block;width : 166px;">
-                    <label for="PickupMaterial_detail" class="form-label">รหัสสั่งซื้อวัสดุและอุปกรณ์</label>
+                    <label for="PickupMaterial_detail" class="form-label">ชื่อวัสดุและอุปกรณ์</label>
                     <input type="text" class="form-control" name="PickupMaterial_detail" value="<?php echo $values['Material_name']; ?>" readonly>
                 </div>
 

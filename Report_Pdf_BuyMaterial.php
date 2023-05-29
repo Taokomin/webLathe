@@ -17,7 +17,6 @@ $sql = "SELECT bm.*,bmd.BuyMaterial_detail ,
   u3.Unit_name AS Counting_unit_name,
   u2.Unit_id AS Price_unit_id,
   u4.Unit_name AS Price_unit_name,
-  mt.MaterialType_name,
   p.Partner_name, 
   p.Partner_surname, 
   p.Partner_email,
@@ -31,7 +30,6 @@ $sql = "SELECT bm.*,bmd.BuyMaterial_detail ,
   INNER JOIN unit AS u2 ON bmd.Price_unit = u2.Unit_id
   INNER JOIN unit AS u3 ON bmd.Counting_unit = u3.Unit_id
   INNER JOIN unit AS u4 ON bmd.Price_unit = u4.Unit_id
-  INNER JOIN material_type AS mt ON bmd.MaterialType_id = mt.MaterialType_id
   INNER JOIN partner AS p ON bm.Partner_id = p.Partner_id
   INNER JOIN employee AS e ON bm.Employee_id = e.Employee_id
   INNER JOIN status AS s ON bm.BuyMaterial_status = s.status_id
@@ -54,15 +52,16 @@ if (mysqli_num_rows($result) > 0) {
           <td style="border-right:1px solid #000;padding:3px;text-align:center;"  >' . $i . '</td>
           <td style="border-right:1px solid #000;padding:3px;text-align:center;"  >' . $row['Material_name'] . '</td>
           <td style="border-right:1px solid #000;padding:3px;text-align:center;"  >' . $row['BuyMaterial_quantity'] . '</td>  
-          <td style="border-right:1px solid #000;padding:3px;text-align:center;"  >' . $row['BuyMaterial_price'] . '</td>    
-          <td style="border-right:1px solid #000;padding:3px;text-align:center;">' . $row['BuyMaterial_quantity'] * $row['BuyMaterial_price'] . '</td>
+          <td style="border-right:1px solid #000;padding:3px;text-align:center;"  >' . $row['Counting_unit_name'] . '</td>  
+          <td style="border-right:1px solid #000;padding:3px;text-align:center;"  >' . number_format($row['BuyMaterial_price']) . '</td>    
+          <td style="border-right:1px solid #000;padding:3px;text-align:center;">' . number_format($row['BuyMaterial_quantity'] * $row['BuyMaterial_price']) . '</td>
         </tr>';
     $i++;
   }
 }
 $tablebody .= '<tr style="border:1px solid #000;">
-    <td colspan="4" style="border-right:1px solid #000;background-color:#A1E7FF;padding:3px;text-align:right;">ผลรวมสรุป:</td>
-    <td style="border-right:1px solid #000;padding:3px;text-align:center;">' . $total . '</td>
+    <td colspan="5" style="border-right:1px solid #000;background-color:#A1E7FF;padding:3px;text-align:right;">ผลรวมสรุป:</td>
+    <td style="border-right:1px solid #000;padding:3px;text-align:center;">' . number_format($total) . '</td>
 </tr>';
 
 mysqli_close($con);
@@ -101,8 +100,9 @@ $tableh = '
     <td  style="border-right:1px solid #000;padding:4px;text-align:center;background-color:#A1E7FF;"   width="10%">ลำดับ</td>
     <td  style="border-right:1px solid #000;padding:4px;text-align:center;background-color:#A1E7FF;"  width="30%">ชื่อวัสดุและอุปกรณ์</td>
     <td  style="border-right:1px solid #000;padding:4px;text-align:center;background-color:#A1E7FF;" width="20%">จำนวน</td>
-    <td  style="border-right:1px solid #000;padding:4px;text-align:center;background-color:#A1E7FF;" width="20%">ราคา</td>
-    <td  style="border-right:1px solid #000;padding:4px;text-align:center;background-color:#A1E7FF;"  width="20%">ราคารวม</td>
+    <td  style="border-right:1px solid #000;padding:4px;text-align:center;background-color:#A1E7FF;" width="10%">หน่วยนับ</td>
+    <td  style="border-right:1px solid #000;padding:4px;text-align:center;background-color:#A1E7FF;" width="20%">ราคา(บาท)</td>
+    <td  style="border-right:1px solid #000;padding:4px;text-align:center;background-color:#A1E7FF;"  width="20%">ราคารวม(บาท)</td>
 </tr>
 </thead>
 <tbody>';

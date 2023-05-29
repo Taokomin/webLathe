@@ -43,16 +43,17 @@ if (mysqli_num_rows($result) > 0) {
         <td style="border-right:1px solid #000;padding:3px;text-align:center;"  >' . $i . '</td>
         <td style="border-right:1px solid #000;padding:3px;text-align:center;"  >' . $row['PreOrder_detail'] . '</td>
         <td style="border-right:1px solid #000;padding:3px;text-align:center;"  >' . $row['PreOrder_quantity'] . '</td>
-    <td style="border-right:1px solid #000;padding:3px;text-align:center;"  >' . $row['PreOrder_price'] . '</td>
-    <td style="border-right:1px solid #000;padding:3px;text-align:center;">' . $row['PreOrder_quantity'] * $row['PreOrder_price'] . '</td>
+        <td style="border-right:1px solid #000;padding:3px;text-align:center;"  >' . $row['Counting_unit_name'] . '</td>
+    <td style="border-right:1px solid #000;padding:3px;text-align:center;"  >' . number_format($row['PreOrder_price']) . '</td>
+    <td style="border-right:1px solid #000;padding:3px;text-align:center;">' . number_format($row['PreOrder_quantity'] * $row['PreOrder_price']) . '</td>
 
       </tr>';
     $i++;
   }
 }
 $tablebody .= '<tr style="border:1px solid #000;">
-    <td colspan="4" style="border-right:1px solid #000;padding:3px;text-align:right;">ผลรวมสรุป:</td>
-    <td style="border-right:1px solid #000;padding:3px;text-align:center;">' . $total . '</td>
+    <td colspan="5" style="border-right:1px solid #000;padding:3px;text-align:right;">ผลรวมสรุป:</td>
+    <td style="border-right:1px solid #000;padding:3px;text-align:center;">' . number_format($total) . '</td>
 </tr>';
 mysqli_close($con);
 
@@ -199,8 +200,9 @@ margin-bottom: 50px;
   <td  style="border-right:1px solid #000;padding:4px;text-align:center;"   width="10%">ลำดับ</td>
   <td  style="border-right:1px solid #000;padding:4px;text-align:center;"  width="15%">สินค้าที่สั่งทำ</td>
   <td  style="border-right:1px solid #000;padding:4px;text-align:center;" width="15%">จำนวน</td>
-  <td  style="border-right:1px solid #000;padding:4px;text-align:center;" width="15%">ราคา</td>
-  <td  style="border-right:1px solid #000;padding:4px;text-align:center;" width="20%">ราคารวม</td>
+  <td  style="border-right:1px solid #000;padding:4px;text-align:center;" width="10%">หน่วยนับ</td>
+  <td  style="border-right:1px solid #000;padding:4px;text-align:center;" width="15%">ราคา(บาท)</td>
+  <td  style="border-right:1px solid #000;padding:4px;text-align:center;" width="20%">ราคารวม(บาท)</td>
   </tr>
 </thead>
   <tbody>';

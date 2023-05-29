@@ -116,11 +116,11 @@
                     <div id="products">
                         <div class="product">
                             <div class="mb-3" style="display: inline-block;width : 166px;">
-                                <label for="product1_detail" class="form-label">รหัสรายการสั่งสินค้า</label>
+                                <label for="product1_PreOrder_detail_id" class="form-label">รหัสรายการสั่งสินค้า</label>
                                 <input type="text" class="form-control" name="product_PreOrder_detail_id[]" value="<?php echo (increaseIdPod($GLOBALS['PreOrder_detail_id'])); ?>" readonly>
                             </div>
                             <div class="mb-3" style="display: inline-block;width : 166px;">
-                                <label for="product1_detail" class="form-label">สินค้าที่สั่งทำ</label>
+                                <label for="product1_PreOrder_detail" class="form-label">สินค้าที่สั่งทำ</label>
                                 <input type="text" class="form-control" name="product_PreOrder_detail[]" required>
                             </div>
                             <div class="mb-3" style="display: inline-block;width : 120px;">
@@ -165,7 +165,9 @@
                                     <?php } ?>
                                 </select>
                             </div>
-
+                            <div class="mb-3" style="display: inline-block;width : 120px;">
+                                <input type="hidden" class="form-control" name="product_showTb[]" value="0" required onkeypress="return isNumberKey(event)">
+                            </div>
                         </div>
                     </div>
                     <button type="button" onclick="addProduct()" class="btn btn-primary">เพิ่มรายการสั่งซื้อ</button>
@@ -199,6 +201,11 @@
                             // Set the counting unit input value to "UN05"
                             const newProductUnitInput = newProduct.querySelector('[name="product_Price_unit[]"]');
                             newProductUnitInput.value = "UN05";
+
+                            const showTbInputs = newProduct.querySelectorAll('[name="product_showTb[]"]');
+                            showTbInputs.forEach((input) => {
+                                input.value = "0";
+                            });
 
                             // Append the new product to the products container
                             productsContainer.appendChild(newProduct);

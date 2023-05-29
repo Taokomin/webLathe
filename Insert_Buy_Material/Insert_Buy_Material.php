@@ -117,7 +117,7 @@ if (!$_SESSION["UserID"]) {
                         $result1 = mysqli_query($sql1, $query1);
                         ?>
                         <div class="mb-3" style="display: inline-block;width : 166px;">
-                            <label for="product1_BuyMaterial_detail" class="form-label">เลือกหน่วยนับ</label>
+                            <label for="product1_BuyMaterial_detail" class="form-label">เลือกวัสดุและอุปกรณ์</label>
                             <select class="form-select" aria-label="Default select example" name="product_BuyMaterial_detail[]" required>
                                 <option value="">-กรุณาเลือก-</option>
                                 <?php foreach ($result1 as $results) { ?>

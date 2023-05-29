@@ -75,6 +75,10 @@ $values = mysqli_fetch_assoc($result);
                 }
             </script>
             <div class="mb-3">
+                <label for="Partner_company" class="form-label">อีเมล</label>
+                <input type="email" class="form-control" name="Partner_email" value="<?php echo $values['Partner_email']; ?>" required>
+            </div>
+            <div class="mb-3">
                 <label for="Partner_company" class="form-label">บริษัทคู่ค้า</label>
                 <input type="text" class="form-control" name="Partner_company" value="<?php echo $values['Partner_company']; ?>" required>
             </div>

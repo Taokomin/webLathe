@@ -187,7 +187,7 @@ if (!$_SESSION["UserID"]) {
                         echo '<div class="mb-3" style="display: inline-block;width : 120px;">';
                         echo '<label  class="form-label">รหัสสั่งสินค้า</label>';
                         echo '<input type="hidden" class="form-control" name="Deliver_detail_id" value="' . $deliverDetailId . '" readonly>';
-                        echo '<input type="text" class="form-control"  value="' . $row['PreOrder_id'] . '" readonly>';
+                        echo '<input type="text" class="form-control" name="PreOrder_detail_id"  value="' . $row['PreOrder_detail_id'] . '" readonly>';
                         echo '</div>';
 
                         echo '&nbsp;&nbsp;<div class="mb-3" style="display: inline-block;width : 120px;">';
@@ -255,6 +255,7 @@ if (!$_SESSION["UserID"]) {
                     <label for="Employee_id" class="form-label">ชื่อพนักงาน</label>
                     <input type="text" class="form-control" value="<?php echo getEmployeeName($_SESSION['User']); ?>" readonly>
                     <input type="hidden" class="form-control" name="Employee_id" value="<?php echo ($_SESSION['User']); ?> <?php ?>" readonly>
+                    <input type="hidden" class="form-control" name="showTb" value="1" required onkeypress="return isNumberKey(event)">
                 </div>
 
                 <div class="modal-footer">

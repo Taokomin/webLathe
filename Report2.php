@@ -80,7 +80,7 @@
                                     $(document).ready(function() {
 
 
-                                        $('#buy_material_day').buy_material_day({
+                                        $('#BuyMaterial_day').BuyMaterial_day({
                                             beforeShowDay: function(date) {
                                                 var month = date.getMonth() + 1;
                                                 var year = date.getFullYear();
@@ -105,7 +105,7 @@
                                     $(document).ready(function() {
 
 
-                                        $('#buy_material_day').buy_material_day({
+                                        $('#BuyMaterial_day').BuyMaterial_day({
                                             beforeShowDay: function(date) {
                                                 var month = date.getMonth() + 1;
                                                 var year = date.getFullYear();
@@ -194,9 +194,7 @@
                     <th style="text-align: center;">ชื่อวัสดุ</th>
                     <th style="text-align: center;">จำนวน</th>
                     <th style="text-align: center;">หน่วยนับ</th>
-                    <th style="text-align: center;">ประเภทวัสดุและอุปกรณ์</th>
-                    <th style="text-align: center;">ราคา</th>
-                    <th style="text-align: center;">หน่วยนับ</th>
+                    <th style="text-align: center;">ราคา(บาท)</th>
                     <th style="text-align: center;">ชื่อพนักงาน</th>
                     <th style="text-align: center;">ชื่อคู่ค้า</th>
                     <th style="text-align: center;">สถานะ</th>
@@ -221,7 +219,6 @@
                     u3.Unit_name AS Counting_unit_name,
                     u2.Unit_id AS Price_unit_id,
                     u4.Unit_name AS Price_unit_name,
-                    mt.MaterialType_name,
                     p.Partner_name, 
                     p.Partner_surname, 
                     e.Employee_name, 
@@ -234,7 +231,6 @@
                     INNER JOIN unit AS u2 ON bmd.Price_unit = u2.Unit_id
                     INNER JOIN unit AS u3 ON bmd.Counting_unit = u3.Unit_id
                     INNER JOIN unit AS u4 ON bmd.Price_unit = u4.Unit_id
-                    INNER JOIN material_type AS mt ON bmd.MaterialType_id = mt.MaterialType_id
                     INNER JOIN partner AS p ON bm.Partner_id = p.Partner_id
                     INNER JOIN employee AS e ON bm.Employee_id = e.Employee_id
                     INNER JOIN status AS s ON bm.BuyMaterial_status = s.status_id
@@ -258,9 +254,7 @@
                     <td align="center"><?php echo $row["Material_name"]; ?></td>
                     <td align="center"><?php echo $row["BuyMaterial_quantity"]; ?></td>
                     <td align="center"><?php echo $row["Counting_unit_name"]; ?></td>
-                    <td align="center"><?php echo $row["MaterialType_name"]; ?></td>
-                    <td align="center"><?php echo $row["BuyMaterial_price"]; ?></td>
-                    <td align="center"><?php echo $row["Price_unit_name"]; ?></td>
+                    <td align="center"><?php echo number_format($row["BuyMaterial_price"]); ?></td>
                     <td align="center"><?php echo $row["Employee_name"] . " " . $row["Partner_surname"]; ?></td>
                     <td align="center"><?php echo $row["Partner_name"] . " " . $row["Employee_surname"]; ?></td>
                     <td align="center"><?php echo $row["status_name"]; ?></td>

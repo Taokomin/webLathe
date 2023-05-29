@@ -121,18 +121,17 @@ if (!$_SESSION["UserID"]) {
             <table id="deliver_table" class="table table-bordered table-striped" style="width:100%">
                 <thead>
                     <tr>
-                        <th style="width: 2%;">ลำดับ</th>
-                        <th style="width: 5%;">รหัสส่งมอบ</th>
-                        <th style="width: 5%;">วันที่ส่งมอบ</th>
-                        <th style="width: 5%;">สินค้า</th>
-                        <th style="width: 2%;">จำนวน</th>
-                        <th style="width: 4%;">หน่วยนับ</th>
-                        <th style="width: 2%;">ราคา</th>
-                        <th style="width: 4%;">หน่วยนับ</th>
-                        <th style="width: 3%;">ชื่อลูกค้า</th>
-                        <th>ที่อยู่ที่ส่งมอบ</th>
-                        <th style="width: 3%;">ชื่อพนักงาน</th>
-                        <th>การดำเนินการ</th>
+                        <th style="text-align: center;width: 2%;">ลำดับ</th>
+                        <th style="text-align: center;width: 5%;">รหัสส่งมอบ</th>
+                        <th style="text-align: center;width: 5%;">วันที่ส่งมอบ</th>
+                        <th style="text-align: center;width: 5%;">สินค้า</th>
+                        <th style="text-align: center;width: 2%;">จำนวน</th>
+                        <th style="text-align: center;width: 4%;">หน่วยนับ</th>
+                        <th style="text-align: center;width: 5%;">ราคา(บาท)</th>
+                        <th style="text-align: center;width: 4%">ชื่อลูกค้า</th>
+                        <th style="text-align: center;">ที่อยู่ที่ส่งมอบ</th>
+                        <th style="text-align: center;width: 4%">ชื่อพนักงาน</th>
+                        <th style="text-align: center;">การดำเนินการ</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -164,8 +163,7 @@ if (!$_SESSION["UserID"]) {
                             <td align="center"><?php echo $values["Deliver_detail"]; ?></td>
                             <td align="center"><?php echo $values["Deliver_quantity"]; ?></td>
                             <td align="center"><?php echo $values["Counting_unit_name"]; ?></td>
-                            <td align="center"><?php echo $values["Deliver_price"]; ?></td>
-                            <td align="center"><?php echo $values["Price_unit_name"]; ?></td>
+                            <td style="text-align: center;"><?php echo number_format($values["Deliver_price"]); ?></td>
                             <td align="center"><?php echo $values["Customer_name"] . " " . $values["Customer_surname"]; ?></td>
                             <td align="center"><?php echo $values["Deliver_address"]; ?></td>
                             <td align="center"><?php echo $values["Employee_name"] . " " . $values["Employee_surname"]; ?></td>

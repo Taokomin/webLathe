@@ -183,22 +183,19 @@
 
 
     <div class="container">
-        <table id="Buy_Material_table" class="table table-bordered table-striped" style="width:100%">
-
+<table id="Buy_Material_table" class="table table-bordered table-striped" style="width:100%">
             <thead>
                 <tr>
-                <th style="text-align: center;">ลำดับ</th>
-                <th style="text-align: center;">รหัสสั่งสินค้า</th>
-                <th style="text-align: center;">วันที่สั่ง</th>
-                <th style="text-align: center;">รหัสรายการ</th>
-                <th style="text-align: center;">สินค้าที่สั่งทำ</th>
-                <th style="text-align: center;">จำนวน</th>
-                <th style="text-align: center;">หน่วยนับ</th>
-                <th style="text-align: center;">ราคา</th>
-                <th style="text-align: center;">หน่วยนับ</th>
-                <th style="text-align: center;">ชื่อลูกค้า</th>
-                <th style="text-align: center;">ชื่อพนักงาน</th>
-                </tr>
+                    <th style="text-align: center;">ลำดับ</th>
+                    <th style="text-align: center;">รหัสส่งมอบ</th>
+                    <th style="text-align: center;">วันที่ส่งมอบ</th>
+                    <th style="text-align: center;">สินค้า</th>
+                    <th style="text-align: center;">จำนวน</th>
+                    <th style="text-align: center;">หน่วยนับ</th>
+                    <th style="text-align: center;">ราคา(บาท)</th>
+                    <th style="text-align: center;">ชื่อลูกค้า</th>
+                    <th style="text-align: center;">ที่อยู่ที่ส่งมอบ</th>
+                    <th style="text-align: center;">ชื่อพนักงาน</th>
             </thead>
 
 
@@ -207,42 +204,42 @@
             require('C:\xampp\XAMXUN\htdocs\webLathe\config\condb.php');
             $num = 1;
 
-            @$d_s = $_POST['d_s']; 
-            @$d_e = $_POST['d_e']; 
+            @$d_s = $_POST['d_s'];
+            @$d_e = $_POST['d_e'];
+
+
             $d_s .= " 00:00:00";
             $d_e .= " 23:59:59";
 
-            $query = "SELECT po.*,pod.PreOrder_detail_id,pod.PreOrder_detail, pod.PreOrder_quantity, u.Unit_id AS Counting_unit_id, u3.Unit_name AS Counting_unit_name,
-            pod.PreOrder_price, u2.Unit_id AS Price_unit_id, u4.Unit_name AS Price_unit_name,
-            pod.PreOrder_quantity, c.Customer_name, c.Customer_surname, e.Employee_name, e.Employee_surname
-            FROM pre_order AS po
-            INNER JOIN pre_order_detail AS pod ON po.PreOrder_id = pod.PreOrder_id
-            INNER JOIN unit AS u ON pod.Counting_unit = u.Unit_id
-            INNER JOIN unit AS u2 ON pod.Price_unit = u2.Unit_id
-            INNER JOIN unit AS u3 ON pod.Counting_unit = u3.Unit_id
-            INNER JOIN unit AS u4 ON pod.Price_unit = u4.Unit_id
-            INNER JOIN customer AS c ON po.Customer_id = c.Customer_id
-            INNER JOIN employee AS e ON po.Employee_id = e.Employee_id
-            WHERE po.PreOrder_day BETWEEN '$d_s' AND '$d_e'
-            ORDER BY po.PreOrder_id,pod.PreOrder_detail_id ASC;";
+            $query = "SELECT *, u.Unit_id AS Counting_unit_id, u3.Unit_name AS Counting_unit_name, u2.Unit_id AS Price_unit_id, u4.Unit_name AS Price_unit_name , c.Customer_name, c.Customer_surname, e.Employee_name, e.Employee_surname
+            FROM deliver AS d
+            INNER JOIN deliver_detail AS dd ON d.Deliver_id = dd.Deliver_id
+            INNER JOIN unit AS u ON dd.Counting_unit = u.Unit_id
+            INNER JOIN unit AS u2 ON dd.Price_unit = u2.Unit_id
+            INNER JOIN unit AS u3 ON dd.Counting_unit = u3.Unit_id
+            INNER JOIN unit AS u4 ON dd.Price_unit = u4.Unit_id
+            INNER JOIN customer AS c ON dd.Customer_id = c.Customer_id
+            INNER JOIN employee AS e ON d.Employee_id = e.Employee_id
+            WHERE d.Deliver_day BETWEEN '$d_s' AND '$d_e'
+            ORDER BY d.Deliver_id ,dd.Deliver_detail_id ASC;
+            ";
 
             $result = mysqli_query($con, $query);
             $num2 = mysqli_num_rows($result);
             $i = 1;
-            while ($row = mysqli_fetch_array($result)) {
+            while ($row = mysqli_fetch_assoc($result)) {
             ?>
                 <tr>
-                <td align="center"><?php echo $i++; ?></td>
-                            <td align="center"><?php echo $row["PreOrder_id"]; ?></td>
-                            <td align="center"><?php echo date("d/m/Y", strtotime($row["PreOrder_day"] . " UTC")); ?></td>
-                            <td align="center"><?php echo $row["PreOrder_detail_id"]; ?></td>
-                            <td align="center"><?php echo $row["PreOrder_detail"]; ?></td>
-                            <td align="center"><?php echo $row["PreOrder_quantity"]; ?></td>
-                            <td align="center"><?php echo $row["Counting_unit_name"]; ?></td>
-                            <td align="center"><?php echo $row["PreOrder_price"]; ?></td>
-                            <td align="center"><?php echo $row["Price_unit_name"]; ?></td>
-                            <td align="center"><?php echo $row["Customer_name"] . " " . $row["Customer_surname"]; ?></td>
-                            <td align="center"><?php echo $row["Employee_name"] . " " . $row["Employee_surname"]; ?></td>
+                    <td align="center"><?php echo $i++; ?></td>
+                    <td align="center"><?php echo $row["Deliver_id"]; ?></td>
+                    <td align="center"><?php echo date("d/m/Y", strtotime($row["Deliver_day"] . " UTC")); ?></td>
+                    <td align="center"><?php echo $row["Deliver_detail"]; ?></td>
+                    <td align="center"><?php echo $row["Deliver_quantity"]; ?></td>
+                    <td align="center"><?php echo $row["Counting_unit_name"]; ?></td>
+                    <td align="center"><?php echo number_format($row["Deliver_price"]); ?></td>
+                    <td align="center"><?php echo $row["Customer_name"] . " " . $row["Customer_surname"]; ?></td>
+                    <td align="center"><?php echo $row["Deliver_address"]; ?></td>
+                    <td align="center"><?php echo $row["Employee_name"] . " " . $row["Employee_surname"]; ?></td>s
                 </tr>
             <?php
             }
@@ -252,9 +249,7 @@
             ?>
 
         </table>
-        <br><br>
-        <center><a href="Report_Pdf_PreOrder.php?d_s=<?php echo $d_s; ?>&&d_e=<?php echo $d_e; ?>" class="btn btn-primary" style="background-color:#03018c">ออกรายงาน</a></center>
-
+        <center><a href="Report_Pdf_Deliver.php?d_s=<?php echo $d_s; ?>&&d_e=<?php echo $d_e; ?>" class="btn btn-primary" style="background-color:#03018c">ออกรายงาน</a></center>
 
     </div>
 

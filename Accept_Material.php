@@ -120,17 +120,16 @@ if (!$_SESSION["UserID"]) {
             <table id="Buy_Material_table" class="table table-bordered table-striped" style="width:100%">
                 <thead>
                     <tr>
-                        <th style="width: 2%;">ลำดับ</th>
-                        <th>รหัสสั่งซื้อวัสดุและอุปกรณ์</th>
-                        <th>วันที่รับเข้า</th>
-                        <th>ชื่อวัสดุและอุปกรณ์</th>
-                        <th style="width: 2%;">จำนวน</th>
-                        <th style="width: 2%;">หน่วยนับ</th>
-                        <th style="width: 2%;">ราคา</th>
-                        <th style="width: 2%;">หน่วยนับ</th>
-                        <th>ชื่อคู่ค้า</th>
-                        <th>ชื่อพนักงาน</th>
-                        <th>การดำเนินการ</th>
+                        <th style="text-align: center;width: 2%;">ลำดับ</th>
+                        <th style="text-align: center;">รหัสสั่งซื้อวัสดุและอุปกรณ์</th>
+                        <th style="text-align: center;">วันที่รับเข้า</th>
+                        <th style="text-align: center;">ชื่อวัสดุและอุปกรณ์</th>
+                        <th style="text-align: center;width: 3%;">จำนวน</th>
+                        <th style="text-align: center;width: 4%;">หน่วยนับ</th>
+                        <th style="text-align: center;width: 5%;">ราคา(บาท)</th>
+                        <th style="text-align: center;">ชื่อคู่ค้า</th>
+                        <th style="text-align: center;">ชื่อพนักงาน</th>
+                        <th style="text-align: center;">การดำเนินการ</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -160,8 +159,7 @@ if (!$_SESSION["UserID"]) {
                             <td align="center"><?php echo $values["Material_name"]; ?></td>
                             <td align="center"><?php echo $values["AcceptMaterial_quantity"]; ?></td>
                             <td align="center"><?php echo $values["Counting_unit_name"]; ?></td>
-                            <td align="center"><?php echo $values["AcceptMaterial_price"]; ?></td>
-                            <td align="center"><?php echo $values["Price_unit_name"]; ?></td>
+                            <td style="text-align: center;"><?php echo number_format($values["AcceptMaterial_price"]); ?></td>
                             <td align="center"><?php echo $values["Employee_name"] . " " . $values["Employee_surname"]; ?></td>
                             <td align="center"><?php echo $values["Partner_name"] . " " . $values["Partner_surname"]; ?></td>
                             <td>

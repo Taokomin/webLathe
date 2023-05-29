@@ -12,7 +12,6 @@ $AcceptMaterial_quantity = $_GET['AcceptMaterial_quantity'];
 $Counting_unit = $_GET['Counting_unit'];
 $AcceptMaterial_price = $_GET['AcceptMaterial_price'];
 $Price_unit = $_GET['Price_unit'];
-$MaterialType_id = $_GET['MaterialType_id'];
 
 $sql = "SELECT Material_quantity, Material_price FROM material WHERE Material_id = '$AcceptMaterial_detail'";
 $result = mysqli_query($con, $sql);
@@ -47,7 +46,6 @@ $sql4 = "INSERT INTO accept_material_detail (
         Counting_unit,
         AcceptMaterial_price,
         Price_unit,
-        MaterialType_id,
         AcceptMaterial_id
     ) 
     VALUES (
@@ -57,7 +55,6 @@ $sql4 = "INSERT INTO accept_material_detail (
         '$Counting_unit',
         '$AcceptMaterial_price',
         '$Price_unit',
-        '$MaterialType_id',
         '$AcceptMaterial_id'
     )";
 

@@ -4,13 +4,12 @@ require('C:\xampp\XAMXUN\htdocs\webLathe\config\condb.php');
 $ID = $_POST['ID'];
 $Username = $_POST['Username'];
 $Password = $_POST['Password'];
-$Firstname = $_POST['Firstname'];
-$Lastname 	= $_POST['Lastname'];
-$Userlevel = $_POST['Userlevel'];
+$Employee_id = $_POST['Employee_id'];
+$License_id = $_POST['License_id'];
 
-$sql = "INSERT INTO user (ID, Username, Password, Firstname, Lastname, Userlevel)
-        VALUES ('$ID', '$Username', '$Password', '$Firstname', '$Lastname', '$Userlevel')";
 
+
+$sql = "UPDATE unit SET  Username = '$Username',Password = '$Password',Employee_id = '$Employee_id',License_id = '$License_id' WHERE ID  = '$ID '";
 if (mysqli_query($con, $sql)) {
     echo "<script type='text/javascript'>";
     echo "alert('เพิ่มข้อมูลเรียบร้อยแล้ว');";

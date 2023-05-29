@@ -120,18 +120,17 @@ if (!$_SESSION["UserID"]) {
             <table id="Buy_Material_table" class="table table-bordered table-striped" style="width:100%">
                 <thead>
                     <tr>
-                        <th style="width: 3%;">ลำดับ</th>
-                        <th style="width: 3%;">รหัสสั่งซื้อ</th>
-                        <th style="width: 4%;">วันที่สั่งซื้อ</th>
-                        <th style="width: 3%;">ชื่อวัสดุ</th>
-                        <th style="width: 3%;">จำนวน</th>
-                        <th style="width: 4%;">หน่วยนับ</th>
-                        <th style="width: 3%;">ราคา</th>
-                        <th style="width: 4%;">หน่วยนับ</th>
-                        <th>ชื่อพนักงาน</th>
-                        <th>ชื่อคู่ค้า</th>
-                        <th style="width: 4%;">สถานะ</th>
-                        <th>การดำเนินการ</th>
+                        <th style="text-align: center;width: 3%;">ลำดับ</th>
+                        <th style="text-align: center;width: 4%;">รหัสสั่งซื้อ</th>
+                        <th style="text-align: center;width: 4%;">วันที่สั่งซื้อ</th>
+                        <th style="text-align: center;width: 3%;">ชื่อวัสดุ</th>
+                        <th style="text-align: center;width: 3%;">จำนวน</th>
+                        <th style="text-align: center;width: 4%;">หน่วยนับ</th>
+                        <th style="text-align: center;width: 5%;">ราคา(บาท)</th>
+                        <th style="text-align: center;">ชื่อพนักงาน</th>
+                        <th style="text-align: center;">ชื่อคู่ค้า</th>
+                        <th style="text-align: center;width: 4%;">สถานะ</th>
+                        <th style="text-align: center;">การดำเนินการ</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -174,8 +173,7 @@ if (!$_SESSION["UserID"]) {
                             <td align="center"><?php echo $values["Material_name"]; ?></td>
                             <td align="center"><?php echo $values["BuyMaterial_quantity"]; ?></td>
                             <td align="center"><?php echo $values["Counting_unit_name"]; ?></td>
-                            <td align="center"><?php echo $values["BuyMaterial_price"]; ?></td>
-                            <td align="center"><?php echo $values["Price_unit_name"]; ?></td>
+                            <td style="text-align: center;"><?php echo number_format($values["BuyMaterial_price"]); ?></td>
                             <td align="center"><?php echo $values["Employee_name"] . " " . $values["Employee_surname"]; ?></td>
                             <td align="center"><?php echo $values["Partner_name"] . " " . $values["Partner_surname"]; ?></td>
                             <td align="center"><?php echo $values["status_name"]; ?></td>

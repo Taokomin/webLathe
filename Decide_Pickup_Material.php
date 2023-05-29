@@ -31,9 +31,10 @@ if (!$_SESSION["UserID"]) {
             </div>
             <div>
                 <a style="color:white; display: flex; width: 200px;">
-                    <iconify-icon icon="gg:profile" width="32" height="32"></iconify-icon><?php
-                                                                                            require('Function\getEmployeeName.php');
-                                                                                            echo getEmployeeName($_SESSION['User']); ?>
+                    <iconify-icon icon="gg:profile" width="32" height="32"></iconify-icon>
+                    <?php
+                    require('Function\getEmployeeName.php');
+                    echo getEmployeeName($_SESSION['User']); ?>
                 </a>
             </div>
             <div>
@@ -60,7 +61,8 @@ if (!$_SESSION["UserID"]) {
                             <li><a class="dropdown-item" href="manager.php">หน้าแรก</a></li>
                             <li><a class="dropdown-item" href="User.php">การจัดการรายชื่อผู้เข้าใช้งาน</a></li>
                             <li><a class="dropdown-item" href="Decide_Buy_Material.php">อนุมัติการสั่งซื้อวัสดุและอุปกรณ์</a></li>
-                            <li><a class="dropdown-item" href="Decide_Pickup_Material.php">อนุมัติการเบิกวัสดุและอุปกรณ์</a></li>
+                            <li><a class="dropdown-item" href="Decide_Pickup_Material.php">อนุมัติการเบิกวัสดุและอุปกรณ์</a>
+                            </li>
                             <li><a class="dropdown-item" href="Report_mng.php">การออกรายงาน</a></li>
                         </ul>
                     </li>
@@ -78,48 +80,51 @@ if (!$_SESSION["UserID"]) {
             <table id="Buy_Material_table" class="table table-bordered table-striped" style="width:100%">
                 <thead>
                     <tr>
-                        <th>ลำดับ</th>
-                        <th>รหัสเบิกวัสดุและอุปกรณ์</th>
-                        <th>วันที่เบิก</th>
-                        <th>ชื่อวัสดุและอุปกรณ์</th>
-                        <th>จำนวน</th>
-                        <th>รหัสหน่วยนับ</th>
-                        <th>รหัสประเภทวัสดุและอุปกรณ์</th>
-                        <th>รหัสพนักงาน</th>
-                        <th>สถานะ</th>
-                        <th>การดำเนินการ</th>
+                        <th style="text-align: center;">ลำดับ</th>
+                        <th style="text-align: center;">รหัสเบิกวัสดุและอุปกรณ์</th>
+                        <th style="text-align: center;">วันที่เบิก</th>
+                        <th style="text-align: center;">ชื่อวัสดุและอุปกรณ์</th>
+                        <th style="text-align: center;">จำนวน</th>
+                        <th style="text-align: center;">รหัสหน่วยนับ</th>
+                        <th style="text-align: center;">รหัสพนักงาน</th>
+                        <th style="text-align: center;">สถานะ</th>
+                        <th style="text-align: center;">การดำเนินการ</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <?php
-                    require_once 'C:\xampp\XAMXUN\htdocs\webLathe\config\condb.php';
+                <?php
+                    require('C:\xampp\XAMXUN\htdocs\webLathe\config\condb.php');
 
-                    function approveMaterial($PickupMaterial_id)
+                    function approveMaterial($PickupMaterialId)
                     {
                         global $con;
-                        $PickupMaterial_id = intval($PickupMaterial_id); // cast to integer
-                        $query = "UPDATE pickup_material SET PickupMaterial_status = 'ST02' WHERE PickupMaterial_id = $PickupMaterial_id";
+                        $PickupMaterialId = intval($PickupMaterialId);
+                        $query = "UPDATE pickup_material SET PickupMaterial_status = 'ST02' WHERE PickupMaterial_id = $PickupMaterialId";
                         return mysqli_query($con, $query);
                     }
 
-                    function disapproveMaterial($PickupMaterial_id)
+
+
+                    function disapproveMaterial($PickupMaterialId)
                     {
                         global $con;
-                        $PickupMaterial_id = intval($PickupMaterial_id); // cast to integer
-                        $query = "UPDATE pickup_material SET PickupMaterial_status = 'ST03' WHERE PickupMaterial_id = $PickupMaterial_id";
+                        $PickupMaterialId = intval($PickupMaterialId);
+                        $query = "UPDATE pickup_material SET PickupMaterial_status = 'ST03' 
+                        WHERE PickupMaterial_id = $PickupMaterialId";
                         return mysqli_query($con, $query);
                     }
-                    if (isset($_POST['PickupMaterial_id'])) {
-                        $PickupMaterial_id = $_POST['PickupMaterial_id'];
+
+                    if (isset($_POST['PickupMaterialId'])) {
+                        $PickupMaterialId = $_POST['PickupMaterialId'];
                         if (isset($_POST['approve'])) {
-                            $success = approveMaterial($_POST['PickupMaterial_id']);
+                            $success = approveMaterial($_POST['PickupMaterialId']);
                             if ($success) {
                                 echo "<script>alert('อนุมัติสำเร็จ');</script>";
                             } else {
                                 echo "<script>alert('เกิดข้อผิดพลาดขณะอนุมัติ');</script>";
                             }
                         } elseif (isset($_POST['disapprove'])) {
-                            $success = disapproveMaterial($_POST['PickupMaterial_id']);
+                            $success = disapproveMaterial($_POST['PickupMaterialId']);
                             if ($success) {
                                 echo "<script>alert('ไม่อนุมัติสำเร็จ');</script>";
                             } else {
@@ -127,17 +132,17 @@ if (!$_SESSION["UserID"]) {
                             }
                         }
                     }
-
                     ?>
+                    ?>
+
                     <?php
                     require('C:\xampp\XAMXUN\htdocs\webLathe\config\condb.php');
                     $query = "SELECT pm.*,pmd.PickupMaterial_quantity, m.Material_name, e.Employee_name, e.Employee_surname, 
-                    mt.MaterialType_name, s.status_name,
+                     s.status_name,
                     u.Unit_id AS Counting_unit_id, u.Unit_name AS Counting_unit_name
                     FROM pickup_material AS pm
                     INNER JOIN pickup_material_detail AS pmd ON pm.PickupMaterial_id = pmd.PickupMaterial_id
                     INNER JOIN material AS m ON pmd.PickupMaterial_detail = m.Material_id
-                    INNER JOIN material_type AS mt ON pmd.MaterialType_id = mt.MaterialType_id
                     INNER JOIN unit AS u ON pmd.Counting_unit = u.Unit_id
                     INNER JOIN employee AS e ON pm.Employee_id = e.Employee_id
                     INNER JOIN status AS s ON pm.PickupMaterial_status = s.status_id
@@ -150,29 +155,29 @@ if (!$_SESSION["UserID"]) {
                         <tr>
                             <td align="center"><?php echo $i++; ?></td>
                             <td align="center"><?php echo $values["PickupMaterial_id"]; ?></td>
-                            <td align="center"><?php echo date("d/m/Y", strtotime($values["PickupMaterial_day"] . " UTC")); ?></td>
+                            <td align="center"><?php echo date("d/m/Y", strtotime($values["PickupMaterial_day"] . " UTC")); ?>
+                            </td>
                             <td align="center"><?php echo $values["Material_name"]; ?></td>
                             <td align="center"><?php echo $values["PickupMaterial_quantity"]; ?></td>
                             <td align="center"><?php echo $values["Counting_unit_name"]; ?></td>
-                            <td align="center"><?php echo $values["MaterialType_name"]; ?></td>
                             <td align="center"><?php echo $values["Employee_name"] . " " . $values["Employee_surname"]; ?></td>
                             <td align="center"><?php echo $values["status_name"]; ?></td>
                             <td align="center">
                                 <?php
-                                //if PickupMaterial_status is pending approval, display the 'approve' button
+
                                 if ($values["PickupMaterial_status"] == "ST01") { ?>
                                     <form method="POST" action="">
-                                        <input type="hidden" name="PickupMaterial_id" value="<?php echo $values["PickupMaterial_id"]; ?>">
+                                        <input type="hidden" name="PickupMaterialId" value="<?php echo $values["PickupMaterial_id"]; ?>">
                                         <button type="submit" name="approve" class="btn btn-success">อนุมัติ</button>
                                     </form>
                                     <form method="POST" action="">
-                                        <input type="hidden" name="PickupMaterial_id" value="<?php echo $values["PickupMaterial_id"]; ?>">
+                                        <input type="hidden" name="PickupMaterialId" value="<?php echo $values["PickupMaterial_id"]; ?>">
                                         <button type="submit" name="disapprove" class="btn btn-warning">ไม่อนุมัติ</button>
                                     </form>
                                 <?php
                                 } else { ?>
                                     <form method="POST" action="">
-                                        <input type="hidden" name="PickupMaterial_id" value="<?php echo $values["PickupMaterial_id"]; ?>">
+                                        <input type="hidden" name="PickupMaterialId" value="<?php echo $values["PickupMaterial_id"]; ?>">
                                         <button type="submit" name="disapprove" class="btn btn-warning">ไม่อนุมัติ</button>
                                     </form>
                                 <?php } ?>
@@ -185,9 +190,12 @@ if (!$_SESSION["UserID"]) {
             </table>
         </div>
         <script src="https://code.iconify.design/iconify-icon/1.0.0/iconify-icon.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/js/bootstrap.min.js" integrity="sha384-oesi62hOLfzrys4LxRF63OJCXdXDipiYWBnvTl9Y9/TRlw5xlKIEHpNyvvDShgf/" crossorigin="anonymous"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous">
+        </script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/js/bootstrap.min.js" integrity="sha384-oesi62hOLfzrys4LxRF63OJCXdXDipiYWBnvTl9Y9/TRlw5xlKIEHpNyvvDShgf/" crossorigin="anonymous">
+        </script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8" crossorigin="anonymous">
+        </script>
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script type="text/javascript" src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.js"></script>
         <script type="text/javascript" src="path/to/th_TH.json"></script>

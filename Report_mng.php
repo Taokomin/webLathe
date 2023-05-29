@@ -80,7 +80,7 @@ if (!$_SESSION["UserID"]) {
                 </div>
                 <div class="col">
                 <a class="btn btn-warning type=" button" type="button" href="Report_mng1.php"><iconify-icon icon="material-symbols:drive-file-move" style="color: white;" width="84" height="84"></iconify-icon></a>
-                <p class="shadow-lg p-3 mb-5 bg-body rounded"style="color:black">รายงานสรุปยอดขายวัสดุและอุปกรณ์</p>
+                <p class="shadow-lg p-3 mb-5 bg-body rounded"style="color:black">รายงานสรุปยอดเบิกวัสดุและอุปกรณ์</p>
                 </div>
             </div>
         </div>

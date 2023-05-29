@@ -126,8 +126,7 @@ if (!$_SESSION["UserID"]) {
                         <th style="text-align: center;">จำนวน</th>
                         <th style="text-align: center;">หน่วยนับ</th>
                         <th style="text-align: center;">ประเภทวัสดุและอุปกรณ์</th>
-                        <th style="text-align: center;">ราคา</th>
-                        <th style="text-align: center;">หน่วยนับ</th>
+                        <th style="text-align: center;">ราคา(บาท)</th>
                         <th style="text-align: center;">การดำเนินการ</th>
                     </tr>
                 </thead>
@@ -152,8 +151,7 @@ if (!$_SESSION["UserID"]) {
                             <td style="text-align: center;"><?php echo $values["Material_quantity"]; ?></td>
                             <td style="text-align: center;"><?php echo $values["Counting_unit_name"]; ?></td>
                             <td style="text-align: center;"><?php echo $values["MaterialType_name"]; ?></td>
-                            <td style="text-align: center;"><?php echo $values["Material_price"]; ?></td>
-                            <td style="text-align: center;"><?php echo $values["Price_unit_name"]; ?></td>
+                            <td style="text-align: center;"><?php echo number_format($values["Material_price"]); ?></td>
                             <td style="text-align: center;">
                                 <a href="Edit_Material/Edit_Material.php?Material_id=<?php echo $values["Material_id"]; ?>" class="btn btn-primary">
                                     <iconify-icon icon="el:file-edit"></iconify-icon>

@@ -126,6 +126,7 @@ if (!$_SESSION["UserID"]) {
                         <th style="text-align: center;">ชื่อผู้ติดต่อ</th>
                         <th style="text-align: center;">นามสกุลผู้ติดต่อ</th>
                         <th style="text-align: center;">เบอร์โทรผู้ติดต่อ</th>
+                        <th style="text-align: center;">อีเมลคู่ค้า</th>
                         <th style="text-align: center;">บริษัทคู่ค้า</th>
                         <th style="text-align: center;">การดำเนินการ</th>
                     </tr>
@@ -149,6 +150,7 @@ if (!$_SESSION["UserID"]) {
                             <td style="text-align: center;"><?php echo $values["Partner_name"]; ?></td>
                             <td style="text-align: center;"><?php echo $values["Partner_surname"]; ?></td>
                             <td style="text-align: center;"><?php echo $values["Partner_number"]; ?></td>
+                            <td style="text-align: center;"><?php echo $values["Partner_email"]; ?></td>
                             <td style="text-align: center;"><?php echo $values["Partner_company"]; ?></td>
                             <td style="text-align: center;">
                                 <a href="Edit_Partner/Edit_Partner.php?Partner_id=<?php echo $values["Partner_id"]; ?>" class="btn btn-primary">

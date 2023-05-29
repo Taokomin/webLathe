@@ -79,19 +79,18 @@ if (!$_SESSION["UserID"]) {
             <table id="Buy_Material_table" class="table table-bordered table-striped" style="width:100%">
                 <thead>
                     <tr>
-                    <th style="width: 3%;">ลำดับ</th>
-                        <th style="width: 3%;">รหัสสั่งซื้อ</th>
-                        <th style="width: 4%;">วันที่สั่งซื้อ</th>
-                        <th style="width: 3%;">ชื่อวัสดุ</th>
-                        <th style="width: 3%;">จำนวน</th>
-                        <th style="width: 4%;">หน่วยนับ</th>
-                        <th style="width: 4%;">ประเภทวัสดุและอุปกรณ์</th> 
-                        <th style="width: 3%;">ราคา</th>
-                        <th style="width: 4%;">หน่วยนับ</th>
-                        <th>ชื่อพนักงาน</th>
-                        <th>ชื่อคู่ค้า</th>
-                        <th style="width: 4%;">สถานะ</th>
-                        <th>การดำเนินการ</th>
+                    <th style="text-align: center;width: 3%;">ลำดับ</th>
+                        <th style="text-align: center;width: 3%;">รหัสสั่งซื้อ</th>
+                        <th style="text-align: center;width: 4%;">วันที่สั่งซื้อ</th>
+                        <th style="text-align: center;width: 3%;">ชื่อวัสดุ</th>
+                        <th style="text-align: center;width: 3%;">จำนวน</th>
+                        <th style="text-align: center;width: 4%;">หน่วยนับ</th>
+                        <th style="text-align: center;width: 3%;">ราคา</th>
+                        <th style="text-align: center;width: 4%;">หน่วยนับ</th>
+                        <th style="text-align: center;">ชื่อพนักงาน</th>
+                        <th style="text-align: center;">ชื่อคู่ค้า</th>
+                        <th style="text-align: center;width: 4%;">สถานะ</th>
+                        <th style="text-align: center;">การดำเนินการ</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -112,7 +111,8 @@ if (!$_SESSION["UserID"]) {
                     {
                         global $con;
                         $buyMaterialId = intval($buyMaterialId);
-                        $query = "UPDATE buy_material SET BuyMaterial_status = 'ST03' WHERE BuyMaterial_id = $buyMaterialId";
+                        $query = "UPDATE buy_material SET BuyMaterial_status = 'ST03' 
+                        WHERE BuyMaterial_id = $buyMaterialId";
                         return mysqli_query($con, $query);
                     }
 
@@ -136,7 +136,7 @@ if (!$_SESSION["UserID"]) {
                     }
                     ?>
 
-<?php
+                    <?php
                     require('C:\xampp\XAMXUN\htdocs\webLathe\config\condb.php');
                     $query = "SELECT bm.*,bmd.BuyMaterial_detail ,
                     bmd.BuyMaterial_quantity,bmd.BuyMaterial_price,
@@ -144,7 +144,6 @@ if (!$_SESSION["UserID"]) {
                     u3.Unit_name AS Counting_unit_name,
                     u2.Unit_id AS Price_unit_id,
                     u4.Unit_name AS Price_unit_name,
-                    mt.MaterialType_name,
                     p.Partner_name, 
                     p.Partner_surname, 
                     e.Employee_name, 
@@ -157,7 +156,6 @@ if (!$_SESSION["UserID"]) {
                     INNER JOIN unit AS u2 ON bmd.Price_unit = u2.Unit_id
                     INNER JOIN unit AS u3 ON bmd.Counting_unit = u3.Unit_id
                     INNER JOIN unit AS u4 ON bmd.Price_unit = u4.Unit_id
-                    INNER JOIN material_type AS mt ON bmd.MaterialType_id = mt.MaterialType_id
                     INNER JOIN partner AS p ON bm.Partner_id = p.Partner_id
                     INNER JOIN employee AS e ON bm.Employee_id = e.Employee_id
                     INNER JOIN status AS s ON bm.BuyMaterial_status = s.status_id
@@ -176,7 +174,6 @@ if (!$_SESSION["UserID"]) {
                             <td align="center"><?php echo $values["Material_name"]; ?></td>
                             <td align="center"><?php echo $values["BuyMaterial_quantity"]; ?></td>
                             <td align="center"><?php echo $values["Counting_unit_name"]; ?></td>
-                            <td align="center"><?php echo $values["MaterialType_name"]; ?></td>
                             <td align="center"><?php echo $values["BuyMaterial_price"]; ?></td>
                             <td align="center"><?php echo $values["Price_unit_name"]; ?></td>
                             <td align="center"><?php echo $values["Employee_name"] . " " . $values["Partner_surname"]; ?></td>

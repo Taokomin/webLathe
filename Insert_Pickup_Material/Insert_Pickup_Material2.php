@@ -131,73 +131,94 @@ if (!$_SESSION["UserID"]) {
                             xmlhttp.open("GET", "getMaterialInfo.php?Material_id=" + str, true);
                             xmlhttp.send();
                         }
+                    }
 
-                        function addProduct() {
+                    function addProduct() {
+                        const productsContainer = document.querySelector("#products");
+                        const newProduct = productsContainer.firstElementChild.cloneNode(true);
+                        const inputElements = newProduct.querySelectorAll("input");
+                        inputElements.forEach((input) => {
+                            input.value = "";
+                        });
+                        const selectElements = newProduct.querySelectorAll("select");
+                        selectElements.forEach((select) => {
+                            select.selectedIndex = 0;
+                        });
+                        const lastProduct = productsContainer.lastElementChild;
+                        const lastProductCode = lastProduct.querySelector('[name="product_PickupMaterial_detail_id[]"]').value;
+                        const newProductCode = 'PMD' + (parseInt(lastProductCode.substr(3)) + 1).toString().padStart(2, '0');
+                        newProduct.querySelector('[name="product_PickupMaterial_detail_id[]"]').value = newProductCode;
+                        productsContainer.appendChild(newProduct);
+                    }
 
-                            var productsDiv = document.getElementById("products");
-
-
-                            var firstProductForm = productsDiv.querySelector(".product");
-
-
-                            var newProductForm = firstProductForm.cloneNode(true);
-
-
-                            var inputs = newProductForm.getElementsByTagName("input");
-                            for (var i = 0; i < inputs.length; i++) {
-                                inputs[i].value = "";
-                            }
-
-                            productsDiv.appendChild(newProductForm);
-                        }
+                    function cloneForm() {
+                        const productsContainer = document.querySelector("#products");
+                        const firstProduct = productsContainer.firstElementChild;
+                        const newProduct = firstProduct.cloneNode(true);
+                        const inputElements = newProduct.querySelectorAll("input");
+                        inputElements.forEach((input) => {
+                            input.value = "";
+                        });
+                        const selectElements = newProduct.querySelectorAll("select");
+                        selectElements.forEach((select) => {
+                            select.selectedIndex = 0;
+                        });
+                        const lastProduct = productsContainer.lastElementChild;
+                        const lastProductCode = lastProduct.querySelector('[name="product_PickupMaterial_detail_id[]"]').value;
+                        const newProductCode = 'PMD' + (parseInt(lastProductCode.substr(3)) + 1).toString().padStart(2, '0');
+                        newProduct.querySelector('[name="product_PickupMaterial_detail_id[]"]').value = newProductCode;
+                        productsContainer.appendChild(newProduct);
                     }
                 </script>
                 <div id="products">
                     <div class="product">
                         <div class="mb-3" style="display: inline-block;width : 166px;">
-                            <label for="PickupMaterial_detail_id" class="form-label">รหัสรายการเบิก</label>
-                            <input type="text" class="form-control" name="PickupMaterial_detail_id" value="<?php echo (increaseIdPmd($GLOBALS['PickupMaterial_detail_id'])); ?>" readonly>
+                            <label for="product1_PickupMaterial_detail_id" class="form-label">รหัสรายการเบิก</label>
+                            <input type="text" class="form-control" name="product_PickupMaterial_detail_id[]" value="<?php echo (increaseIdPmd($GLOBALS['PickupMaterial_detail_id'])); ?>" readonly>
                         </div>
                         <?php
                         require('C:\xampp\XAMXUN\htdocs\webLathe\config\condb.php');
                         $sql1 = $con;
-                        $query1 = "SELECT m.*,m.Material_name, u.Unit_id as Counting_unit, u.Unit_name as Counting_unit_name, u2.Unit_id as Price_unit , u2.Unit_name as Price_unit_name , u.Unit_name, u2.Unit_name, mt.MaterialType_name
-                    FROM material as m 
-                    INNER JOIN unit as u ON m.Counting_unit = u.Unit_id
-                    INNER JOIN unit as u2 ON m.Price_unit = u2.Unit_id
-                    INNER JOIN material_type as mt ON m.MaterialType_id = mt.MaterialType_id
-                    ORDER BY m.Material_id ASC";
+                        $query1 = "SELECT m.*, u.Unit_id as Counting_unit, u.Unit_name as Counting_unit_name, u2.Unit_id as Price_unit , u2.Unit_name as Price_unit_name , u.Unit_name, u2.Unit_name, mt.MaterialType_name
+                        FROM material as m 
+                        INNER JOIN unit as u ON m.Counting_unit = u.Unit_id
+                        INNER JOIN unit as u2 ON m.Price_unit = u2.Unit_id
+                        INNER JOIN material_type as mt ON m.MaterialType_id = mt.MaterialType_id
+                        ORDER BY m.Material_id ASC";
                         $result1 = mysqli_query($sql1, $query1);
                         ?>
-                        <div class="mb-3" style="display: inline-block;width : 186px;">
-                            <label for="PickupMaterial_detail" class="form-label">เลือกชื่อวัสดุและอุปกรณ์</label>
-                            <select class="form-select material-dropdown" aria-label="Default select example" name="PickupMaterial_detail" onchange="showMaterialInfo(this.value)" required>
+                        <div class="mb-3" style="display: inline-block;width : 166px;">
+                            <label for="product1_PickupMaterial_detail" class="form-label">เลือกวัสดุ</label>
+                            <select class="form-select material-dropdown" aria-label="Default select example" name="product_PickupMaterial_detail[]" onchange="showMaterialInfo(this.value)" required>
                                 <option value="">-กรุณาเลือก-</option>
                                 <?php foreach ($result1 as $results) { ?>
                                     <option value="<?php echo $results["Material_id"]; ?>">
-                                        <?php echo $results["Material_name"]; ?>
+                                        <?php echo $results["Material_id"]; ?>
                                     </option>
                                 <?php } ?>
                             </select>
                         </div>
                         <div class="mb-3" style="display: inline-block;width : 166px;">
-                            <label for="PickupMaterial_detail_id" class="form-label">ชื่อวัสดุและอุปกรณ์</label>
+                            <label for="product1_PickupMaterial_detail_id" class="form-label">สินค้าที่สั่งทำ</label>
                             <input type="text" class="form-control" id="Material_id" readonly>
                         </div>
                         <div class="mb-3" style="display: inline-block;width : 120px;">
-                            <label for="PickupMaterial_quantity" class="form-label">จำนวนที่มีอยู่</label>
+                            <label for="product1_PickupMaterial_quantity" class="form-label">จำนวนที่มีอยู่</label>
                             <input type="tel" class="form-control" id="Material_quantity" readonly pattern="[0-9]+" onkeypress="return isNumberKey(event)">
                         </div>
                         <div class="mb-3" style="display: inline-block;width : 166px;">
-                            <label for="Counting_unit" class="form-label">หน่วยนับ</label>
+                            <label for="product1_Counting_unit" class="form-label">หน่วยนับ</label>
                             <input type="text" class="form-control" id="Counting_unit_name" readonly>
-                            <input type="hidden" class="form-control" id="Counting_unit" name="Counting_unit" readonly>
+                            <input type="hidden" class="form-control" id="Counting_unit" name="product_Counting_unit[]" readonly>
                         </div>
                         <div class="mb-3" style="display: inline-block;width : 166px;">
-                            <label for="PickupMaterial_quantity" class="form-label">จำนวนที่ต้องการเบิก</label>
-                            <input type="tel" class="form-control" id="Material_quantity" name="PickupMaterial_quantity" required pattern="[0-9]+" onkeypress="return isNumberKey(event)">
+                            <label for="product1_PickupMaterial_quantity" class="form-label">จำนวนที่ต้องการเบิก</label>
+                            <input type="tel" class="form-control" id="Material_quantity" name="product_PickupMaterial_quantity[]" required pattern="[0-9]+" onkeypress="return isNumberKey(event)">
                         </div>
                     </div>
+                </div>
+                <div >
+                    <button type="button" onclick="addProduct()" class="btn btn-primary">เพิ่มรายการสั่งซื้อ</button>
                 </div>
 
                 <?php

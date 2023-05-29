@@ -29,10 +29,9 @@ for ($i = 0; $i < count($product_BuyMaterial_detail_id); $i++) {
     $Counting_unit = mysqli_real_escape_string($con, $product_Counting_unit[$i]);
     $BuyMaterial_price = mysqli_real_escape_string($con, $product_BuyMaterial_price[$i]);
     $Price_unit = mysqli_real_escape_string($con, $product_Price_unit[$i]);
-    $MaterialType_id = mysqli_real_escape_string($con, $product_MaterialType_id[$i]);
     
-    $sql2 = "INSERT INTO buy_material_detail (BuyMaterial_detail_id,  BuyMaterial_detail,BuyMaterial_quantity, Counting_unit, BuyMaterial_price, Price_unit,MaterialType_id ,BuyMaterial_id)
-             VALUES ('$BuyMaterial_detail_id', '$BuyMaterial_detail', '$BuyMaterial_quantity', '$Counting_unit', '$BuyMaterial_price', '$Price_unit','$MaterialType_id', '$BuyMaterial_id')";
+    $sql2 = "INSERT INTO buy_material_detail (BuyMaterial_detail_id,  BuyMaterial_detail,BuyMaterial_quantity, Counting_unit, BuyMaterial_price, Price_unit,BuyMaterial_id)
+             VALUES ('$BuyMaterial_detail_id', '$BuyMaterial_detail', '$BuyMaterial_quantity', '$Counting_unit', '$BuyMaterial_price', '$Price_unit', '$BuyMaterial_id')";
     mysqli_query($con, $sql2);
 }
 

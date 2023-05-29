@@ -65,7 +65,7 @@
             <div class="panel custom-panel">
                 <div class="panel-heading"><b>
                         <font size="5">
-                            <center style="color: white"> ค้นหา รายงานสรุปยอดขายวัสดุและอุปกรณ์ ตามช่วงวันที่</center>
+                        <center style="color: white"> ค้นหา รายงานสรุปยอดเบิกวัสดุและอุปกรณ์ ตามช่วงวันที่</center>
                         </font>
                         </b></div>
                     <div class="panel-body">
@@ -188,16 +188,13 @@
             <thead>
                 <tr>
                     <th style="text-align: center;">ลำดับ</th>
-                    <th style="text-align: center;">รหัสส่งมอบ</th>
-                    <th style="text-align: center;">วันที่ส่งมอบ</th>
-                    <th style="text-align: center;">สินค้า</th>
+                    <th style="text-align: center;">รหัสเบิกวัสดุและอุปกรณ์</th>
+                    <th style="text-align: center;">วันที่เบิก</th>
+                    <th style="text-align: center;">ชื่อวัสดุและอุปกรณ์</th>
                     <th style="text-align: center;">จำนวน</th>
                     <th style="text-align: center;">หน่วยนับ</th>
-                    <th style="text-align: center;">ราคา</th>
-                    <th style="text-align: center;">หน่วยนับ</th>
-                    <th style="text-align: center;">ชื่อลูกค้า</th>
-                    <th style="text-align: center;">ที่อยู่ที่ส่งมอบ</th>
                     <th style="text-align: center;">ชื่อพนักงาน</th>
+
             </thead>
 
 
@@ -213,18 +210,17 @@
             $d_s .= " 00:00:00";
             $d_e .= " 23:59:59";
 
-            $query = "SELECT *, u.Unit_id AS Counting_unit_id, u3.Unit_name AS Counting_unit_name, u2.Unit_id AS Price_unit_id, u4.Unit_name AS Price_unit_name , c.Customer_name, c.Customer_surname, e.Employee_name, e.Employee_surname
-            FROM deliver AS d
-            INNER JOIN deliver_detail AS dd ON d.Deliver_id = dd.Deliver_id
-            INNER JOIN unit AS u ON dd.Counting_unit = u.Unit_id
-            INNER JOIN unit AS u2 ON dd.Price_unit = u2.Unit_id
-            INNER JOIN unit AS u3 ON dd.Counting_unit = u3.Unit_id
-            INNER JOIN unit AS u4 ON dd.Price_unit = u4.Unit_id
-            INNER JOIN customer AS c ON dd.Customer_id = c.Customer_id
-            INNER JOIN employee AS e ON d.Employee_id = e.Employee_id
-            WHERE d.Deliver_day BETWEEN '$d_s' AND '$d_e'
-            ORDER BY d.Deliver_id ,dd.Deliver_detail_id ASC;
-            ";
+            $query = "SELECT pm.*,pmd.PickupMaterial_quantity, e.Employee_name, e.Employee_surname, 
+            m.Material_name, s.status_name,
+            u.Unit_id AS Counting_unit_id, u.Unit_name AS Counting_unit_name
+            FROM pickup_material AS pm
+            INNER JOIN pickup_material_detail AS pmd ON pm.PickupMaterial_id = pmd.PickupMaterial_id
+            INNER JOIN material AS m ON pmd.PickupMaterial_detail = m.Material_id
+            INNER JOIN unit AS u ON pmd.Counting_unit = u.Unit_id
+            INNER JOIN employee AS e ON pm.Employee_id = e.Employee_id
+            INNER JOIN status AS s ON pm.PickupMaterial_status = s.status_id
+            WHERE pm.PickupMaterial_day BETWEEN '$d_s' AND '$d_e'
+            ORDER BY PickupMaterial_id ASC";
 
             $result = mysqli_query($con, $query);
             $num2 = mysqli_num_rows($result);
@@ -232,27 +228,22 @@
             while ($row = mysqli_fetch_assoc($result)) {
             ?>
                 <tr>
-                    <td align="center"><?php echo $i++; ?></td>
-                    <td align="center"><?php echo $row["Deliver_id"]; ?></td>
-                    <td align="center"><?php echo date("d/m/Y", strtotime($row["Deliver_day"] . " UTC")); ?></td>
-                    <td align="center"><?php echo $row["Deliver_detail"]; ?></td>
-                    <td align="center"><?php echo $row["Deliver_quantity"]; ?></td>
-                    <td align="center"><?php echo $row["Counting_unit_name"]; ?></td>
-                    <td align="center"><?php echo $row["Deliver_price"]; ?></td>
-                    <td align="center"><?php echo $row["Price_unit_name"]; ?></td>
-                    <td align="center"><?php echo $row["Customer_name"] . " " . $row["Customer_surname"]; ?></td>
-                    <td align="center"><?php echo $row["Deliver_address"]; ?></td>
-                    <td align="center"><?php echo $row["Employee_name"] . " " . $row["Employee_surname"]; ?></td>s
+                <td align="center"><?php echo $i++; ?></td>
+                            <td align="center"><?php echo $row["PickupMaterial_id"]; ?></td>
+                            <td align="center"><?php echo date("d/m/Y", strtotime($row["PickupMaterial_day"] . " UTC")); ?></td>
+                            <td align="center"><?php echo $row["Material_name"]; ?></td>
+                            <td align="center"><?php echo $row["PickupMaterial_quantity"]; ?></td>
+                            <td align="center"><?php echo $row["Counting_unit_name"]; ?></td>
+                            <td align="center"><?php echo $row["Employee_name"] . " " . $row["Employee_surname"]; ?></td>
                 </tr>
             <?php
             }
 
-            // Close database connection
             mysqli_close($con);
             ?>
 
         </table>
-        <center><a href="Report_Pdf_Deliver.php?d_s=<?php echo $d_s; ?>&&d_e=<?php echo $d_e; ?>" class="btn btn-primary" style="background-color:#03018c">ออกรายงาน</a></center>
+        <center><a href="Report_Pdf_Pickup_Material.php?d_s=<?php echo $d_s; ?>&&d_e=<?php echo $d_e; ?>" class="btn btn-primary" style="background-color:#03018c">ออกรายงาน</a></center>
 
     </div>
 

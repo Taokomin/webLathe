@@ -53,7 +53,7 @@ if (!$_SESSION["UserID"]) {
             <form action="ProcBme.php" method="POST">
                 <input type="hidden" class="form-control" name="BuyMaterial_id" value="<?php echo $values["BuyMaterial_id"]; ?>" readonly>
                 <div class="mb-3" style="display: inline-block;width : 166px;">
-                    <label for="BuyMaterial_day" class="form-label">วันที่สั่งซื้อ</label>
+                    <label for="BuyMaterial_day" class="form-label">วันที่ส่งมอบ</label>
                     <input type="date" class="form-control" name="BuyMaterial_day" id="BuyMaterial_day" value="<?php echo $values["BuyMaterial_day"]; ?>" required>
                     <script type='text/javascript'>
                         var highlight_dates = ['1-5-2020', '11-5-2020', '18-5-2020', '28-5-2020', '1-7-2023', '15-7-2023'];
@@ -79,9 +79,9 @@ if (!$_SESSION["UserID"]) {
                 $sql = $con;
                 $query = "SELECT * FROM material ORDER BY Material_id asc";
                 $result = mysqli_query($sql, $query);
-                $default_Material_id = "";
-                if (isset($values['Material_id'])) {
-                    $default_Material_id = $values['Material_id'];
+                $default_BuyMaterial_detail = "";
+                if (isset($values['BuyMaterial_detail'])) {
+                    $default_BuyMaterial_detail = $values['BuyMaterial_detail'];
                 }
                 ?>
                 <div class="mb-3" style="display: inline-block;width : 166px;">
@@ -89,13 +89,14 @@ if (!$_SESSION["UserID"]) {
                     <select class="form-select" aria-label="Default select example" name="BuyMaterial_detail" required>
                         <option value="">-กรุณาเลือก-</option>
                         <?php foreach ($result as $results) { ?>
-                            <?php $selected = ($results["Material_id"] == $default_Material_id) ? "selected" : ""; ?>
+                            <?php $selected = ($results["Material_id"] == $default_BuyMaterial_detail) ? "selected" : ""; ?>
                             <option value="<?php echo $results["Material_id"]; ?>" <?php echo $selected; ?>>
                                 <?php echo $results["Material_name"]; ?>
                             </option>
                         <?php } ?>
                     </select>
                 </div>
+
                 <div class="mb-3" style="display: inline-block;width : 166px;">
                     <label for="BuyMaterial_quantity" class="form-label">จำนวน</label>
                     <input type="text" class="form-control" name="BuyMaterial_quantity" value="<?php echo $values["BuyMaterial_quantity"]; ?>" required onkeypress="return isNumberKey(event)">
@@ -111,20 +112,22 @@ if (!$_SESSION["UserID"]) {
                 </script>
                 <?php
                 require('C:\xampp\XAMXUN\htdocs\webLathe\config\condb.php');
-                $sql3 = $con;
-                $query3 = "SELECT * FROM unit ORDER BY Unit_id asc";
-                $result3 = mysqli_query($sql3, $query3);
-                $default_Counting_unit = "";
-                if (isset($values['Counting_unit'])) {
-                    $default_Counting_unit = $values['Counting_unit'];
+
+                $sql1 = $con;
+                $query1 = "SELECT * FROM unit ORDER BY Unit_id asc";
+                $result1 = mysqli_query($sql1, $query1);
+
+                $default_Counting_unit_id = "";
+                if (isset($values['Counting_unit_id'])) {
+                    $default_Counting_unit_id = $values['Counting_unit_id'];
                 }
                 ?>
                 <div class="mb-3" style="display: inline-block;width : 166px;">
                     <label for="Counting_unit" class="form-label">เลือกหน่วยนับ</label>
                     <select class="form-select" aria-label="Default select example" name="Counting_unit" required>
                         <option value="">-กรุณาเลือก-</option>
-                        <?php foreach ($result3 as $results) { ?>
-                            <?php $selected = ($results["Unit_id"] == $default_Unit_id) ? "selected" : ""; ?>
+                        <?php foreach ($result1 as $results) { ?>
+                            <?php $selected = ($results["Unit_id"] == $default_Counting_unit_id) ? "selected" : ""; ?>
                             <option value="<?php echo $results["Unit_id"]; ?>" <?php echo $selected; ?>>
                                 <?php echo $results["Unit_name"]; ?>
                             </option>

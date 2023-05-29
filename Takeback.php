@@ -120,21 +120,22 @@ if (!$_SESSION["UserID"]) {
             <table id="Buy_Material_table" class="table table-bordered table-striped" style="width:100%">
                 <thead>
                     <tr>
-                        <th>ลำดับ</th>
-                        <th>รหัสรับคืนวัสดุและอุปกรณ์</th>
-                        <th>วันที่รับคืน</th>
-                        <th>ชื่อวัสดุและอุปกรณ์</th>
-                        <th>จำนวน</th>
-                        <th>รหัสหน่วยนับ</th>
-                        <th>รหัสพนักงาน</th>
-                        <th>การดำเนินการ</th>
+                        <th style="text-align: center;">ลำดับ</th>
+                        <th style="text-align: center;">รหัสรับคืนวัสดุและอุปกรณ์</th>
+                        <th style="text-align: center;">วันที่รับคืน</th>
+                        <th style="text-align: center;">ชื่อวัสดุและอุปกรณ์</th>
+                        <th style="text-align: center;">จำนวน</th>
+                        <th style="text-align: center;">หน่วยนับ</th>
+                        <th style="text-align: center;">ชื่อพนักงาน</th>
+                        <th style="text-align: center;">การดำเนินการ</th>
                     </tr>
                 </thead>
                 <tbody>
                     <?php
                     require('C:\xampp\XAMXUN\htdocs\webLathe\config\condb.php');
 
-                    $query = "SELECT tm.*, 
+                    $query = "SELECT tm.*,
+                    tmd.Takeback_detail_id, 
                     tmd.Takeback_quantity,
                     u.Unit_id AS Counting_unit_id,
                     u.Unit_name AS Counting_unit_name,
@@ -154,7 +155,8 @@ if (!$_SESSION["UserID"]) {
                     ?>
                         <tr>
                             <td align="center"><?php echo $i++; ?></td>
-                            <td align="center"><?php echo $values["Takeback_id"]; ?></td>
+                            <?php $values["Takeback_id"]; ?>
+                            <td align="center"><?php echo $values["Takeback_detail_id"]; ?></td>   
                             <td align="center"><?php echo date("d/m/Y", strtotime($values["Takeback_day"] . " UTC")); ?></td>
                             <td align="center"><?php echo $values["Material_name"]; ?></td>
                             <td align="center"><?php echo $values["Takeback_quantity"]; ?></td>

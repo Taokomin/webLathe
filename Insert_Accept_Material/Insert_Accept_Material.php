@@ -161,7 +161,6 @@ if (!$_SESSION["UserID"]) {
                 u3.Unit_name AS Counting_unit_name,
                 u2.Unit_id AS Price_unit_id,
                 u4.Unit_name AS Price_unit_name,
-                mt.MaterialType_name,
                 p.Partner_id, 
                 p.Partner_name, 
                 p.Partner_surname, 
@@ -176,7 +175,6 @@ if (!$_SESSION["UserID"]) {
                 INNER JOIN unit AS u2 ON bmd.Price_unit = u2.Unit_id
                 INNER JOIN unit AS u3 ON bmd.Counting_unit = u3.Unit_id
                 INNER JOIN unit AS u4 ON bmd.Price_unit = u4.Unit_id
-                INNER JOIN material_type AS mt ON bmd.MaterialType_id = mt.MaterialType_id
                 INNER JOIN partner AS p ON b.Partner_id = p.Partner_id
                 INNER JOIN employee AS e ON b.Employee_id = e.Employee_id
                 INNER JOIN status AS s ON b.BuyMaterial_status = s.status_id
@@ -207,8 +205,8 @@ if (!$_SESSION["UserID"]) {
                         echo '<input type="text" class="form-control"  value="' . $row['BuyMaterial_id'] . '" readonly>';
                         echo '</div>';
 
-                        echo '&nbsp;&nbsp;<div class="mb-3" style="display: inline-block;width : 120px;">';
-                        echo '<label for="AcceptMaterial_detail" class="form-label">ชื่อวัสดุ</label>';
+                        echo '&nbsp;&nbsp;<div class="mb-3" style="display: inline-block;width : 130px;">';
+                        echo '<label for="AcceptMaterial_detail" class="form-label">ชื่อวัสดุและอุปกรณ์</label>';
                         echo '<input type="hidden" class="form-control" name="AcceptMaterial_detail" value="' . $row['BuyMaterial_detail'] . '" readonly>';
                         echo '<input type="text" class="form-control"  value="' . $row['Material_name'] . '" readonly>';
                         echo '</div>';
@@ -234,12 +232,6 @@ if (!$_SESSION["UserID"]) {
                         echo '<label for="Price_unit" class="form-label">หน่วยนับ</label>';
                         echo '<input type="hidden" class="form-control" name="Price_unit" value="' . $row["Price_unit"] . '" readonly>';
                         echo '<input type="text" class="form-control"  value="' . $row["Price_unit_name"] . '" readonly>';
-                        echo '</div>';
-
-                        echo '&nbsp;&nbsp;<div class="mb-3" style="display: inline-block;width : 120px;">';
-                        echo '<label for="MaterialType_id" class="form-label">ประเภท</label>';
-                        echo '<input type="hidden" class="form-control" name="MaterialType_id" value="' . $row["MaterialType_id"] .  '" readonly>';
-                        echo '<input type="text" class="form-control"  value="' . $row["MaterialType_name"] .  '" readonly>';
                         echo '</div>';
 
                         echo '&nbsp;&nbsp;<div class="mb-3" style="display: inline-block;width : 120px;">';

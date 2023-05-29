@@ -29,23 +29,52 @@ $values = mysqli_fetch_assoc($result);
                 <label for="Password" class="form-label">รหัสผ่าน</label>
                 <input type="text" class="form-control" name="Password" value="<?php echo $values["Password"]; ?>" required>
             </div>
-            <div class="mb-3">
-                <label for="Firstname" class="form-label">ชื่อ</label>
-                <input type="text" class="form-control" name="Firstname" value="<?php echo $values["Firstname"]; ?>" required>
-            </div>
-            <div class="mb-3">
-                <label for="Lastname" class="form-label">นามสกุล</label>
-                <input type="text" class="form-control" name="Lastname" value="<?php echo $values["Lastname"]; ?>" required>
-            </div>
-            <div class="mb-3">
-                <label for="Userlevel" class="form-label">สิทธิการใช้งาน</label>
-                <select class="form-select" aria-label="Default select example" name="Userlevel"  required>
-                    <option value="<?php echo $values["Userlevel"]; ?>">-กรุณาเลือกสิทธิการใช้งาน-</option>
-                    <option value="P">บุคลากร(P)</option>
-                    <option value="M">ผู้จัดการ(M)</option>
-                    <option value="E">ผู้บริหาร(E)</option>
-                </select>
-            </div>
+            <?php
+                require('C:\xampp\XAMXUN\htdocs\webLathe\config\condb.php');
+                $sql3 = $con;
+                $query3 = "SELECT * FROM employee ORDER BY Employee_id asc";
+                $result3 = mysqli_query($sql3, $query3);
+                $default_Employee_id = "";
+                if (isset($values['Employee_id'])) {
+                    $default_Employee_id = $values['Employee_id'];
+                }
+                ?>
+                <div class="mb-3">
+                    <label for="Employee_id" class="form-label">ชื่อลูกค้า</label>
+                    <select class="form-select" aria-label="Default select example" name="Employee_id" required>
+                        <option value="">-กรุณาเลือก-</option>
+                        <?php foreach ($result3 as $results) { ?>
+                            <?php $selected = ($results["Employee_id"] == $default_Employee_id) ? "selected" : ""; ?>
+                            <option value="<?php echo $results["Employee_id"]; ?>" <?php echo $selected; ?>>
+                                <?php echo $results["Employee_name"] . " " . $results["Employee_surname"]; ?>
+                            </option>
+                        <?php } ?>
+                    </select>
+                </div>
+
+            <?php
+                require('C:\xampp\XAMXUN\htdocs\webLathe\config\condb.php');
+                $sql3 = $con;
+                $query3 = "SELECT * FROM license ORDER BY License_id asc";
+                $result3 = mysqli_query($sql3, $query3);
+                $default_License_id = "";
+                if (isset($values['License_id'])) {
+                    $default_License_id = $values['License_id'];
+                }
+                ?>
+                <div class="mb-3">
+                    <label for="License_id" class="form-label">สิทธิการใช้งาน</label>
+                    <select class="form-select" aria-label="Default select example" name="License_id" required>
+                        <option value="">-กรุณาเลือก-</option>
+                        <?php foreach ($result3 as $results) { ?>
+                            <?php $selected = ($results["License_id"] == $default_License_id) ? "selected" : ""; ?>
+                            <option value="<?php echo $results["License_id"]; ?>" <?php echo $selected; ?>>
+                                <?php echo $results["License_name"]; ?>
+                            </option>
+                        <?php } ?>
+                    </select>
+                </div>
+
             <div class="modal-footer">
                 <button type="submit" class="btn btn-success ">แก้ไขข้อมูล</button>
                 <a type="button" class="btn btn-danger " href="..\User.php">ยกเลิก</a>

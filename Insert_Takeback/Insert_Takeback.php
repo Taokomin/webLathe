@@ -120,8 +120,8 @@ if (!$_SESSION["UserID"]) {
                 $query1 = "SELECT PickupMaterial_detail_id FROM pickup_material_detail ORDER BY PickupMaterial_detail_id ASC";
                 $result1 = mysqli_query($con, $query1);
                 ?>
-                <div class="mb-3" style="width : 166px;">
-                    <label for="searchInput" class="form-label">เลือกรหัสคืน</label>
+                <div class="mb-3" style="width : 222px;">
+                    <label for="searchInput" class="form-label">เลือกรหัสวัสดุและอุปกรณ์ที่จะคืน</label>
                     <select class="form-select" aria-label="Default select example" name="PickupMaterial_detail_id" required>
                         <option value="<?php if (isset($_GET['PickupMaterial_detail_id'])) {
                                             echo htmlspecialchars($_GET['PickupMaterial_detail_id']);
@@ -165,6 +165,7 @@ if (!$_SESSION["UserID"]) {
                     INNER JOIN unit AS u ON pmd.Counting_unit = u.Unit_id
                     INNER JOIN employee AS e ON pm.Employee_id = e.Employee_id
                     INNER JOIN status AS s ON pm.PickupMaterial_status = s.status_id
+                    WHERE pmd.PickupMaterial_detail_id  = '$PickupMaterial_detail_id '
                     ORDER BY PickupMaterial_id ASC";
 
 
@@ -175,22 +176,22 @@ if (!$_SESSION["UserID"]) {
 
                         $takebackDetailId = increaseIdTmd($GLOBALS['Takeback_detail_id']);
 
-                        echo '<div class="mb-3" style="display: inline-block;width : 120px;">';
-                        echo '<label  class="form-label">รหัสสั่งสินค้า</label>';
+                        echo '<div class="mb-3" style="display: inline-block;width : 166px;">';
+                        echo '<label  class="form-label">รหัสเบิกวัสดุและอุปกรณ์</label>';
                         echo '<input type="hidden" class="form-control" name="Takeback_detail_id" value="' . $takebackDetailId . '" readonly>';
                         echo '<input type="hidden" class="form-control" name="PickupMaterial_detail_id"  value="' . $row['PickupMaterial_detail_id'] . '" readonly>';
                         echo '<input type="text" class="form-control"  value="' . $row['PickupMaterial_id'] . '" readonly>';
                         echo '</div>';
 
-                        echo '&nbsp;&nbsp;<div class="mb-3" style="display: inline-block;width : 120px;">';
-                        echo '<label for="Takeback_detail" class="form-label">สินค้าที่สั่งทำ</label>';
+                        echo '&nbsp;&nbsp;<div class="mb-3" style="display: inline-block;width : 166px;">';
+                        echo '<label for="Takeback_detail" class="form-label">ชื่อวัสดุและอุปกรณ์</label>';
                         echo '<input type="text" class="form-control"  value="' . $row['Material_name'] . '" readonly>';
                         echo '<input type="hidden" class="form-control" name="Takeback_detail" value="' . $row['Material_id'] . '" readonly>';
                         echo '<input type="hidden" class="form-control" name="Material_id" value="' . $row['Material_id'] . '" readonly>';
                         echo '</div>';
 
                         echo '&nbsp;&nbsp;<div class="mb-3" style="display: inline-block;width : 120px;">';
-                        echo '<label for="PickupMaterial_quantity" class="form-label">จำนวน</label>';
+                        echo '<label for="PickupMaterial_quantity" class="form-label">จำนวนที่เบิก</label>';
                         echo '<input type="text" class="form-control" name="PickupMaterial_quantity" value="' . $row['PickupMaterial_quantity'] . '" readonly>';
                         echo '</div>';
 
@@ -201,7 +202,7 @@ if (!$_SESSION["UserID"]) {
                         echo '</div>';
 
                         echo '&nbsp;&nbsp;<div class="mb-3" style="display: inline-block;width : 120px;">';
-                        echo '<label for="Takeback_quantity" class="form-label">จำนวนคืน</label>';
+                        echo '<label for="Takeback_quantity" class="form-label">จำนวนที่คืน</label>';
                         echo '<input type="text" class="form-control" name="Takeback_quantity" value=""  required>';
                         echo '</div>';
                     } else {

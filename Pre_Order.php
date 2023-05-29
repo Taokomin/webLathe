@@ -125,8 +125,7 @@ if (!$_SESSION["UserID"]) {
                         <th style="text-align: center;">สินค้าที่สั่งทำ</th>
                         <th style="text-align: center;">จำนวน</th>
                         <th style="text-align: center;">หน่วยนับ</th>
-                        <th style="text-align: center;">ราคา</th>
-                        <th style="text-align: center;">หน่วยนับ</th>
+                        <th style="text-align: center;">ราคา(บาท)</th>
                         <th style="text-align: center;">ชื่อลูกค้า</th>
                         <th style="text-align: center;">ชื่อพนักงาน</th>
                         <th style="text-align: center;">การดำเนินการ</th>
@@ -135,7 +134,7 @@ if (!$_SESSION["UserID"]) {
                 <tbody>
                     <?php
                     require('C:\xampp\XAMXUN\htdocs\webLathe\config\condb.php');
-                    $query = "SELECT po.*,pod.PreOrder_detail_id,pod.PreOrder_detail, pod.PreOrder_quantity, u.Unit_id AS Counting_unit_id, u3.Unit_name AS Counting_unit_name,
+                    $query = "SELECT po.*,pod.showTb,pod.Counting_unit,pod.Price_unit,pod.PreOrder_detail_id,pod.PreOrder_detail, pod.PreOrder_quantity, u.Unit_id AS Counting_unit_id, u3.Unit_name AS Counting_unit_name,
           pod.PreOrder_price, u2.Unit_id AS Price_unit_id, u4.Unit_name AS Price_unit_name,
           pod.PreOrder_quantity, c.Customer_name, c.Customer_surname, e.Employee_name, e.Employee_surname
           FROM pre_order AS po
@@ -146,7 +145,9 @@ if (!$_SESSION["UserID"]) {
           INNER JOIN unit AS u4 ON pod.Price_unit = u4.Unit_id
           INNER JOIN customer AS c ON po.Customer_id = c.Customer_id
           INNER JOIN employee AS e ON po.Employee_id = e.Employee_id
+          WHERE showTb = '0'
           ORDER BY po.PreOrder_id,pod.PreOrder_detail_id ASC;";
+
 
 
                     $result = mysqli_query($con, $query);
@@ -161,14 +162,16 @@ if (!$_SESSION["UserID"]) {
                             <td align="center"><?php echo $values["PreOrder_detail"]; ?></td>
                             <td align="center"><?php echo $values["PreOrder_quantity"]; ?></td>
                             <td align="center"><?php echo $values["Counting_unit_name"]; ?></td>
-                            <td align="center"><?php echo $values["PreOrder_price"]; ?></td>
-                            <td align="center"><?php echo $values["Price_unit_name"]; ?></td>
+                            <?php $values["Counting_unit"]; ?>
+                            <td style="text-align: center;"><?php echo number_format($values["PreOrder_price"]); ?></td>
+                            <?php $values["Price_unit"]; ?>
                             <td align="center"><?php echo $values["Customer_name"] . " " . $values["Customer_surname"]; ?></td>
                             <td align="center"><?php echo $values["Employee_name"] . " " . $values["Employee_surname"]; ?></td>
+                            <?php $values["showTb"]; ?>
                             <td align="center">
 
                                 <a href="Pdf_Pre_Order_id.php?PreOrder_id=<?php echo $values['PreOrder_id']; ?>" class="btn btn-warning"><iconify-icon icon="bxs:file-pdf" style="width: 14px; height: 14px"></iconify-icon></a>
-                                <a href="Edit_Pre_Order/Edit_Pre_Order.php?PreOrder_detail_id=<?php echo $values["PreOrder_detail_id"]; ?>" class="btn btn-primary">
+                                <a href="Edit_Pre_Order/Edit_Pre_Order.php?PreOrder_id=<?php echo $values["PreOrder_id"]; ?>" class="btn btn-primary">
                                     <iconify-icon icon="el:file-edit"></iconify-icon>
                                 </a>
                                 <a onclick="return confirm('คุณแน่ใจหรือว่าต้องการลบรายการนี้?')" href="Delete_Pre_Order/Delete_Pre_Order.php?PreOrder_id=<?php echo $values["PreOrder_id"]; ?>" class='btn btn-danger'>

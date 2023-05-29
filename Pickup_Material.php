@@ -120,15 +120,15 @@ if (!$_SESSION["UserID"]) {
             <table id="Buy_Material_table" class="table table-bordered table-striped" style="width:100%">
                 <thead>
                     <tr>
-                        <th>ลำดับ</th>
-                        <th>รหัสเบิกวัสดุและอุปกรณ์</th>
-                        <th>วันที่เบิก</th>
-                        <th>ชื่อวัสดุและอุปกรณ์</th>
-                        <th>จำนวน</th>
-                        <th>หน่วยนับ</th>
-                        <th>ชื่อพนักงาน</th>
-                        <th>สถานะ</th>
-                        <th>การดำเนินการ</th>
+                        <th style="text-align: center;">ลำดับ</th>
+                        <th style="text-align: center;">รหัสเบิกวัสดุและอุปกรณ์</th>
+                        <th style="text-align: center;">วันที่เบิก</th>
+                        <th style="text-align: center;">ชื่อวัสดุและอุปกรณ์</th>
+                        <th style="text-align: center;">จำนวน</th>
+                        <th style="text-align: center;">หน่วยนับ</th>
+                        <th style="text-align: center;">ชื่อพนักงาน</th>
+                        <th style="text-align: center;">สถานะ</th>
+                        <th style="text-align: center;">การดำเนินการ</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -143,6 +143,7 @@ if (!$_SESSION["UserID"]) {
                     INNER JOIN unit AS u ON pmd.Counting_unit = u.Unit_id
                     INNER JOIN employee AS e ON pm.Employee_id = e.Employee_id
                     INNER JOIN status AS s ON pm.PickupMaterial_status = s.status_id
+                    WHERE pmd.PickupMaterial_quantity > 0
                     ORDER BY PickupMaterial_id ASC";
 
                     $result = mysqli_query($con, $query);

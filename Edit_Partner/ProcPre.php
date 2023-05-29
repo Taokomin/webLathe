@@ -6,8 +6,9 @@ $Prefix_id = $_POST['Prefix_id'];
 $Partner_name = $_POST['Partner_name'];
 $Partner_surname = $_POST['Partner_surname'];
 $Partner_number = $_POST['Partner_number'];
+$Partner_email = $_POST['Partner_email'];
 $Partner_company = $_POST['Partner_company'];
-$sql = "UPDATE partner SET  Prefix_id = '$Prefix_id',Partner_name = '$Partner_name',Partner_surname = '$Partner_surname',Partner_number = '$Partner_number',Partner_company = '$Partner_company' WHERE Partner_id = '$Partner_id'";
+$sql = "UPDATE partner SET  Prefix_id = '$Prefix_id',Partner_name = '$Partner_name',Partner_surname = '$Partner_surname',Partner_number = '$Partner_number',Partner_company = '$Partner_company',Partner_email = '$Partner_email' WHERE Partner_id = '$Partner_id'";
     $result = mysqli_query($con, $sql) or die("เกิดข้อผิดพลาดเกิดขึ้น");
     if ($result) {
         echo "<script type='text/javascript'>";
